@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        4%{?dist}
+Release:        4%{?dist}.1
 Summary:        The unversioned Python RPM macros
 
 License:        MIT
@@ -10,8 +10,6 @@ Source2:        macros.python2
 Source3:        macros.python3
 
 BuildArch:      noarch
-Obsoletes:      python-macros < 3
-Provides:       python-macros = %{version}-%{release}
 
 %description
 This package contains the unversioned Python RPM macros, that most
@@ -28,16 +26,12 @@ RPM macros for building Python source packages.
 
 %package -n python2-rpm-macros
 Summary:        RPM macros for building Python 2 packages
-# Would need to be different for each release - worth it?
-#Conflicts:      python2-devel < 2.7.11-3
 
 %description -n python2-rpm-macros
 RPM macros for building Python 2 packages.
 
 %package -n python3-rpm-macros
 Summary:        RPM macros for building Python 3 packages
-# Would need to be different for each release - worth it?
-#Conflicts:      python3-devel < 3.5.1-3
 
 %description -n python3-rpm-macros
 RPM macros for building Python 3 packages.
@@ -67,6 +61,9 @@ install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} \
 
 
 %changelog
+* Thu Jan 14 2016 Orion Poplawski <orion@cora.nwra.com> 3-4.1
+- EPEL version
+
 * Wed Jan 13 2016 Orion Poplawski <orion@cora.nwra.com> 3-4
 - Fix python2/3-rpm-macros package names
 

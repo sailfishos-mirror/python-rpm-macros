@@ -1,3 +1,8 @@
 # python3_pkgversion specifies the version of Python 3 in the distro.  It can be
 # a specific version (e.g. 34 in Fedora EPEL7)
-%python3_pkgversion 3
+%python3_pkgversion 34
+#python3_other_pkgversion 35
+# Set to /bin/true when not active to avoid %ifdefs in specfiles
+%__python3_other /bin/true
+%py3_other_build /bin/true
+%py3_other_install /bin/true
