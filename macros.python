@@ -29,8 +29,10 @@ CFLAGS="%{optflags}" %{__python} %{py_setup} %{?py_setup_args} install -O1 --ski
                 print(string.sub(package,9,string.len(package)));\
                 print(" < ");\
                 print(vr);\
-        elseif (string.starts(package, "python3-")) then\
+        elseif (string.starts(str, "python" .. rpm.expand("%{python3_pkgversion}") .. "-")) then\
                 --No unversioned provides as python3 is not default\
+        elseif (rpm.expand("%{?python3_other_pkgversion}") != "" and string.starts(str, "python" .. rpm.expand("%{python3_other_pkgversion}") .. "-")) then\
+                --No unversioned provides as python3_other is not default\
         elseif (string.starts(package, "pypy-")) then\
                 --No unversioned provides as pypy is not default\
         elseif (string.starts(package, "pypy3-")) then\
@@ -47,8 +49,3 @@ CFLAGS="%{optflags}" %{__python} %{py_setup} %{?py_setup_args} install -O1 --ski
                 print("not recognized.");\
         end\
 }
-
-# Set to /bin/true to avoid %ifdefs in specfiles
-%__python3_other /bin/true
-%py3_other_build /bin/true
-%py3_other_install /bin/true
