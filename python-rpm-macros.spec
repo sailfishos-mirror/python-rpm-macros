@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        4%{?dist}.1
+Release:        5%{?dist}
 Summary:        The unversioned Python RPM macros
 
 License:        MIT
@@ -61,6 +61,9 @@ install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} \
 
 
 %changelog
+* Thu Jan 14 2016 Orion Poplawski <orion@cora.nwra.com> 3-5
+- Handle noarch python sub-packages (bug #1290900)
+
 * Thu Jan 14 2016 Orion Poplawski <orion@cora.nwra.com> 3-4.1
 - EPEL version
 
