@@ -33,9 +33,9 @@ CFLAGS="%{optflags}" %{__python} %{py_setup} %{?py_setup_args} install -O1 --ski
                 print(string.sub(package,9,string.len(package)));\
                 print(" < ");\
                 print(vr);\
-        elseif (string.starts(str, "python" .. rpm.expand("%{python3_pkgversion}") .. "-")) then\
+        elseif (string.starts(package, "python" .. rpm.expand("%{python3_pkgversion}") .. "-")) then\
                 --No unversioned provides as python3 is not default\
-        elseif (rpm.expand("%{?python3_other_pkgversion}") ~= "" and string.starts(str, "python" .. rpm.expand("%{python3_other_pkgversion}") .. "-")) then\
+        elseif (rpm.expand("%{?python3_other_pkgversion}") ~= "" and string.starts(package, "python" .. rpm.expand("%{python3_other_pkgversion}") .. "-")) then\
                 --No unversioned provides as python3_other is not default\
         elseif (string.starts(package, "pypy-")) then\
                 --No unversioned provides as pypy is not default\
@@ -48,8 +48,8 @@ CFLAGS="%{optflags}" %{__python} %{py_setup} %{?py_setup_args} install -O1 --ski
                 print(" = ");\
                 print(vr);\
         else\
-                print("ERROR: ");\
+                print("%python_provide: ERROR: ");\
                 print(package);\
-                print("not recognized.");\
+                print(" not recognized.");\
         end\
 }
