@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        6%{?dist}
+Release:        6%{?dist}.1
 Summary:        The unversioned Python RPM macros
 
 License:        MIT
@@ -61,6 +61,9 @@ install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} \
 
 
 %changelog
+* Mon Jan 25 2016 Orion Poplawski <orion@cora.nwra.com> 3-6.1
+- Set %%__python3 to /usr/bin/python3.4
+
 * Thu Jan 14 2016 Orion Poplawski <orion@cora.nwra.com> 3-6
 - Fix typo in %%python_provide
 
