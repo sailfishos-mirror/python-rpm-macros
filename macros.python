@@ -25,10 +25,6 @@ CFLAGS="%{optflags}" %{__python} %{py_setup} %{?py_setup_args} install -O1 --ski
                 print(" = ");\
                 print(vr);\
                 --Obsoleting the previous default python package\
-                if (rpm.expand("%{?buildarch}") ~= "noarch") then\
-                        str = "\\nObsoletes: python-" .. string.sub(package,9,string.len(package)) .. "%{?_isa} < " .. vr;\
-                        print(rpm.expand(str));\
-                end\
                 print("\\nObsoletes: python-");\
                 print(string.sub(package,9,string.len(package)));\
                 print(" < ");\

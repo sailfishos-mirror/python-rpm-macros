@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        6%{?dist}.1
+Release:        10%{?dist}
 Summary:        The unversioned Python RPM macros
 
 License:        MIT
@@ -10,6 +10,8 @@ Source2:        macros.python2
 Source3:        macros.python3
 
 BuildArch:      noarch
+# For %%python3_pkgversion used in %%python_provide
+Requires:       python-srpm-macros
 
 %description
 This package contains the unversioned Python RPM macros, that most
@@ -46,7 +48,7 @@ mkdir -p %{buildroot}/%{_rpmconfigdir}/macros.d/
 install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} \
   %{buildroot}/%{_rpmconfigdir}/macros.d/
 
- 
+
 %files
 %{_rpmconfigdir}/macros.d/macros.python
 
@@ -61,6 +63,18 @@ install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} \
 
 
 %changelog
+* Tue Jul 12 2016 Orion Poplawski <orion@cora.nwra.com> 3-10
+- Do not generate useless Obsoletes with %%{?_isa}
+
+* Fri May 13 2016 Orion Poplawski <orion@cora.nwra.com> 3-9
+- Make python-rpm-macros require python-srpm-macros (bug #1335860)
+
+* Thu May 12 2016 Jason L Tibbitts III <tibbs@math.uh.edu> - 3-8
+- Add single-second sleeps to work around setuptools bug.
+
+* Thu Feb 04 2016 Fedora Release Engineering <releng@fedoraproject.org> - 3-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
+
 * Mon Jan 25 2016 Orion Poplawski <orion@cora.nwra.com> 3-6.1
 - Set %%__python3 to /usr/bin/python3.4
 
