@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        The unversioned Python RPM macros
 
 License:        MIT
@@ -44,25 +44,33 @@ RPM macros for building Python 3 packages.
 %build
 
 %install
-mkdir -p %{buildroot}/%{_rpmconfigdir}/macros.d/
+mkdir -p %{buildroot}/%{rpmmacrodir}
 install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} \
-  %{buildroot}/%{_rpmconfigdir}/macros.d/
+  %{buildroot}/%{rpmmacrodir}
 
 
 %files
-%{_rpmconfigdir}/macros.d/macros.python
+%{rpmmacrodir}/macros.python
 
 %files -n python-srpm-macros
-%{_rpmconfigdir}/macros.d/macros.python-srpm
+%{rpmmacrodir}/macros.python-srpm
 
 %files -n python2-rpm-macros
-%{_rpmconfigdir}/macros.d/macros.python2
+%{rpmmacrodir}/macros.python2
 
 %files -n python3-rpm-macros
-%{_rpmconfigdir}/macros.d/macros.python3
+%{rpmmacrodir}/macros.python3
 
 
 %changelog
+* Thu Sep 15 2016 Jason L Tibbitts III <tibbs@math.uh.edu> - 3-11
+- Use %%rpmmacrodir to put the macros in the proper location.
+- Change %%python2_version* to a form that works on EL6.
+- Change %%__python2 to point explicitly to python2.6 to avoid breakage in
+  Amazon Linux, which links /usr/bin/python to python2.7.  This syncs up with
+  the macros which were in epel-rpm-macros.  See
+  https://bugzilla.redhat.com/show_bug.cgi?id=1347019
+
 * Tue Jul 12 2016 Orion Poplawski <orion@cora.nwra.com> 3-10
 - Do not generate useless Obsoletes with %%{?_isa}
 
