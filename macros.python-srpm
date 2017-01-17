@@ -6,3 +6,58 @@
 %__python3_other /bin/true
 %py3_other_build /bin/true
 %py3_other_install /bin/true
+
+
+
+# === Macros for Build/Requires tags using Python dist tags ===
+# - https://fedoraproject.org/wiki/Changes/Automatic_Provides_for_Python_RPM_Packages
+# - These macros need to be in macros.python-srpm, because BuildRequires tags
+#   get rendered as runtime requires into the metadata of SRPMs.
+
+# Converts Python dist name to a canonical format
+%py_dist_name() %{lua:\
+        name = rpm.expand("%{?1:%{1}}");\
+        canonical = string.gsub(string.lower(name), "%W+", "-");\
+        print(canonical);\
+}
+
+# Creates Python 2 dist tag(s) after converting names to canonical format
+#   Needs to first put all arguments into a list, because invoking a different
+#   macro (%py_dist_name) overwrites them
+%py2_dist() %{lua:\
+        args = {}\
+        arg = 1\
+        while (true) do\
+                name = rpm.expand("%{?" .. arg .. ":%{" .. arg .. "}}");\
+                if (name == nil or name == '') then\
+                        break\
+                end\
+                args[arg] = name\
+                arg = arg + 1\
+        end\
+        for arg, name in ipairs(args) do\
+                canonical = rpm.expand("%py_dist_name " .. name);\
+                print("python2dist(" .. canonical .. ") ");\
+        end\
+}
+
+# Creates Python 3 dist tag(s) after converting names to canonical format
+#   Needs to first put all arguments into a list, because invoking a different
+#   macro (%py_dist_name) overwrites them
+%py3_dist() %{lua:\
+        args = {}\
+        arg = 1\
+        while (true) do\
+                name = rpm.expand("%{?" .. arg .. ":%{" .. arg .. "}}");\
+                if (name == nil or name == '') then\
+                        break\
+                end\
+                args[arg] = name\
+                arg = arg + 1\
+        end\
+        for arg, name in ipairs(args) do\
+                canonical = rpm.expand("%py_dist_name " .. name);\
+                print("python3dist(" .. canonical .. ") ");\
+        end\
+}
+

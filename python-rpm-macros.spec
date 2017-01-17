@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        The unversioned Python RPM macros
 
 License:        MIT
@@ -69,6 +69,10 @@ install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} \
 
 
 %changelog
+* Tue Jan 17 2017 Tomas Orsava <torsava@redhat.com> - 3-11
+- Added macros for Build/Requires tags using Python dist tags:
+  https://fedoraproject.org/wiki/Changes/Automatic_Provides_for_Python_RPM_Packages
+
 * Tue Jul 12 2016 Orion Poplawski <orion@cora.nwra.com> 3-10
 - Do not generate useless Obsoletes with %%{?_isa}
 
