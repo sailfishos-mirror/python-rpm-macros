@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        The unversioned Python RPM macros
 
 License:        MIT
@@ -50,25 +50,35 @@ RPM macros for building Python 3 packages.
 %build
 
 %install
-mkdir -p %{buildroot}/%{_rpmconfigdir}/macros.d/
+mkdir -p %{buildroot}/%{rpmmacrodir}
 install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} \
-  %{buildroot}/%{_rpmconfigdir}/macros.d/
+  %{buildroot}/%{rpmmacrodir}/
 
 
 %files
-%{_rpmconfigdir}/macros.d/macros.python
+%{rpmmacrodir}/macros.python
 
 %files -n python-srpm-macros
-%{_rpmconfigdir}/macros.d/macros.python-srpm
+%{rpmmacrodir}/macros.python-srpm
 
 %files -n python2-rpm-macros
-%{_rpmconfigdir}/macros.d/macros.python2
+%{rpmmacrodir}/macros.python2
 
 %files -n python3-rpm-macros
-%{_rpmconfigdir}/macros.d/macros.python3
+%{rpmmacrodir}/macros.python3
 
 
 %changelog
+* Wed Feb 21 2017 Orion Poplawski <orion@cora.nwra.com> 3-12
+- Make expanded macros start on the same line as the macro
+- Add --no-deps option to py_install_wheel macros
+- Add missing sleeps to other build macros
+- Add %%py_build_wheel and %%py_install_wheel macros
+- Add %%py_build_egg and %%py_install_egg macros
+- Allow multiple args to %%py_build/install macros
+- Tidy up macro formatting
+- Use %%rpmmacrodir
+
 * Tue Jan 17 2017 Tomas Orsava <torsava@redhat.com> - 3-11
 - Added macros for Build/Requires tags using Python dist tags:
   https://fedoraproject.org/wiki/Changes/Automatic_Provides_for_Python_RPM_Packages
