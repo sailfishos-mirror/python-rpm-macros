@@ -69,7 +69,7 @@ install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} \
 
 
 %changelog
-* Wed Feb 21 2017 Orion Poplawski <orion@cora.nwra.com> 3-12
+* Wed Feb 22 2017 Orion Poplawski <orion@cora.nwra.com> 3-12
 - Make expanded macros start on the same line as the macro
 - Add --no-deps option to py_install_wheel macros
 - Add missing sleeps to other build macros
