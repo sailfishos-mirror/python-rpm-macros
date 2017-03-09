@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        11%{?dist}
+Release:        17%{?dist}
 Summary:        The unversioned Python RPM macros
 
 License:        MIT
@@ -63,6 +63,29 @@ install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} \
 
 
 %changelog
+* Mon Jan 23 2017 Michal Cyprian <mcyprian@redhat.com> - 3-17
+- Add --no-deps option to py_install_wheel macros
+
+* Tue Jan 17 2017 Tomas Orsava <torsava@redhat.com> - 3-16
+- Added macros for Build/Requires tags using Python dist tags:
+  https://fedoraproject.org/wiki/Changes/Automatic_Provides_for_Python_RPM_Packages
+
+* Thu Nov 24 2016 Orion Poplawski <orion@cora.nwra.com> 3-15
+- Make expanded macros start on the same line as the macro
+
+* Wed Nov 16 2016 Orion Poplawski <orion@cora.nwra.com> 3-14
+- Fix %%py3_install_wheel (bug #1395953)
+
+* Wed Nov 16 2016 Orion Poplawski <orion@cora.nwra.com> 3-13
+- Add missing sleeps to other build macros
+- Fix build_egg macros
+- Add %%py_build_wheel and %%py_install_wheel macros
+
+* Tue Nov 15 2016 Orion Poplawski <orion@cora.nwra.com> 3-12
+- Add %%py_build_egg and %%py_install_egg macros
+- Allow multiple args to %%py_build/install macros
+- Tidy up macro formatting
+
 * Wed Aug 24 2016 Orion Poplawski <orion@cora.nwra.com> 3-11
 - Use %%rpmmacrodir
 
