@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        21%{?dist}
+Release:        22%{?dist}
 Summary:        The unversioned Python RPM macros
 
 License:        MIT
@@ -8,6 +8,7 @@ Source0:        macros.python
 Source1:        macros.python-srpm
 Source2:        macros.python2
 Source3:        macros.python3
+Source4:        macros.platform-python
 
 BuildArch:      noarch
 # For %%python3_pkgversion used in %%python_provide
@@ -44,6 +45,12 @@ Summary:        RPM macros for building Python 3 packages
 %description -n python3-rpm-macros
 RPM macros for building Python 3 packages.
 
+%package -n platform-python-rpm-macros
+Summary:        RPM macros for building Platform-Python packages
+
+%description -n platform-python-rpm-macros
+RPM macros for building Platform-Python packages.
+
 
 %prep
 
@@ -51,7 +58,7 @@ RPM macros for building Python 3 packages.
 
 %install
 mkdir -p %{buildroot}/%{rpmmacrodir}
-install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} \
+install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} \
   %{buildroot}/%{rpmmacrodir}/
 
 
@@ -67,8 +74,14 @@ install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} \
 %files -n python3-rpm-macros
 %{rpmmacrodir}/macros.python3
 
+%files -n platform-python-rpm-macros
+%{rpmmacrodir}/macros.platform-python
+
 
 %changelog
+* Wed Aug 02 2017 Tomas Orsava <torsava@redhat.com> - 3-22
+- Add platform-python macros (https://fedoraproject.org/wiki/Changes/Platform_Python_Stack)
+
 * Thu Jul 27 2017 Fedora Release Engineering <releng@fedoraproject.org> - 3-21
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Mass_Rebuild
 
