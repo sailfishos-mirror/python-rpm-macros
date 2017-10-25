@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        22%{?dist}
+Release:        23%{?dist}
 Summary:        The unversioned Python RPM macros
 
 License:        MIT
@@ -79,6 +79,9 @@ install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} \
 
 
 %changelog
+* Thu Oct 26 2017 Ville Skyttä <ville.skytta@iki.fi> - 3-23
+- Use -Es/-I to invoke macro scriptlets (#1506355)
+
 * Wed Aug 02 2017 Tomas Orsava <torsava@redhat.com> - 3-22
 - Add platform-python macros (https://fedoraproject.org/wiki/Changes/Platform_Python_Stack)
 
