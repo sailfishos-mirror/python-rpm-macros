@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        24%{?dist}
+Release:        25%{?dist}
 Summary:        The unversioned Python RPM macros
 
 License:        MIT
@@ -69,6 +69,9 @@ install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} \
 
 
 %changelog
+* Fri Jan 19 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 3-25
+- Add %%python_enable_dependency_generator
+
 * Tue Nov 28 2017 Tomas Orsava <torsava@redhat.com> - 3-24
 - Remove platform-python macros (https://fedoraproject.org/wiki/Changes/Platform_Python_Stack)
 
