@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        20%{?dist}
+Release:        21%{?dist}
 Summary:        The unversioned Python RPM macros
 
 License:        MIT
@@ -69,6 +69,9 @@ install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} \
 
 
 %changelog
+* Fri Jan 19 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 3-25
+- Add %%python_enable_dependency_generator
+
 * Fri Mar 03 2017 Michal Cyprian <mcyprian@redhat.com> - 3-20
 - Revert "Switch %%__python3 to /usr/libexec/system-python"
   after the Fedora Change https://fedoraproject.org/wiki/Changes/Making_sudo_pip_safe
