@@ -71,3 +71,7 @@
     print(" not recognized.")
   end
 }
+
+%python_enable_dependency_generator() \
+%global __python_requires %{_rpmconfigdir}/pythondistdeps.py --requires \
+%{nil}
