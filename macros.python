@@ -4,22 +4,26 @@
 # Use the slashes after expand so that the command starts on the same line as
 # the macro
 %py_build() %{expand:\\\
-  CFLAGS="%{optflags}" %{__python} %{py_setup} %{?py_setup_args} build --executable="%{__python2} %{py_shbang_opts}" %{?*}
+  CFLAGS="${CFLAGS:-${RPM_OPT_FLAGS}}" LDFLAGS="${LDFLAGS:-${RPM_LD_FLAGS}}"\\\
+  %{__python} %{py_setup} %{?py_setup_args} build --executable="%{__python2} %{py_shbang_opts}" %{?*}
   sleep 1
 }
 
 %py_build_egg() %{expand:\\\
-  CFLAGS="%{optflags}" %{__python} %{py_setup} %{?py_setup_args} bdist_egg %{?*}
+  CFLAGS="${CFLAGS:-${RPM_OPT_FLAGS}}" LDFLAGS="${LDFLAGS:-${RPM_LD_FLAGS}}"\\\
+  %{__python} %{py_setup} %{?py_setup_args} bdist_egg %{?*}
   sleep 1
 }
 
 %py_build_wheel() %{expand:\\\
-  CFLAGS="%{optflags}" %{__python} %{py_setup} %{?py_setup_args} bdist_wheel %{?*}
+  CFLAGS="${CFLAGS:-${RPM_OPT_FLAGS}}" LDFLAGS="${LDFLAGS:-${RPM_LD_FLAGS}}"\\\
+  %{__python} %{py_setup} %{?py_setup_args} bdist_wheel %{?*}
   sleep 1
 }
 
 %py_install() %{expand:\\\
-  CFLAGS="%{optflags}" %{__python} %{py_setup} %{?py_setup_args} install -O1 --skip-build --root %{buildroot} %{?*}
+  CFLAGS="${CFLAGS:-${RPM_OPT_FLAGS}}" LDFLAGS="${LDFLAGS:-${RPM_LD_FLAGS}}"\\\
+  %{__python} %{py_setup} %{?py_setup_args} install -O1 --skip-build --root %{buildroot} %{?*}
 }
 
 %py_install_egg() %{expand:\\\

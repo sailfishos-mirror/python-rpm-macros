@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        26%{?dist}
+Release:        27%{?dist}
 Summary:        The unversioned Python RPM macros
 
 License:        MIT
@@ -69,6 +69,9 @@ install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} \
 
 
 %changelog
+* Fri Mar 23 2018 Miro Hrončok <mhroncok@redhat.com> - 3-27
+- make LDFLAGS propagated whenever CFLAGS are
+
 * Fri Feb 09 2018 Fedora Release Engineering <releng@fedoraproject.org> - 3-26
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
 
