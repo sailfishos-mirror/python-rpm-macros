@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        28%{?dist}
+Release:        29%{?dist}
 Summary:        The unversioned Python RPM macros
 
 License:        MIT
@@ -8,6 +8,7 @@ Source0:        macros.python
 Source1:        macros.python-srpm
 Source2:        macros.python2
 Source3:        macros.python3
+Source4:        macros.pybytecompile
 
 BuildArch:      noarch
 # For %%python3_pkgversion used in %%python_provide
@@ -51,12 +52,13 @@ RPM macros for building Python 3 packages.
 
 %install
 mkdir -p %{buildroot}/%{rpmmacrodir}
-install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} \
+install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} \
   %{buildroot}/%{rpmmacrodir}/
 
 
 %files
 %{rpmmacrodir}/macros.python
+%{rpmmacrodir}/macros.pybytecompile
 
 %files -n python-srpm-macros
 %{rpmmacrodir}/macros.python-srpm
@@ -69,6 +71,9 @@ install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} \
 
 
 %changelog
+* Wed Apr 18 2018 Miro Hrončok <mhroncok@redhat.com> - 3-29
+- move macros.pybytecompile from python3-devel
+
 * Fri Apr 06 2018 Tomas Orsava <torsava@redhat.com> - 3-28
 - Fix the %%py_dist_name macro to not convert dots (".") into dashes, so that
   submodules can be addressed as well
