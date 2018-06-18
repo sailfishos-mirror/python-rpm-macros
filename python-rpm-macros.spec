@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        The unversioned Python RPM macros
 
 License:        MIT
@@ -63,6 +63,9 @@ install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} \
 
 
 %changelog
+* Mon Jun 18 2018 Jason L Tibbitts III <tibbs@math.uh.edu> - 3-12
+- Add %%pypi_source macro.
+
 * Thu Sep 15 2016 Jason L Tibbitts III <tibbs@math.uh.edu> - 3-11
 - Use %%rpmmacrodir to put the macros in the proper location.
 - Change %%python2_version* to a form that works on EL6.
