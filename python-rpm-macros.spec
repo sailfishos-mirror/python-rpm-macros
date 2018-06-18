@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        18%{?dist}
+Release:        19%{?dist}
 Summary:        The unversioned Python RPM macros
 
 License:        MIT
@@ -63,6 +63,9 @@ install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} \
 
 
 %changelog
+* Mon Jun 18 2018 Jason L Tibbitts III <tibbs@math.uh.edu> - 3-19
+- Add %%pypi_source macro.
+
 * Wed Dec 20 2017 Charalampos Stratakis <cstratak@redhat.com> - 3-18
 - Add python36 in EPEL 7.
 
