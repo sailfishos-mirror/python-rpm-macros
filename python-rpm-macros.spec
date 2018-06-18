@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        28%{?dist}
+Release:        29%{?dist}
 Summary:        The unversioned Python RPM macros
 
 License:        MIT
@@ -69,10 +69,12 @@ install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} \
 
 
 %changelog
+* Mon Jun 18 2018 Jason L Tibbitts III <tibbs@math.uh.edu> - 3-29
+- Add %%pypi_source macro.
+
 * Fri Apr 06 2018 Tomas Orsava <torsava@redhat.com> - 3-28
 - Fix the %%py_dist_name macro to not convert dots (".") into dashes, so that
-  submodules can be addressed as well
-Resolves: rhbz#1564095
+  submodules can be addressed as well Resolves: rhbz#1564095
 
 * Fri Mar 23 2018 Miro Hrončok <mhroncok@redhat.com> - 3-27
 - make LDFLAGS propagated whenever CFLAGS are
