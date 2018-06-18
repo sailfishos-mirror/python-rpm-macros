@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        24%{?dist}
+Release:        25%{?dist}
 Summary:        The unversioned Python RPM macros
 
 License:        MIT
@@ -78,7 +78,10 @@ install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} \
 %{rpmmacrodir}/macros.platform-python
 
 %changelog
-* Fri Jan 19 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 3-25
+* Mon Jun 18 2018 Jason L Tibbitts III <tibbs@math.uh.edu> - 3-25
+- Add %%pypi_source macro.
+
+* Fri Jan 19 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 3-24
 - Add %%python_enable_dependency_generator
 
 * Thu Oct 26 2017 Ville Skyttä <ville.skytta@iki.fi> - 3-23
