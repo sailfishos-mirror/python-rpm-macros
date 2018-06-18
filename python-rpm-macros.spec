@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        29%{?dist}
+Release:        30%{?dist}
 Summary:        The unversioned Python RPM macros
 
 License:        MIT
@@ -71,6 +71,10 @@ install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} \
 
 
 %changelog
+* Mon Jun 18 2018 Jason L Tibbitts III <tibbs@math.uh.edu> - 3-30
+- Add %%pypi_source macro, as well as %%__pypi_url and
+  %%_pypi_default_extension.
+
 * Wed Apr 18 2018 Miro Hrončok <mhroncok@redhat.com> - 3-29
 - move macros.pybytecompile from python3-devel
 
