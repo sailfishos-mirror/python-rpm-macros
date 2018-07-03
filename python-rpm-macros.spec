@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        30%{?dist}
+Release:        31%{?dist}
 Summary:        The unversioned Python RPM macros
 
 License:        MIT
@@ -71,6 +71,9 @@ install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} \
 
 
 %changelog
+* Tue Jul 03 2018 Miro Hrončok <mhroncok@redhat.com> - 3-31
+- Add %%python3_platform useful for PYTHONPATH on arched builds
+
 * Mon Jun 18 2018 Jason L Tibbitts III <tibbs@math.uh.edu> - 3-30
 - Add %%pypi_source macro, as well as %%__pypi_url and
   %%_pypi_default_extension.
