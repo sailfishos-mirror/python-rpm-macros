@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        20%{?dist}
+Release:        21%{?dist}
 Summary:        The unversioned Python RPM macros
 
 License:        MIT
@@ -65,6 +65,9 @@ install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} \
 
 
 %changelog
+* Mon Jul 09 2018 Jason L Tibbitts III <tibbs@math.uh.edu> - 3-21
+- Backport %%python3_platform and add %%python3_other_platform.
+
 * Thu Jun 21 2018 Tadej Janež <tadej.j@nez.si> - 3-20
 - Add %%python3_other_* counterparts for %%python3_* macros in EPEL 7
 
