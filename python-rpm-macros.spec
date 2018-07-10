@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        31%{?dist}
+Release:        32%{?dist}
 Summary:        The unversioned Python RPM macros
 
 License:        MIT
@@ -71,6 +71,10 @@ install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} \
 
 
 %changelog
+* Tue Jul 10 2018 Tomas Orsava <torsava@redhat.com> - 3-32
+- Fix %%py_byte_compile macro: when invoked with a Python 2 binary it also
+  mistakenly ran py3_byte_compile
+
 * Tue Jul 03 2018 Miro Hrončok <mhroncok@redhat.com> - 3-31
 - Add %%python3_platform useful for PYTHONPATH on arched builds
 
