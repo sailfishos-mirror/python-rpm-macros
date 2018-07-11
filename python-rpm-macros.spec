@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        33%{?dist}
+Release:        34%{?dist}
 Summary:        The unversioned Python RPM macros
 
 License:        MIT
@@ -71,6 +71,10 @@ install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} \
 
 
 %changelog
+* Sat Jul 14 2018 Tomas Orsava <torsava@redhat.com> - 3-34
+- macros.pybytecompile: Detect Python version through sys.version_info instead
+  of guessing from the executable name
+
 * Sat Jul 14 2018 Fedora Release Engineering <releng@fedoraproject.org> - 3-33
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
 
