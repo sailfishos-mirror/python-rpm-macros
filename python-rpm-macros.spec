@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        21%{?dist}
+Release:        22%{?dist}
 Summary:        The unversioned Python RPM macros
 
 License:        MIT
@@ -9,6 +9,7 @@ Source1:        macros.python-srpm
 Source2:        macros.python2
 Source3:        macros.python3
 Source4:        macros.python3_other
+Source5:        macros.pybytecompile
 
 BuildArch:      noarch
 # For %%python3_pkgversion used in %%python_provide
@@ -46,12 +47,13 @@ RPM macros for building Python 3 packages.
 
 %install
 mkdir -p %{buildroot}/%{rpmmacrodir}
-install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} \
+install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} %{SOURCE5} \
   %{buildroot}/%{rpmmacrodir}/
 
 
 %files
 %{rpmmacrodir}/macros.python
+%{rpmmacrodir}/macros.pybytecompile
 
 %files -n python-srpm-macros
 %{rpmmacrodir}/macros.python-srpm
@@ -65,6 +67,11 @@ install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} \
 
 
 %changelog
+* Sat Jul 14 2018 Tomas Orsava <torsava@redhat.com> - 3-22
+- Move macros.pybytecompile in here from python3X-devel
+- macros.pybytecompile: Detect Python version through sys.version_info instead
+  of guessing from the executable name
+
 * Mon Jul 09 2018 Jason L Tibbitts III <tibbs@math.uh.edu> - 3-21
 - Backport %%python3_platform and add %%python3_other_platform.
 
