@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        34%{?dist}
+Release:        35%{?dist}
 Summary:        The unversioned Python RPM macros
 
 License:        MIT
@@ -71,6 +71,9 @@ install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} \
 
 
 %changelog
+* Sat Jul 28 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 3-35
+- Change way how enabling-depgen works internally
+
 * Sat Jul 14 2018 Tomas Orsava <torsava@redhat.com> - 3-34
 - macros.pybytecompile: Detect Python version through sys.version_info instead
   of guessing from the executable name
