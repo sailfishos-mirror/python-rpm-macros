@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        36%{?dist}
+Release:        37%{?dist}
 Summary:        The unversioned Python RPM macros
 
 License:        MIT
@@ -71,6 +71,9 @@ install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} \
 
 
 %changelog
+* Wed Aug 15 2018 Miro Hrončok <mhroncok@redhat.com> - 3-37
+- Make %%py_byte_compile terminate build on SyntaxErrors (#1616219)
+
 * Wed Aug 15 2018 Miro Hrončok <mhroncok@redhat.com> - 3-36
 - Make %%py_build wokr if %%__python is defined to custom value
 
