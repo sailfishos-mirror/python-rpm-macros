@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        35%{?dist}
+Release:        36%{?dist}
 Summary:        The unversioned Python RPM macros
 
 License:        MIT
@@ -71,6 +71,9 @@ install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} \
 
 
 %changelog
+* Wed Aug 15 2018 Miro Hrončok <mhroncok@redhat.com> - 3-36
+- Make %%py_build wokr if %%__python is defined to custom value
+
 * Sat Jul 28 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 3-35
 - Change way how enabling-depgen works internally
 
