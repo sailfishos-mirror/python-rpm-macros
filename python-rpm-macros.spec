@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        37%{?dist}
+Release:        38%{?dist}
 Summary:        The unversioned Python RPM macros
 
 License:        MIT
@@ -31,6 +31,7 @@ RPM macros for building Python source packages.
 
 %package -n python2-rpm-macros
 Summary:        RPM macros for building Python 2 packages
+Requires:       python-srpm-macros >= 3-38
 # Would need to be different for each release - worth it?
 #Conflicts:      python2-devel < 2.7.11-3
 
@@ -39,6 +40,7 @@ RPM macros for building Python 2 packages.
 
 %package -n python3-rpm-macros
 Summary:        RPM macros for building Python 3 packages
+Requires:       python-srpm-macros >= 3-38
 # Would need to be different for each release - worth it?
 #Conflicts:      python3-devel < 3.5.1-3
 
@@ -71,6 +73,10 @@ install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} \
 
 
 %changelog
+* Thu Sep 20 2018 Tomas Orsava <torsava@redhat.com> - 3-38
+- Move the __python2/3 macros to the python-srpm-macros subpackage
+- This facilitates using the %%{__python2/3} in Build/Requires
+
 * Wed Aug 15 2018 Miro Hrončok <mhroncok@redhat.com> - 3-37
 - Make %%py_byte_compile terminate build on SyntaxErrors (#1616219)
 
