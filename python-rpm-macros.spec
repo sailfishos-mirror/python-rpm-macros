@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        38%{?dist}
+Release:        39%{?dist}
 Summary:        The unversioned Python RPM macros
 
 License:        MIT
@@ -73,6 +73,9 @@ install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} \
 
 
 %changelog
+* Thu Nov 01 2018 Petr Viktorin <pviktori@redhat.com> - 3-39
+- Move "sleep 1" workaround from py3_build to py2_build (#1644923)
+
 * Thu Sep 20 2018 Tomas Orsava <torsava@redhat.com> - 3-38
 - Move the __python2/3 macros to the python-srpm-macros subpackage
 - This facilitates using the %%{__python2/3} in Build/Requires

@@ -12,19 +12,16 @@
 %py3_build() %{expand:\\\
   CFLAGS="${CFLAGS:-${RPM_OPT_FLAGS}}" LDFLAGS="${LDFLAGS:-${RPM_LD_FLAGS}}"\\\
   %{__python3} %{py_setup} %{?py_setup_args} build --executable="%{__python3} %{py3_shbang_opts}" %{?*}
-  sleep 1
 }
 
 %py3_build_egg() %{expand:\\\
   CFLAGS="${CFLAGS:-${RPM_OPT_FLAGS}}" LDFLAGS="${LDFLAGS:-${RPM_LD_FLAGS}}"\\\
   %{__python3} %{py_setup} %{?py_setup_args} bdist_egg %{?*}
-  sleep 1
 }
 
 %py3_build_wheel() %{expand:\\\
   CFLAGS="${CFLAGS:-${RPM_OPT_FLAGS}}" LDFLAGS="${LDFLAGS:-${RPM_LD_FLAGS}}"\\\
   %{__python3} %{py_setup} %{?py_setup_args} bdist_wheel %{?*}
-  sleep 1
 }
 
 %py3_install() %{expand:\\\
