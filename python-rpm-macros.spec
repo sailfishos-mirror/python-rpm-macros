@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        39%{?dist}
+Release:        40%{?dist}
 Summary:        The unversioned Python RPM macros
 
 License:        MIT
@@ -73,6 +73,9 @@ install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} \
 
 
 %changelog
+* Wed Dec 05 2018 Miro Hrončok <mhroncok@redhat.com> - 3-40
+- Workaround leaking buildroot PATH in %py_byte_compile (#1647212)
+
 * Thu Nov 01 2018 Petr Viktorin <pviktori@redhat.com> - 3-39
 - Move "sleep 1" workaround from py3_build to py2_build (#1644923)
 

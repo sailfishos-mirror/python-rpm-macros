@@ -14,6 +14,11 @@
 
 %py_byte_compile()\
 python_binary="%1"\
-bytecode_compilation_path="%2"\
-find $bytecode_compilation_path -type f -a -name "*.py" -print0 | xargs -0 $python_binary -O -m py_compile\
-find $bytecode_compilation_path -type f -a -name "*.py" -print0 | xargs -0 $python_binary -m py_compile
+buildroot_path="%2"\
+bytecode_compilation_path=".${buildroot_path/#$RPM_BUILD_ROOT}"\
+failure=0\
+pushd $RPM_BUILD_ROOT\
+find $bytecode_compilation_path -type f -a -name "*.py" -print0 | xargs -0 $python_binary -O -m py_compile || failure=1\
+find $bytecode_compilation_path -type f -a -name "*.py" -print0 | xargs -0 $python_binary -m py_compile || failure=1\
+popd\
+test $failure -eq 0
