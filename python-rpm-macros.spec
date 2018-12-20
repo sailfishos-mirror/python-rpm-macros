@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        40%{?dist}
+Release:        41%{?dist}
 Summary:        The unversioned Python RPM macros
 
 License:        MIT
@@ -73,6 +73,9 @@ install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} \
 
 
 %changelog
+* Thu Dec 20 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 3-41
+- Add %%python_disable_dependency_generator
+
 * Wed Dec 05 2018 Miro Hrončok <mhroncok@redhat.com> - 3-40
 - Workaround leaking buildroot PATH in %py_byte_compile (#1647212)
 

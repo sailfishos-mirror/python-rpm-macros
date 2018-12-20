@@ -76,6 +76,6 @@
   end
 }
 
-%python_enable_dependency_generator() \
-%global __pythondist_requires %{_rpmconfigdir}/pythondistdeps.py --requires \
+%python_disable_dependency_generator() \
+%undefine __pythondist_requires \
 %{nil}
