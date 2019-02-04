@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        22%{?dist}
+Release:        23%{?dist}
 Summary:        The unversioned Python RPM macros
 
 License:        MIT
@@ -67,6 +67,10 @@ install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} %{SOURCE5}
 
 
 %changelog
+* Thu Jan 31 2019 Miro Hrončok <mhroncok@redhat.com> - 3-23
+- Make Python 3.6 the main Python 3 version
+- Make Python 3.4 the other Python 3 version
+
 * Sat Jul 14 2018 Tomas Orsava <torsava@redhat.com> - 3-22
 - Move macros.pybytecompile in here from python3X-devel
 - macros.pybytecompile: Detect Python version through sys.version_info instead

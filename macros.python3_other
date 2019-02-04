@@ -1,4 +1,4 @@
-%__python3_other /usr/bin/python3.6
+%__python3_other /usr/bin/python3.4
 
 %python3_other_sitelib %(%{__python3_other} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")
 %python3_other_sitearch %(%{__python3_other} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")
