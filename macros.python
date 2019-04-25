@@ -51,8 +51,29 @@
     print(string.sub(package,9,string.len(package)))
     print(" < ")
     print(vr)
-  elseif (string.starts(package, "python" .. rpm.expand("%{python3_pkgversion}") .. "-")) then
-    --No unversioned provides as python3 is not default
+  elseif (string.starts(package, "python3-")) then
+    if (rpm.expand("%{?buildarch}") ~= "noarch") then
+      str = "Provides: python36-" .. string.sub(package,9,string.len(package)) .. "%{?_isa} = " .. vr
+      print(rpm.expand(str))
+    end
+    print("\\nProvides: python36-")
+    print(string.sub(package,9,string.len(package)))
+    print(" = ")
+    print(vr)
+    --Obsoleting the EPEL python36 package
+    print("\\nObsoletes: python36-")
+    print(string.sub(package,9,string.len(package)))
+    print(" < ")
+    print(vr)
+  elseif (string.starts(package, "python36-")) then
+    if (rpm.expand("%{?buildarch}") ~= "noarch") then
+      str = "Provides: python3-" .. string.sub(package,10,string.len(package)) .. "%{?_isa} = " .. vr
+      print(rpm.expand(str))
+    end
+    print("\\nProvides: python3-")
+    print(string.sub(package,10,string.len(package)))
+    print(" = ")
+    print(vr)
   elseif (rpm.expand("%{?python3_other_pkgversion}") ~= "" and string.starts(package, "python" .. rpm.expand("%{python3_other_pkgversion}") .. "-")) then
     --No unversioned provides as python3_other is not default
   elseif (string.starts(package, "pypy-")) then
