@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        24%{?dist}
+Release:        25%{?dist}
 Summary:        The unversioned Python RPM macros
 
 License:        MIT
@@ -8,7 +8,6 @@ Source0:        macros.python
 Source1:        macros.python-srpm
 Source2:        macros.python2
 Source3:        macros.python3
-Source4:        macros.python3_other
 Source5:        macros.pybytecompile
 
 BuildArch:      noarch
@@ -47,7 +46,7 @@ RPM macros for building Python 3 packages.
 
 %install
 mkdir -p %{buildroot}/%{rpmmacrodir}
-install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} %{SOURCE5} \
+install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE5} \
   %{buildroot}/%{rpmmacrodir}/
 
 
@@ -63,10 +62,12 @@ install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} %{SOURCE5}
 
 %files -n python3-rpm-macros
 %{rpmmacrodir}/macros.python3
-%{rpmmacrodir}/macros.python3_other
 
 
 %changelog
+* Tue Apr 30 2019 Miro Hrončok <mhroncok@redhat.com> - 3-25
+- Split python3-other-rpm-macros from python-rpm-macros to python-epel-rpm-macros
+
 * Thu Apr 25 2019 Miro Hrončok <mhroncok@redhat.com> - 3-24
 - %%python_provide: Obsolete and provide python36- from python3-
 - %%python_provide: Provide python3- from python36-
