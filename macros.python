@@ -1,3 +1,10 @@
+# unversioned macros: used with user defined __python, no longer part of rpm >= 4.15
+%__python %{error:attempt to use unversioned python, define %%__python to %{_bindir}/python2 or %{_bindir}/python3 explicitly}
+%python_sitelib %(%{__python} -Esc "from distutils.sysconfig import get_python_lib; print(get_python_lib())")
+%python_sitearch %(%{__python} -Esc "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")
+%python_version %(%{__python} -Esc "import sys; sys.stdout.write('{0.major}.{0.minor}'.format(sys.version_info))")
+%python_version_nodots %(%{__python} -Esc "import sys; sys.stdout.write('{0.major}{0.minor}'.format(sys.version_info))")
+
 %py_setup setup.py
 %py_shbang_opts -s
 
