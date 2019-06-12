@@ -5,6 +5,10 @@
 %__python2 /usr/bin/python2
 %__python3 /usr/bin/python3
 
+# This now errors unless redefined to user provided value
+%__python %{error:attempt to use unversioned python, define %%__python to /usr/bin/python2 or /usr/bin/python3 explicitly}
+
+
 # python3_pkgversion specifies the version of Python 3 in the distro.  It can be
 # a specific version (e.g. 34 in Fedora EPEL7)
 %python3_pkgversion 3
