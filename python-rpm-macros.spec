@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        43%{?dist}
+Release:        44%{?dist}
 Summary:        The unversioned Python RPM macros
 
 License:        MIT
@@ -73,6 +73,9 @@ install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} \
 
 
 %changelog
+* Mon Jun 17 2019 Miro Hrončok <mhroncok@redhat.com> - 3-44
+- Make %%__python /usr/bin/python once again until we are ready
+
 * Mon Jun 10 2019 Miro Hrončok <mhroncok@redhat.com> - 3-43
 - Define %%python_sitelib, %%python_sitearch, %%python_version, %%python_version_nodots,
   in rpm 4.15 those are no longer defined, the meaning of python is derived from %%__python.
