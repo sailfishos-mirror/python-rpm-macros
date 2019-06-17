@@ -77,6 +77,7 @@ install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} \
 - Define %%python_sitelib, %%python_sitearch, %%python_version, %%python_version_nodots,
   in rpm 4.15 those are no longer defined, the meaning of python is derived from %%__python.
 - Usage of %%__python or the above-mentioned macros will error unless user defined.
+- The %%python_provide macro no longer gives the arched provide for arched packages (#1705656)
 
 * Sat Feb 02 2019 Fedora Release Engineering <releng@fedoraproject.org> - 3-42
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild

@@ -49,10 +49,6 @@
   package = rpm.expand("%{?1}")
   vr = rpm.expand("%{?epoch:%{epoch}:}%{version}-%{release}")
   if (string.starts(package, "python2-")) then
-    if (rpm.expand("%{?buildarch}") ~= "noarch") then
-      str = "Provides: python-" .. string.sub(package,9,string.len(package)) .. "%{?_isa} = " .. vr
-      print(rpm.expand(str))
-    end
     print("\\nProvides: python-")
     print(string.sub(package,9,string.len(package)))
     print(" = ")
