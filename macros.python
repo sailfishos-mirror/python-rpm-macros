@@ -53,11 +53,13 @@
     print(string.sub(package,9,string.len(package)))
     print(" = ")
     print(vr)
-    --Obsoleting the previous default python package
-    print("\\nObsoletes: python-")
-    print(string.sub(package,9,string.len(package)))
-    print(" < ")
-    print(vr)
+    --Obsoleting the previous default python package (if it doesn't have isa)
+    if (string.sub(package, "-1") ~= ")") then
+      print("\\nObsoletes: python-")
+      print(string.sub(package,9,string.len(package)))
+      print(" < ")
+      print(vr)
+    end
   elseif (string.starts(package, "python" .. rpm.expand("%{python3_pkgversion}") .. "-")) then
     --No unversioned provides as python3 is not default
   elseif (rpm.expand("%{?python3_other_pkgversion}") ~= "" and string.starts(package, "python" .. rpm.expand("%{python3_other_pkgversion}") .. "-")) then

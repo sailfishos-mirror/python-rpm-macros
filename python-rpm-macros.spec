@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        44%{?dist}
+Release:        45%{?dist}
 Summary:        The unversioned Python RPM macros
 
 License:        MIT
@@ -73,6 +73,9 @@ install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} \
 
 
 %changelog
+* Tue Jul 09 2019 Miro Hrončok <mhroncok@redhat.com> - 3-45
+- %%python_provide: Don't try to obsolete %%_isa provides
+
 * Mon Jun 17 2019 Miro Hrončok <mhroncok@redhat.com> - 3-44
 - Make %%__python /usr/bin/python once again until we are ready
 
