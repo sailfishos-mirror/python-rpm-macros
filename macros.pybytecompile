@@ -17,15 +17,15 @@ py2_byte_compile () {\
     python_binary="%1"\
     bytecode_compilation_path="%2"\
     failure=0\
-    find $bytecode_compilation_path -type f -a -name "*.py" -print0 | xargs -0 $python_binary -c 'import py_compile, sys; [py_compile.compile(f, dfile=f.partition("'"$RPM_BUILD_ROOT"'")[2], doraise=True) for f in sys.argv[1:]]' || failure=1\
-    find $bytecode_compilation_path -type f -a -name "*.py" -print0 | xargs -0 $python_binary -O -c 'import py_compile, sys; [py_compile.compile(f, dfile=f.partition("'"$RPM_BUILD_ROOT"'")[2], doraise=True) for f in sys.argv[1:]]' || failure=1\
+    find $bytecode_compilation_path -type f -a -name "*.py" -print0 | xargs -0 $python_binary -s -c 'import py_compile, sys; [py_compile.compile(f, dfile=f.partition("'"$RPM_BUILD_ROOT"'")[2], doraise=True) for f in sys.argv[1:]]' || failure=1\
+    find $bytecode_compilation_path -type f -a -name "*.py" -print0 | xargs -0 $python_binary -s -O -c 'import py_compile, sys; [py_compile.compile(f, dfile=f.partition("'"$RPM_BUILD_ROOT"'")[2], doraise=True) for f in sys.argv[1:]]' || failure=1\
     test $failure -eq 0\
 }\
 \
 py3_byte_compile () {\
     python_binary="%1"\
     bytecode_compilation_path="%2"\
-    PYTHONPATH="%{_rpmconfigdir}/redhat" $python_binary -B -m compileall2 -o 0 -o 1 -s $RPM_BUILD_ROOT -p / $bytecode_compilation_path \
+    PYTHONPATH="%{_rpmconfigdir}/redhat" $python_binary -s -B -m compileall2 -o 0 -o 1 -s $RPM_BUILD_ROOT -p / $bytecode_compilation_path \
 }\
 \
 # Get version without a dot (36 instead of 3.6), bash doesn't compare floats well \
