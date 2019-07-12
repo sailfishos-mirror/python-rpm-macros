@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        45%{?dist}
+Release:        46%{?dist}
 Summary:        The unversioned Python RPM macros
 
 License:        MIT
@@ -73,6 +73,10 @@ install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} \
 
 
 %changelog
+* Fri Jul 12 2019 Miro Hrončok <mhroncok@redhat.com> - 3-46
+- %%python_provide: Switch python2 and python3 behavior
+- https://fedoraproject.org/wiki/Changes/Python_means_Python3
+
 * Tue Jul 09 2019 Miro Hrončok <mhroncok@redhat.com> - 3-45
 - %%python_provide: Don't try to obsolete %%_isa provides
 

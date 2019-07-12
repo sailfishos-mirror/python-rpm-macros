@@ -49,31 +49,30 @@
   package = rpm.expand("%{?1}")
   vr = rpm.expand("%{?epoch:%{epoch}:}%{version}-%{release}")
   if (string.starts(package, "python2-")) then
+    --No unversioned provides as python2 is not default
+  elseif (string.starts(package, "python" .. rpm.expand("%{python3_pkgversion}") .. "-")) then
     print("\\nProvides: python-")
-    print(string.sub(package,9,string.len(package)))
+    l = 8 + string.len(rpm.expand("%{python3_pkgversion}"))
+    print(string.sub(package,l,string.len(package)))
     print(" = ")
     print(vr)
     --Obsoleting the previous default python package (if it doesn't have isa)
     if (string.sub(package, "-1") ~= ")") then
       print("\\nObsoletes: python-")
-      print(string.sub(package,9,string.len(package)))
+      print(string.sub(package,l,string.len(package)))
       print(" < ")
       print(vr)
     end
-  elseif (string.starts(package, "python" .. rpm.expand("%{python3_pkgversion}") .. "-")) then
-    --No unversioned provides as python3 is not default
   elseif (rpm.expand("%{?python3_other_pkgversion}") ~= "" and string.starts(package, "python" .. rpm.expand("%{python3_other_pkgversion}") .. "-")) then
     --No unversioned provides as python3_other is not default
   elseif (string.starts(package, "pypy-")) then
     --No unversioned provides as pypy is not default
+  elseif (string.starts(package, "pypy2-")) then
+    --No unversioned provides as pypy is not default
   elseif (string.starts(package, "pypy3-")) then
     --No unversioned provides as pypy is not default
   elseif (string.starts(package, "python-")) then
-    --Providing the current default python
-    print("Provides: python2-")
-    print(string.sub(package,8,string.len(package)))
-    print(" = ")
-    print(vr)
+    --No unversioned provides needed for unversioned python
   else
     print("%python_provide: ERROR: ")
     print(package)
