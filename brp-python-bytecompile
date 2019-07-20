@@ -15,6 +15,14 @@ if [ -z "$depth" -o "$depth" -le "1" ]; then
 	exit 0
 fi
 
+# This function now implements Python byte-compilation in two different ways:
+# Python >= 3.4 uses a new module compileall2 - https://github.com/fedora-python/compileall2
+# Python < 3.4 (inc. Python 2) uses compileall module from stdlib with some hacks
+# When we drop support for Python 2, we'd be able to use all compileall2 features like:
+# - -s and -p options to manipulate with a path baked into pyc files instead of $real_libdir
+# - -o 0 -o 1 to produce multiple files in one run - each with a different optimization level - instead of $options
+# - removed useless $depth - both compileall and compileall2 are limited by sys.getrecursionlimit()
+# These changes will make this script much simpler
 function python_bytecompile()
 {
     local options=$1
@@ -23,6 +31,26 @@ function python_bytecompile()
     local python_libdir=$4
     local depth=$5
     local real_libdir=$6
+
+	python_version=$($python_binary -c "import sys; sys.stdout.write('{0.major}{0.minor}'.format(sys.version_info))")
+
+	#
+	# Python 3.4 and higher
+	#
+	if [ "$python_version" -ge 34 ]; then
+
+		[ ! -z $exclude ] && exclude="-x '$exclude'"
+		# /usr/lib/rpm/redhat/ contains compileall2 Python module
+		# -q disables verbose output
+		# -f forces the process to overwrite existing compiled files
+		# -x excludes paths defined by regex
+		# -e excludes symbolic links pointing outside the build root
+		# -x and -e together implements the same functionality as the Filter class below
+		PYTHONPATH=/usr/lib/rpm/redhat/ $python_binary $options -m compileall2 -q -f $exclude -d $real_libdir -e $RPM_BUILD_ROOT $python_libdir
+	else
+#
+# Python 3.3 and lower (incl. Python 2)
+#
 
 cat << EOF | $python_binary $options
 import compileall, sys, os, re
@@ -42,6 +70,8 @@ class Filter:
 
 sys.exit(not compileall.compile_dir(python_libdir, depth, real_libdir, force=1, rx=Filter(), quiet=1))
 EOF
+
+fi
 }
 
 # .pyc/.pyo files embed a "magic" value, identifying the ABI version of Python
