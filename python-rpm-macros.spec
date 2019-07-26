@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        46%{?dist}
+Release:        47%{?dist}
 Summary:        The unversioned Python RPM macros
 
 # macros: MIT, compileall2.py: PSFv2
@@ -78,6 +78,9 @@ install -m 644 %{SOURCE5} \
 
 
 %changelog
+* Fri Jul 26 2019 Fedora Release Engineering <releng@fedoraproject.org> - 3-47
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
+
 * Fri Jul 12 2019 Miro Hrončok <mhroncok@redhat.com> - 3-46
 - %%python_provide: Switch python2 and python3 behavior
 - https://fedoraproject.org/wiki/Changes/Python_means_Python3
