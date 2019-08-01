@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        48%{?dist}
+Release:        49%{?dist}
 Summary:        The unversioned Python RPM macros
 
 # macros: MIT, compileall2.py: PSFv2
@@ -78,6 +78,9 @@ install -m 644 %{SOURCE5} \
 
 
 %changelog
+* Fri Sep 27 2019 Miro Hrončok <mhroncok@redhat.com> - 3-49
+- Define %%python2 and %%python3
+
 * Mon Aug 26 2019 Miro Hrončok <mhroncok@redhat.com> - 3-48
 - Drop --strip-file-prefix option from %%pyX_install_wheel macros, it is not needed
 
