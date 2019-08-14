@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        25%{?dist}
+Release:        31%{?dist}
 Summary:        The unversioned Python RPM macros
 
 License:        MIT
@@ -65,6 +65,11 @@ install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE5} \
 
 
 %changelog
+* Wed Aug 14 2019 Kevin Fenzi <kevin@scrye.com> - 3-31
+- Update to larger than 30 so rhel7.7 python2 will work in koji.
+- Note: this package should be retired as soon as centos 7.7 is out. 
+- Note: this package should NOT be pushed as an update, only used as a override.
+
 * Tue Apr 30 2019 Miro Hrončok <mhroncok@redhat.com> - 3-25
 - Split python3-other-rpm-macros from python-rpm-macros to python-epel-rpm-macros
 
