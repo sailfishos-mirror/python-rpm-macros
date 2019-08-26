@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        47%{?dist}
+Release:        48%{?dist}
 Summary:        The unversioned Python RPM macros
 
 # macros: MIT, compileall2.py: PSFv2
@@ -78,6 +78,9 @@ install -m 644 %{SOURCE5} \
 
 
 %changelog
+* Mon Aug 26 2019 Miro Hrončok <mhroncok@redhat.com> - 3-48
+- Drop --strip-file-prefix option from %%pyX_install_wheel macros, it is not needed
+
 * Fri Jul 26 2019 Fedora Release Engineering <releng@fedoraproject.org> - 3-47
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
 
