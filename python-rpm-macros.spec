@@ -67,6 +67,7 @@ install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE5} \
 %changelog
 * Fri Sep 27 2019 Miro Hrončok <mhroncok@redhat.com> - 3-15
 - Define %%python2 and %%python3
+- Drop hardcoded python2 from %%py_build
 
 * Wed Mar 06 2019 Carl George <carl@george.computer> - 3-14
 - Move macros.pybytecompile in here from python3X-devel
