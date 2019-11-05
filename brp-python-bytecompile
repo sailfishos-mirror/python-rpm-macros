@@ -29,8 +29,8 @@ function python_bytecompile()
     local python_binary=$2
     local exclude=$3
     local python_libdir=$4
-    local depth=$5
-    local real_libdir=$6
+    local depth=$5 # Not used for Python >= 3.4
+    local real_libdir=$6 # Not used for Python >= 3.4
 
 	python_version=$($python_binary -c "import sys; sys.stdout.write('{0.major}{0.minor}'.format(sys.version_info))")
 
@@ -46,7 +46,9 @@ function python_bytecompile()
 		# -x excludes paths defined by regex
 		# -e excludes symbolic links pointing outside the build root
 		# -x and -e together implements the same functionality as the Filter class below
-		PYTHONPATH=/usr/lib/rpm/redhat/ $python_binary $options -m compileall2 -q -f $exclude -d $real_libdir -e $RPM_BUILD_ROOT $python_libdir
+		# -s strips $RPM_BUILD_ROOT from the path
+		# -p prepends the leading slash to the path to make it absolute
+		PYTHONPATH=/usr/lib/rpm/redhat/ $python_binary $options -m compileall2 -q -f $exclude -s $RPM_BUILD_ROOT -p / -e $RPM_BUILD_ROOT $python_libdir
 	else
 #
 # Python 3.3 and lower (incl. Python 2)
