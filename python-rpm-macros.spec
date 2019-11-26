@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        49%{?dist}
+Release:        50%{?dist}
 Summary:        The unversioned Python RPM macros
 
 # macros: MIT, compileall2.py: PSFv2
@@ -78,6 +78,9 @@ install -m 644 %{SOURCE5} \
 
 
 %changelog
+* Tue Nov 26 2019 Lumír Balhar <lbalhar@redhat.com> - 3-50
+- Update of bundled compileall2 module
+
 * Fri Sep 27 2019 Miro Hrončok <mhroncok@redhat.com> - 3-49
 - Define %%python2 and %%python3
 
