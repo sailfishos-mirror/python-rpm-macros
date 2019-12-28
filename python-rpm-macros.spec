@@ -80,6 +80,7 @@ install -m 644 %{SOURCE5} \
 %changelog
 * Sat Dec 28 2019 Miro Hrončok <mhroncok@redhat.com> - 3-51
 - Define %%python, but make it work only if %%__python is redefined
+- Add the %%pycached macro
 
 * Tue Nov 26 2019 Lumír Balhar <lbalhar@redhat.com> - 3-50
 - Update of bundled compileall2 module
