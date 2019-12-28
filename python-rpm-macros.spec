@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        43%{?dist}
+Release:        44%{?dist}
 Summary:        The unversioned Python RPM macros
 
 License:        MIT
@@ -73,6 +73,9 @@ install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} \
 
 
 %changelog
+* Sat Dec 28 2019 Miro Hrončok <mhroncok@redhat.com> - 3-44
+- Define %%python, but make it work only if %%__python is redefined
+
 * Fri Sep 27 2019 Miro Hrončok <mhroncok@redhat.com> - 3-43
 - Define %%python2 and %%python3
 
