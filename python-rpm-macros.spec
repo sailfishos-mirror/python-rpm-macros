@@ -81,6 +81,8 @@ install -m 644 %{SOURCE5} \
 * Sat Dec 28 2019 Miro Hrončok <mhroncok@redhat.com> - 3-51
 - Define %%python, but make it work only if %%__python is redefined
 - Add the %%pycached macro
+- Remove stray __pycache__ directory from /usr/bin when running %%py_install,
+  %%py_install_wheel and %%py_build_wheel macros
 
 * Tue Nov 26 2019 Lumír Balhar <lbalhar@redhat.com> - 3-50
 - Update of bundled compileall2 module

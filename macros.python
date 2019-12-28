@@ -31,15 +31,18 @@
 %py_install() %{expand:\\\
   CFLAGS="${CFLAGS:-${RPM_OPT_FLAGS}}" LDFLAGS="${LDFLAGS:-${RPM_LD_FLAGS}}"\\\
   %{__python} %{py_setup} %{?py_setup_args} install -O1 --skip-build --root %{buildroot} %{?*}
+  rm -rfv %{buildroot}%{_bindir}/__pycache__
 }
 
 %py_install_egg() %{expand:\\\
   mkdir -p %{buildroot}%{python_sitelib}
   easy_install -m --prefix %{buildroot}%{_prefix} -Z dist/*-py%{python_version}.egg %{?*}
+  rm -rfv %{buildroot}%{_bindir}/__pycache__
 }
 
 %py_install_wheel() %{expand:\\\
   pip install -I dist/%{1} --root %{buildroot} --strip-file-prefix %{buildroot} --no-deps
+  rm -rfv %{buildroot}%{_bindir}/__pycache__
 }
 
 %python_provide() %{lua:
