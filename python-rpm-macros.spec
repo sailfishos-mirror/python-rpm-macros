@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        52%{?dist}
+Release:        53%{?dist}
 Summary:        The unversioned Python RPM macros
 
 # macros: MIT, compileall2.py: PSFv2
@@ -78,6 +78,9 @@ install -m 644 %{SOURCE5} \
 
 
 %changelog
+* Thu Feb 06 2020 Miro Hrončok <mhroncok@redhat.com> - 3-53
+- Define %%py(2|3)?_shbang_opts_nodash to be used with pathfix.py -a
+
 * Thu Jan 30 2020 Fedora Release Engineering <releng@fedoraproject.org> - 3-52
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_32_Mass_Rebuild
 

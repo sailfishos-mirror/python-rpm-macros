@@ -6,6 +6,7 @@
 %py3dir %{_builddir}/python3-%{name}-%{version}-%{release}
 
 %py3_shbang_opts -s
+%py3_shbang_opts_nodash %(opts=%{py3_shbang_opts}; echo ${opts#-})
 
 # Use the slashes after expand so that the command starts on the same line as
 # the macro
