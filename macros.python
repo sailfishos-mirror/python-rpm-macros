@@ -1,5 +1,6 @@
 %py_setup setup.py
 %py_shbang_opts -s
+%py_shbang_opts_nodash %(opts=%{py_shbang_opts}; echo ${opts#-})
 
 # Use the slashes after expand so that the command starts on the same line as
 # the macro

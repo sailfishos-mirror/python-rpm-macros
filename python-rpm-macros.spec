@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        44%{?dist}
+Release:        45%{?dist}
 Summary:        The unversioned Python RPM macros
 
 License:        MIT
@@ -73,6 +73,9 @@ install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} \
 
 
 %changelog
+* Fri Feb 07 2020 Miro Hrončok <mhroncok@redhat.com> - 3-45
+- Define %%py(2|3)?_shbang_opts_nodash to be used with pathfix.py -a
+
 * Sat Dec 28 2019 Miro Hrončok <mhroncok@redhat.com> - 3-44
 - Define %%python, but make it work only if %%__python is redefined
 - Add the %%pycached macro
