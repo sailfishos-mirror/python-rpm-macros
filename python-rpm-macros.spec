@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        53%{?dist}
+Release:        54%{?dist}
 Summary:        The unversioned Python RPM macros
 
 # macros: MIT, compileall2.py: PSFv2
@@ -10,7 +10,7 @@ Source1:        macros.python-srpm
 Source2:        macros.python2
 Source3:        macros.python3
 Source4:        macros.pybytecompile
-Source5:        https://github.com/fedora-python/compileall2/raw/v0.5.0/compileall2.py
+Source5:        https://github.com/fedora-python/compileall2/raw/v0.7.0/compileall2.py
 
 BuildArch:      noarch
 # For %%python3_pkgversion used in %%python_provide and compileall2.py
@@ -78,6 +78,10 @@ install -m 644 %{SOURCE5} \
 
 
 %changelog
+* Mon Feb 10 2020 Miro Hrončok <mhroncok@redhat.com> - 3-54
+- Update of bundled compileall2 module to 0.7.0
+  Adds the optional --hardlink-dupes flag for compileall2 for pyc deduplication
+
 * Thu Feb 06 2020 Miro Hrončok <mhroncok@redhat.com> - 3-53
 - Define %%py(2|3)?_shbang_opts_nodash to be used with pathfix.py -a
 
