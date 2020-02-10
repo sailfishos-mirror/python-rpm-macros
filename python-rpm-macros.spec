@@ -1,14 +1,16 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        45%{?dist}
+Release:        46%{?dist}
 Summary:        The unversioned Python RPM macros
 
-License:        MIT
+# macros: MIT, compileall2.py: PSFv2
+License:        MIT and Python
 Source0:        macros.python
 Source1:        macros.python-srpm
 Source2:        macros.python2
 Source3:        macros.python3
 Source4:        macros.pybytecompile
+Source5:        https://github.com/fedora-python/compileall2/raw/v0.7.0/compileall2.py
 
 BuildArch:      noarch
 # For %%python3_pkgversion used in %%python_provide
@@ -25,6 +27,7 @@ python?-devel packages require it. So install a python-devel package instead.
 
 %package -n python-srpm-macros
 Summary:        RPM macros for building Python source packages
+Requires:       redhat-rpm-config
 
 %description -n python-srpm-macros
 RPM macros for building Python source packages.
@@ -53,10 +56,13 @@ RPM macros for building Python 3 packages.
 %build
 
 %install
-mkdir -p %{buildroot}/%{rpmmacrodir}
+mkdir -p %{buildroot}%{rpmmacrodir}
 install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} \
-  %{buildroot}/%{rpmmacrodir}/
+  %{buildroot}%{rpmmacrodir}/
 
+mkdir -p %{buildroot}%{_rpmconfigdir}/redhat
+install -m 644 %{SOURCE5} \
+  %{buildroot}%{_rpmconfigdir}/redhat/
 
 %files
 %{rpmmacrodir}/macros.python
@@ -64,6 +70,7 @@ install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} \
 
 %files -n python-srpm-macros
 %{rpmmacrodir}/macros.python-srpm
+%{_rpmconfigdir}/redhat/compileall2.py
 
 %files -n python2-rpm-macros
 %{rpmmacrodir}/macros.python2
@@ -73,6 +80,9 @@ install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} \
 
 
 %changelog
+* Mon Feb 10 2020 Miro Hrončok <mhroncok@redhat.com> - 3-46
+- Add the compileall2 module (0.7.0) to be used in various Python spec files
+
 * Fri Feb 07 2020 Miro Hrončok <mhroncok@redhat.com> - 3-45
 - Define %%py(2|3)?_shbang_opts_nodash to be used with pathfix.py -a
 
