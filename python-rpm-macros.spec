@@ -1,7 +1,7 @@
 Name:           python-rpm-macros
-Version:        3
-Release:        54%{?dist}
-Summary:        The unversioned Python RPM macros
+Version:        3.8
+Release:        1%{?dist}
+Summary:        The common Python RPM macros
 
 # macros: MIT, compileall2.py: PSFv2
 License:        MIT and Python
@@ -78,6 +78,11 @@ install -m 644 %{SOURCE5} \
 
 
 %changelog
+* Mon Mar 23 2020 Miro Hrončok <mhroncok@redhat.com> - 3.8-1
+- Hardcode the default Python 3 version in the SRPM macros (#1812087)
+- Provide python38-foo for python3-foo and the other way around (future RHEL compatibility)
+- %%python_provide: Allow any names starting with "python" or "pypy"
+
 * Mon Feb 10 2020 Miro Hrončok <mhroncok@redhat.com> - 3-54
 - Update of bundled compileall2 module to 0.7.0
   Adds the optional --hardlink-dupes flag for compileall2 for pyc deduplication

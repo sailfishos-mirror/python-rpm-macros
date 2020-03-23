@@ -25,6 +25,11 @@
     end\
 }
 
+# This specifies what packages are equal to the python3-... packages, in python_provide macro
+# E.g. in Fedora 32, python38-foo will provide python3-foo and vice versa
+%__default_python3_version 3.8
+%__default_python3_pkgversion %(echo %__default_python3_version | sed 's/\\.//')
+
 # python3_pkgversion specifies the version of Python 3 in the distro.  It can be
 # a specific version (e.g. 34 in Fedora EPEL7)
 %python3_pkgversion 3
