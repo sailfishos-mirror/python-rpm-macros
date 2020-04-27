@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        54%{?dist}
+Release:        55%{?dist}
 Summary:        The unversioned Python RPM macros
 
 # macros: MIT, compileall2.py: PSFv2
@@ -35,6 +35,7 @@ RPM macros for building Python source packages.
 %package -n python2-rpm-macros
 Summary:        RPM macros for building Python 2 packages
 Requires:       python-srpm-macros >= 3-38
+Requires:       python-rpm-macros
 # Would need to be different for each release - worth it?
 #Conflicts:      python2-devel < 2.7.11-3
 
@@ -44,6 +45,7 @@ RPM macros for building Python 2 packages.
 %package -n python3-rpm-macros
 Summary:        RPM macros for building Python 3 packages
 Requires:       python-srpm-macros >= 3-38
+Requires:       python-rpm-macros
 
 %description -n python3-rpm-macros
 RPM macros for building Python 3 packages.
@@ -78,6 +80,9 @@ install -m 644 %{SOURCE5} \
 
 
 %changelog
+* Tue Apr 28 2020 Miro Hrončok <mhroncok@redhat.com> - 3-55
+- Make pythonX-rpm-macros depend on python-rpm-macros (#1827811)
+
 * Tue Mar 31 2020 Lumír Balhar <lbalhar@redhat.com> - 3-54
 - Update of bundled compileall2 module to 0.7.1 (bugfix release)
 
