@@ -3,7 +3,7 @@ Version:        3.8
 Release:        4%{?dist}
 Summary:        The common Python RPM macros
 
-# macros: MIT, compileall2.py: PSFv2
+# macros and lua: MIT, compileall2.py: PSFv2
 License:        MIT and Python
 Source0:        macros.python
 Source1:        macros.python-srpm
@@ -11,6 +11,7 @@ Source2:        macros.python2
 Source3:        macros.python3
 Source4:        macros.pybytecompile
 Source5:        https://github.com/fedora-python/compileall2/raw/v0.7.1/compileall2.py
+Source6:        python.lua
 
 BuildArch:      noarch
 # For %%python3_pkgversion used in %%python_provide and compileall2.py
@@ -64,6 +65,9 @@ mkdir -p %{buildroot}%{_rpmconfigdir}/redhat
 install -m 644 %{SOURCE5} \
   %{buildroot}%{_rpmconfigdir}/redhat/
 
+mkdir -p %{buildroot}%{_rpmluadir}/fedora/srpm
+install -p -m 644 -t %{buildroot}%{_rpmluadir}/fedora/srpm %{SOURCE6}
+
 %files
 %{rpmmacrodir}/macros.python
 %{rpmmacrodir}/macros.pybytecompile
@@ -71,6 +75,7 @@ install -m 644 %{SOURCE5} \
 %files -n python-srpm-macros
 %{rpmmacrodir}/macros.python-srpm
 %{_rpmconfigdir}/redhat/compileall2.py
+%{_rpmluadir}/fedora/srpm/python.lua
 
 %files -n python2-rpm-macros
 %{rpmmacrodir}/macros.python2
