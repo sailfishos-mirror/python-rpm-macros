@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3.8
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        The common Python RPM macros
 
 # macros and lua: MIT, compileall2.py: PSFv2
@@ -107,6 +107,9 @@ install -m 644 compileall2.py %{buildroot}%{_rpmconfigdir}/redhat/
 
 
 %changelog
+* Tue May 05 2020 Miro Hrončok <mhroncok@redhat.com> - 3.8-5
+- Implement %%py_provides
+
 * Mon May 04 2020 Tomas Hrnciar <thrnciar@redhat.com> - 3.8-4
 - Make %%py3_install_wheel macro remove direct_url.json file created by PEP 610.
 - https://discuss.python.org/t/pep-610-usage-guidelines-for-linux-distributions/4012

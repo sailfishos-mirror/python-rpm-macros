@@ -137,3 +137,24 @@
 \
     print(url .. first .. '/' .. src .. '/' .. src .. '-' .. ver .. '.' .. ext)
 }
+
+%py_provides() %{lua:
+    local python = require 'fedora.srpm.python'
+    local name = rpm.expand('%1')
+    if name == '%1' then
+        rpm.expand('%{error:%%py_provides requires at least 1 argument, the name to provide}')
+    end
+    local evr = rpm.expand('%2')
+    if evr == '%2' then
+        evr = rpm.expand('%{?epoch:%{epoch}:}%{version}-%{release}')
+    end
+    print('Provides: ' .. name .. ' = ' .. evr .. '\\n')
+    local provides = python.python_altprovides_once(name, evr)
+    -- provides is either an array/table or nil
+    -- nil means the function was already called with the same arguments
+    if provides then
+      for i, provide in ipairs(provides) do
+          print('Provides: ' .. provide .. '\\n')
+        end
+    end
+}
