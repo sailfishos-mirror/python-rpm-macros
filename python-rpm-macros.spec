@@ -5,19 +5,27 @@ Summary:        The common Python RPM macros
 
 # macros and lua: MIT, compileall2.py: PSFv2
 License:        MIT and Python
-Source0:        macros.python
-Source1:        macros.python-srpm
-Source2:        macros.python2
-Source3:        macros.python3
-Source4:        macros.pybytecompile
-Source5:        https://github.com/fedora-python/compileall2/raw/v0.7.1/compileall2.py
-Source6:        python.lua
+
+# Macros:
+Source101:      macros.python
+Source102:      macros.python-srpm
+Source103:      macros.python2
+Source104:      macros.python3
+Source105:      macros.pybytecompile
+
+# Lua files
+Source201:      python.lua
+
+# Python code
+%global compileall2_version 0.7.1
+Source301:      https://github.com/fedora-python/compileall2/raw/v%{compileall2_version}/compileall2.py
 
 BuildArch:      noarch
-# For %%python3_pkgversion used in %%python_provide and compileall2.py
-Requires:       python-srpm-macros >= 3-46
-Obsoletes:      python-macros < 3
-Provides:       python-macros = %{version}-%{release}
+
+# For %%__default_python3_pkgversion used in %%python_provide
+# For python.lua
+# For compileall2.py
+Requires:       python-srpm-macros
 
 %description
 This package contains the unversioned Python RPM macros, that most
@@ -26,26 +34,40 @@ implementations should rely on.
 You should not need to install this package manually as the various
 python?-devel packages require it. So install a python-devel package instead.
 
+
 %package -n python-srpm-macros
 Summary:        RPM macros for building Python source packages
+
+# For directory structure and flags macros
 Requires:       redhat-rpm-config
+
+# We bundle our own software here :/
+Provides:       bundled(python3dist(compileall2)) = %{compileall2_version}
 
 %description -n python-srpm-macros
 RPM macros for building Python source packages.
 
+
 %package -n python2-rpm-macros
 Summary:        RPM macros for building Python 2 packages
-Requires:       python-srpm-macros >= 3-38
+
+# For %%__python2 and %%python2
+Requires:       python-srpm-macros
+
+# For %%py_setup
 Requires:       python-rpm-macros
-# Would need to be different for each release - worth it?
-#Conflicts:      python2-devel < 2.7.11-3
 
 %description -n python2-rpm-macros
 RPM macros for building Python 2 packages.
 
+
 %package -n python3-rpm-macros
 Summary:        RPM macros for building Python 3 packages
-Requires:       python-srpm-macros >= 3-38
+
+# For %%__python3 and %%python3
+Requires:       python-srpm-macros
+
+# For %%py_setup
 Requires:       python-rpm-macros
 
 %description -n python3-rpm-macros
@@ -53,20 +75,20 @@ RPM macros for building Python 3 packages.
 
 
 %prep
+%autosetup -c -T
+cp -a %{sources} .
 
-%build
 
 %install
 mkdir -p %{buildroot}%{rpmmacrodir}
-install -m 644 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} \
-  %{buildroot}%{rpmmacrodir}/
-
-mkdir -p %{buildroot}%{_rpmconfigdir}/redhat
-install -m 644 %{SOURCE5} \
-  %{buildroot}%{_rpmconfigdir}/redhat/
+install -m 644 macros.* %{buildroot}%{rpmmacrodir}/
 
 mkdir -p %{buildroot}%{_rpmluadir}/fedora/srpm
-install -p -m 644 -t %{buildroot}%{_rpmluadir}/fedora/srpm %{SOURCE6}
+install -p -m 644 -t %{buildroot}%{_rpmluadir}/fedora/srpm python.lua
+
+mkdir -p %{buildroot}%{_rpmconfigdir}/redhat
+install -m 644 compileall2.py %{buildroot}%{_rpmconfigdir}/redhat/
+
 
 %files
 %{rpmmacrodir}/macros.python
