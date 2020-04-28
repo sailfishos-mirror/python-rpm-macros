@@ -149,12 +149,8 @@
         evr = rpm.expand('%{?epoch:%{epoch}:}%{version}-%{release}')
     end
     print('Provides: ' .. name .. ' = ' .. evr .. '\\n')
-    local provides = python.python_altprovides_once(name, evr)
-    -- provides is either an array/table or nil
-    -- nil means the function was already called with the same arguments
-    if provides then
-      for i, provide in ipairs(provides) do
-          print('Provides: ' .. provide .. '\\n')
-        end
+    local provides = python.python_altprovides(name, evr)
+    for i, provide in ipairs(provides) do
+        print('Provides: ' .. provide .. '\\n')
     end
 }

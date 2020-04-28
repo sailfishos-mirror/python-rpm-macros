@@ -31,6 +31,11 @@ end
 -- Uses python_altnames under the hood
 -- Returns a table/array with strings.
 local function python_altprovides(name, evr)
+  -- global cache that tells what provides were already processed
+  if __python_altnames_provides_beenthere == nil then
+    __python_altnames_provides_beenthere = {}
+  end
+  __python_altnames_provides_beenthere[name .. ' ' .. evr] = true
   local altprovides = {}
   for i, altname in ipairs(python_altnames(name)) do
     table.insert(altprovides, altname .. ' = ' .. evr)
@@ -41,6 +46,7 @@ end
 
 -- Like python_altprovides but only return something once.
 -- For each argument can only be used once, returns nil otherwise.
+-- Previous usage of python_altprovides counts as well.
 local function python_altprovides_once(name, evr)
   -- global cache that tells what provides were already processed
   if __python_altnames_provides_beenthere == nil then
