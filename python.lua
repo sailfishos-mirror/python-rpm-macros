@@ -27,6 +27,36 @@ local function python_altnames(name)
 end
 
 
+-- For any given name and epoch-version-release, return provides except self.
+-- Uses python_altnames under the hood
+-- Returns a table/array with strings.
+local function python_altprovides(name, evr)
+  local altprovides = {}
+  for i, altname in ipairs(python_altnames(name)) do
+    table.insert(altprovides, altname .. ' = ' .. evr)
+  end
+  return altprovides
+end
+
+
+-- Like python_altprovides but only return something once.
+-- For each argument can only be used once, returns nil otherwise.
+local function python_altprovides_once(name, evr)
+  -- global cache that tells what provides were already processed
+  if __python_altnames_provides_beenthere == nil then
+    __python_altnames_provides_beenthere = {}
+  end
+  if __python_altnames_provides_beenthere[name .. ' ' .. evr] == nil then
+    __python_altnames_provides_beenthere[name .. ' ' .. evr] = true
+    return python_altprovides(name, evr)
+  else
+    return nil
+  end
+end
+
+
 return {
   python_altnames = python_altnames,
+  python_altprovides = python_altprovides,
+  python_altprovides_once = python_altprovides_once,
 }
