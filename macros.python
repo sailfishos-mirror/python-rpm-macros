@@ -44,6 +44,12 @@
 %py_install_wheel() %{expand:\\\
   pip install -I dist/%{1} --root %{buildroot} --strip-file-prefix %{buildroot} --no-deps
   rm -rfv %{buildroot}%{_bindir}/__pycache__
+  for distinfo in %{buildroot}%{python_sitelib}/*.dist-info %{buildroot}%{python_sitearch}/*.dist-info; do
+    if [ -f ${distinfo}/direct_url.json ]; then
+      rm -fv ${distinfo}/direct_url.json
+      sed -i '/direct_url.json/d' ${distinfo}/RECORD
+    fi
+  done
 }
 
 %python_provide() %{lua:

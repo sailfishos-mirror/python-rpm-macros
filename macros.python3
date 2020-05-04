@@ -40,6 +40,12 @@
 %py3_install_wheel() %{expand:\\\
   pip%{python3_version} install -I dist/%{1} --root %{buildroot} --no-deps
   rm -rfv %{buildroot}%{_bindir}/__pycache__
+  for distinfo in %{buildroot}%{python3_sitelib}/*.dist-info %{buildroot}%{python3_sitearch}/*.dist-info; do
+    if [ -f ${distinfo}/direct_url.json ]; then
+      rm -fv ${distinfo}/direct_url.json
+      sed -i '/direct_url.json/d' ${distinfo}/RECORD
+    fi
+  done
 }
 
 # This only supports Python 3.5+ and will never work with Python 2.

@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3.8
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        The common Python RPM macros
 
 # macros: MIT, compileall2.py: PSFv2
@@ -80,6 +80,10 @@ install -m 644 %{SOURCE5} \
 
 
 %changelog
+* Mon May 04 2020 Tomas Hrnciar <thrnciar@redhat.com> - 3.8-4
+- Make %%py3_install_wheel macro remove direct_url.json file created by PEP 610.
+- https://discuss.python.org/t/pep-610-usage-guidelines-for-linux-distributions/4012
+
 * Mon Apr 27 2020 Miro Hrončok <mhroncok@redhat.com> - 3.8-3
 - Make pythonX-rpm-macros depend on python-rpm-macros (#1827811)
 
