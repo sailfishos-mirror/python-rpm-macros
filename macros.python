@@ -59,10 +59,10 @@
   end
   local package = rpm.expand("%{?1}")
   local vr = rpm.expand("%{?epoch:%{epoch}:}%{version}-%{release}")
-  local altnames = python.python_altnames(package)
+  local provides = python.python_altprovides(package, vr)
   if (string.starts(package, "python3-")) then
-    for i, altname in ipairs(altnames) do
-      print("\\nProvides: " .. altname .. " = " .. vr)
+    for i, provide in ipairs(provides) do
+      print("\\nProvides: " .. provide)
     end
     --Obsoleting the previous default python package (if it doesn't have isa)
     if (string.sub(package, "-1") ~= ")") then
@@ -71,8 +71,8 @@
       print(" < " .. vr)
     end
   elseif (string.starts(package, "python" .. rpm.expand("%{__default_python3_pkgversion}") .. "-")) then
-    for i, altname in ipairs(altnames) do
-      print("\\nProvides: " .. altname .. " = " .. vr)
+    for i, provide in ipairs(provides) do
+      print("\\nProvides: " .. provide)
     end
     --Obsoleting the previous default python package (if it doesn't have isa)
     if (string.sub(package, "-1") ~= ")") then
