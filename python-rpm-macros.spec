@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3.8
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        The common Python RPM macros
 
 # macros and lua: MIT, compileall2.py: PSFv2
@@ -25,7 +25,7 @@ BuildArch:      noarch
 # For %%__default_python3_pkgversion used in %%python_provide
 # For python.lua
 # For compileall2.py
-Requires:       python-srpm-macros
+Requires:       python-srpm-macros >= 3.8-5
 
 %description
 This package contains the unversioned Python RPM macros, that most
@@ -107,6 +107,9 @@ install -m 644 compileall2.py %{buildroot}%{_rpmconfigdir}/redhat/
 
 
 %changelog
+* Tue May 05 2020 Miro Hrončok <mhroncok@redhat.com> - 3.8-6
+- Require recent enough SRPM macros from RPM macros, to prevent missing Lua files
+
 * Tue May 05 2020 Miro Hrončok <mhroncok@redhat.com> - 3.8-5
 - Implement %%py_provides
 
