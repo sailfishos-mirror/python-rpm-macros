@@ -82,6 +82,7 @@ install -m 644 %{SOURCE5} \
 %changelog
 * Wed May 20 2020 Miro Hrončok <mhroncok@redhat.com> - 3-56
 - Implement %%py_provides
+- Implement %%pytest
 
 * Tue Apr 28 2020 Miro Hrončok <mhroncok@redhat.com> - 3-55
 - Make pythonX-rpm-macros depend on python-rpm-macros (#1827811)
