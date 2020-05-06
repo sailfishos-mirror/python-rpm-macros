@@ -122,3 +122,13 @@ def test_py_provides_with_evr():
     assert 'Provides: python-foo = 123' in lines
     assert f'Provides: python{X_Y}-foo = 123' in lines
     assert len(lines) == 3
+
+
+def test_pytest_passes_options_naturally():
+    lines = rpm_eval('%pytest -k foo')
+    assert '/usr/bin/pytest -k foo' in lines[-1]
+
+
+def test_pytest_different_command():
+    lines = rpm_eval('%pytest', __pytest='pytest-3')
+    assert 'pytest-3' in lines[-1]
