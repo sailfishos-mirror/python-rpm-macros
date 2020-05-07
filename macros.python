@@ -77,7 +77,7 @@
     --Obsoleting the previous default python package (if it doesn't have isa)
     if (string.sub(package, "-1") ~= ")") then
       print("\\nObsoletes: python-")
-      print(string.sub(package,10,string.len(package)))
+      print(string.sub(package,11,string.len(package)))
       print(" < " .. vr)
     end
   elseif (string.starts(package, "python")) then

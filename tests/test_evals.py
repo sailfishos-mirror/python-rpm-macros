@@ -1,7 +1,7 @@
 import subprocess
 import sys
 
-XY = f'{sys.version_info[0]}{sys.version_info[1]}'
+X_Y = f'{sys.version_info[0]}.{sys.version_info[1]}'
 
 
 def rpm_eval(expression, **kwargs):
@@ -23,7 +23,7 @@ def test_python_provide_python3():
     lines = rpm_eval('%python_provide python3-foo', version='6', release='1.fc66')
     assert 'Obsoletes: python-foo < 6-1.fc66' in lines
     assert 'Provides: python-foo = 6-1.fc66' in lines
-    assert f'Provides: python{XY}-foo = 6-1.fc66' in lines
+    assert f'Provides: python{X_Y}-foo = 6-1.fc66' in lines
     assert len(lines) == 3
 
 
@@ -31,12 +31,12 @@ def test_python_provide_python3_epoched():
     lines = rpm_eval('%python_provide python3-foo', epoch='1', version='6', release='1.fc66')
     assert 'Obsoletes: python-foo < 1:6-1.fc66' in lines
     assert 'Provides: python-foo = 1:6-1.fc66' in lines
-    assert f'Provides: python{XY}-foo = 1:6-1.fc66' in lines
+    assert f'Provides: python{X_Y}-foo = 1:6-1.fc66' in lines
     assert len(lines) == 3
 
 
 def test_python_provide_python3X():
-    lines = rpm_eval(f'%python_provide python{XY}-foo', version='6', release='1.fc66')
+    lines = rpm_eval(f'%python_provide python{X_Y}-foo', version='6', release='1.fc66')
     assert 'Obsoletes: python-foo < 6-1.fc66' in lines
     assert 'Provides: python-foo = 6-1.fc66' in lines
     assert 'Provides: python3-foo = 6-1.fc66' in lines
@@ -44,7 +44,7 @@ def test_python_provide_python3X():
 
 
 def test_python_provide_python3X_epoched():
-    lines = rpm_eval(f'%python_provide python{XY}-foo', epoch='1', version='6', release='1.fc66')
+    lines = rpm_eval(f'%python_provide python{X_Y}-foo', epoch='1', version='6', release='1.fc66')
     assert 'Obsoletes: python-foo < 1:6-1.fc66' in lines
     assert 'Provides: python-foo = 1:6-1.fc66' in lines
     assert 'Provides: python3-foo = 1:6-1.fc66' in lines
@@ -56,7 +56,7 @@ def test_python_provide_doubleuse():
                      version='6', release='1.fc66')
     assert 'Obsoletes: python-foo < 6-1.fc66' in lines
     assert 'Provides: python-foo = 6-1.fc66' in lines
-    assert f'Provides: python{XY}-foo = 6-1.fc66' in lines
+    assert f'Provides: python{X_Y}-foo = 6-1.fc66' in lines
     assert len(lines) == 6
     assert len(set(lines)) == 3
 
@@ -77,7 +77,7 @@ def test_py_provides_python3():
     lines = rpm_eval('%py_provides python3-foo', version='6', release='1.fc66')
     assert 'Provides: python3-foo = 6-1.fc66' in lines
     assert 'Provides: python-foo = 6-1.fc66' in lines
-    assert f'Provides: python{XY}-foo = 6-1.fc66' in lines
+    assert f'Provides: python{X_Y}-foo = 6-1.fc66' in lines
     assert len(lines) == 3
 
 
@@ -85,21 +85,21 @@ def test_py_provides_python3_epoched():
     lines = rpm_eval('%py_provides python3-foo', epoch='1', version='6', release='1.fc66')
     assert 'Provides: python3-foo = 1:6-1.fc66' in lines
     assert 'Provides: python-foo = 1:6-1.fc66' in lines
-    assert f'Provides: python{XY}-foo = 1:6-1.fc66' in lines
+    assert f'Provides: python{X_Y}-foo = 1:6-1.fc66' in lines
     assert len(lines) == 3
 
 
 def test_py_provides_python3X():
-    lines = rpm_eval(f'%py_provides python{XY}-foo', version='6', release='1.fc66')
-    assert f'Provides: python{XY}-foo = 6-1.fc66' in lines
+    lines = rpm_eval(f'%py_provides python{X_Y}-foo', version='6', release='1.fc66')
+    assert f'Provides: python{X_Y}-foo = 6-1.fc66' in lines
     assert 'Provides: python-foo = 6-1.fc66' in lines
     assert 'Provides: python3-foo = 6-1.fc66' in lines
     assert len(lines) == 3
 
 
 def test_py_provides_python3X_epoched():
-    lines = rpm_eval(f'%py_provides python{XY}-foo', epoch='1', version='6', release='1.fc66')
-    assert f'Provides: python{XY}-foo = 1:6-1.fc66' in lines
+    lines = rpm_eval(f'%py_provides python{X_Y}-foo', epoch='1', version='6', release='1.fc66')
+    assert f'Provides: python{X_Y}-foo = 1:6-1.fc66' in lines
     assert 'Provides: python-foo = 1:6-1.fc66' in lines
     assert 'Provides: python3-foo = 1:6-1.fc66' in lines
     assert len(lines) == 3
@@ -110,7 +110,7 @@ def test_py_provides_doubleuse():
                      version='6', release='1.fc66')
     assert 'Provides: python3-foo = 6-1.fc66' in lines
     assert 'Provides: python-foo = 6-1.fc66' in lines
-    assert f'Provides: python{XY}-foo = 6-1.fc66' in lines
+    assert f'Provides: python{X_Y}-foo = 6-1.fc66' in lines
     assert len(lines) == 6
     assert len(set(lines)) == 3
 
@@ -120,5 +120,5 @@ def test_py_provides_with_evr():
                      version='6', release='1.fc66')
     assert 'Provides: python3-foo = 123' in lines
     assert 'Provides: python-foo = 123' in lines
-    assert f'Provides: python{XY}-foo = 123' in lines
+    assert f'Provides: python{X_Y}-foo = 123' in lines
     assert len(lines) == 3
