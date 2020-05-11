@@ -93,7 +93,7 @@
 # Accepts zero to three arguments:
 # 1:  The PyPI project name, defaulting to %srcname if it is defined, then
 #     %pypi_name if it is defined, then just %name.
-# 2:  The PYPI version, defaulting to %version.
+# 2:  The PYPI version, defaulting to %version with tildes stripped.
 # 3:  The file extension, defaulting to "tar.gz".  (A period will be added
 #     automatically.)
 # Requires %__pypi_url and %__pypi_default_extension to be defined.
@@ -120,7 +120,7 @@
 \
     -- If no second argument, use %version
     if ver == '%2' then
-        ver = rpm.expand('%version')
+        ver = rpm.expand('%version'):gsub('~', '')
     end
 \
     -- If no third argument, use the preset default extension

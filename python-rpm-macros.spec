@@ -83,6 +83,7 @@ install -m 644 %{SOURCE5} \
 * Wed May 20 2020 Miro Hrončok <mhroncok@redhat.com> - 3-57
 - Implement %%py_provides
 - Implement %%pytest
+- Strip tildes from %%version in %%pypi_source by default
 
 * Tue Apr 28 2020 Miro Hrončok <mhroncok@redhat.com> - 3-56
 - Make pythonX-rpm-macros depend on python-rpm-macros (#1827811)
