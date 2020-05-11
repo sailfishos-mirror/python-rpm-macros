@@ -91,3 +91,57 @@ def test_pytest_passes_options_naturally():
 def test_pytest_different_command():
     lines = rpm_eval('%pytest', __pytest='pytest-3')
     assert 'pytest-3' in lines[-1]
+
+
+def test_pypi_source_default_name():
+    url = rpm_eval('%pypi_source',
+                   name='foo', version='6')[0]
+    assert url == 'https://files.pythonhosted.org/packages/source/f/foo/foo-6.tar.gz'
+
+
+def test_pypi_source_default_srcname():
+    url = rpm_eval('%pypi_source',
+                   name='python-foo', srcname='foo', version='6')[0]
+    assert url == 'https://files.pythonhosted.org/packages/source/f/foo/foo-6.tar.gz'
+
+
+def test_pypi_source_default_pypi_name():
+    url = rpm_eval('%pypi_source',
+                   name='python-foo', pypi_name='foo', version='6')[0]
+    assert url == 'https://files.pythonhosted.org/packages/source/f/foo/foo-6.tar.gz'
+
+
+def test_pypi_source_default_name_uppercase():
+    url = rpm_eval('%pypi_source',
+                   name='Foo', version='6')[0]
+    assert url == 'https://files.pythonhosted.org/packages/source/F/Foo/Foo-6.tar.gz'
+
+
+def test_pypi_source_provided_name():
+    url = rpm_eval('%pypi_source foo',
+                   name='python-bar', pypi_name='bar', version='6')[0]
+    assert url == 'https://files.pythonhosted.org/packages/source/f/foo/foo-6.tar.gz'
+
+
+def test_pypi_source_provided_name_version():
+    url = rpm_eval('%pypi_source foo 6',
+                   name='python-bar', pypi_name='bar', version='3')[0]
+    assert url == 'https://files.pythonhosted.org/packages/source/f/foo/foo-6.tar.gz'
+
+
+def test_pypi_source_provided_name_version_ext():
+    url = rpm_eval('%pypi_source foo 6 zip',
+                   name='python-bar', pypi_name='bar', version='3')[0]
+    assert url == 'https://files.pythonhosted.org/packages/source/f/foo/foo-6.zip'
+
+
+def test_pypi_source_prerelease():
+    url = rpm_eval('%pypi_source',
+                   name='python-foo', pypi_name='foo', version='6~b2')[0]
+    assert url == 'https://files.pythonhosted.org/packages/source/f/foo/foo-6b2.tar.gz'
+
+
+def test_pypi_source_explicit_tilde():
+    url = rpm_eval('%pypi_source foo 6~6',
+                   name='python-foo', pypi_name='foo', version='6')[0]
+    assert url == 'https://files.pythonhosted.org/packages/source/f/foo/foo-6~6.tar.gz'
