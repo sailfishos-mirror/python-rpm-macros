@@ -109,6 +109,7 @@ install -m 644 compileall2.py %{buildroot}%{_rpmconfigdir}/redhat/
 %changelog
 * Mon May 11 2020 Miro Hrončok <mhroncok@redhat.com> - 3.8-8
 - Implement %%pytest
+- Strip tildes from %%version in %%pypi_source by default
 
 * Thu May 07 2020 Miro Hrončok <mhroncok@redhat.com> - 3.8-7
 - Change %%__default_python3_pkgversion from 38 to 3.8
