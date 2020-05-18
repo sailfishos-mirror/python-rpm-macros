@@ -109,6 +109,7 @@ install -m 644 compileall2.py %{buildroot}%{_rpmconfigdir}/redhat/
 %changelog
 * Mon May 11 2020 Miro Hrončok <mhroncok@redhat.com> - 3.8-8
 - Implement %%pytest
+- Implement %%pyX_shebang_fix
 - Strip tildes from %%version in %%pypi_source by default
 
 * Thu May 07 2020 Miro Hrončok <mhroncok@redhat.com> - 3.8-7

@@ -7,7 +7,10 @@ X_Y = f'{sys.version_info[0]}.{sys.version_info[1]}'
 def rpm_eval(expression, **kwargs):
     cmd = ['rpmbuild']
     for var, value in kwargs.items():
-        cmd += ['--define', f'{var} {value}']
+        if value is None:
+            cmd += ['--undefine', var]
+        else:
+            cmd += ['--define', f'{var} {value}']
     cmd += ['--eval', expression]
     cp = subprocess.run(cmd, text=True,
                         stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -186,3 +189,23 @@ def test_pypi_source_explicit_tilde():
     url = rpm_eval('%pypi_source foo 6~6',
                    name='python-foo', pypi_name='foo', version='6')[0]
     assert url == 'https://files.pythonhosted.org/packages/source/f/foo/foo-6~6.tar.gz'
+
+
+def test_py3_shebang_fix():
+    cmd = rpm_eval('%py3_shebang_fix arg1 arg2 arg3')[0]
+    assert cmd == '/usr/bin/pathfix.py -pni /usr/bin/python3 -ka s arg1 arg2 arg3'
+
+
+def test_py3_shebang_fix_custom_flags():
+    cmd = rpm_eval('%py3_shebang_fix arg1 arg2 arg3', py3_shebang_flags='Es')[0]
+    assert cmd == '/usr/bin/pathfix.py -pni /usr/bin/python3 -ka Es arg1 arg2 arg3'
+
+
+def test_py3_shebang_fix_empty_flags():
+    cmd = rpm_eval('%py3_shebang_fix arg1 arg2 arg3', py3_shebang_flags=None)[0]
+    assert cmd == '/usr/bin/pathfix.py -pni /usr/bin/python3 -k arg1 arg2 arg3'
+
+
+def test_py_shebang_fix_custom():
+    cmd = rpm_eval('%py_shebang_fix arg1 arg2 arg3', __python='/usr/bin/pypy')[0]
+    assert cmd == '/usr/bin/pathfix.py -pni /usr/bin/pypy -ka s arg1 arg2 arg3'
