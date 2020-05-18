@@ -19,4 +19,5 @@
     required_packages:
     - rpm-build
     - python-rpm-macros
+    - python3-rpm-macros
     - python3-pytest
