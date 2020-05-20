@@ -132,3 +132,20 @@
 \
     print(url .. first .. '/' .. src .. '/' .. src .. '-' .. ver .. '.' .. ext)
 }
+
+%py_provides() %{lua:
+    local name = rpm.expand('%1')
+    if name == '%1' then
+        rpm.expand('%{error:%%py_provides requires at least 1 argument, the name to provide}')
+    end
+    local evr = rpm.expand('%2')
+    if evr == '%2' then
+        evr = rpm.expand('%{?epoch:%{epoch}:}%{version}-%{release}')
+    end
+    print('Provides: ' .. name .. ' = ' .. evr .. '\\n')
+    -- NB: dash needs to be escaped!
+    if name:match('^python3%-') then
+      replaced = name:gsub('^python3%-', 'python-')
+      print('Provides: ' .. replaced .. ' = ' .. evr .. '\\n')
+    end
+}
