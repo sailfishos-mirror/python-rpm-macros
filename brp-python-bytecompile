@@ -94,7 +94,7 @@ fi
 #
 # Support this by assuming that below each /usr/lib/python$VERSION/, all
 # .pyc/.pyo files are to be compiled for /usr/bin/python$VERSION.
-# 
+#
 # For example, below /usr/lib/python2.6/, we're targeting /usr/bin/python2.6
 # and below /usr/lib/python3.1/, we're targeting /usr/bin/python3.1
 
