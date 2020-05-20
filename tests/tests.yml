@@ -1,0 +1,22 @@
+---
+- hosts: localhost
+  tags:
+    - classic
+  tasks:
+    - dnf:
+        name: "*"
+        state: latest
+
+- hosts: localhost
+  roles:
+  - role: standard-test-basic
+    tags:
+    - classic
+    tests:
+    - pytest:
+        dir: .
+        run: pytest -v
+    required_packages:
+    - rpm-build
+    - python-rpm-macros
+    - python3-pytest

@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        56%{?dist}
+Release:        57%{?dist}
 Summary:        The unversioned Python RPM macros
 
 # macros: MIT, compileall2.py: PSFv2
@@ -80,6 +80,9 @@ install -m 644 %{SOURCE5} \
 
 
 %changelog
+* Wed May 20 2020 Miro Hrončok <mhroncok@redhat.com> - 3-57
+- Implement %%py_provides
+
 * Tue Apr 28 2020 Miro Hrončok <mhroncok@redhat.com> - 3-56
 - Make pythonX-rpm-macros depend on python-rpm-macros (#1827811)
 
