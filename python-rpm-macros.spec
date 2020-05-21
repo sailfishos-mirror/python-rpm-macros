@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
-Version:        3.8
-Release:        8%{?dist}
+Version:        3.9
+Release:        1%{?dist}
 Summary:        The common Python RPM macros
 
 # macros and lua: MIT, compileall2.py: PSFv2
@@ -107,6 +107,10 @@ install -m 644 compileall2.py %{buildroot}%{_rpmconfigdir}/redhat/
 
 
 %changelog
+* Thu May 21 2020 Miro Hrončok <mhroncok@redhat.com> - 3.9-1
+- https://fedoraproject.org/wiki/Changes/Python3.9
+- Switch the %%py_dist_name macro to convert dots (".") into dashes as defined in PEP 503 (#1791530)
+
 * Mon May 11 2020 Miro Hrončok <mhroncok@redhat.com> - 3.8-8
 - Implement %%pytest
 - Implement %%pyX_shebang_fix
