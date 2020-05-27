@@ -1,10 +1,12 @@
+import os
 import subprocess
 import sys
 
 X_Y = f'{sys.version_info[0]}.{sys.version_info[1]}'
+XY = f'{sys.version_info[0]}{sys.version_info[1]}'
 
 
-def rpm_eval(expression, **kwargs):
+def rpm_eval(expression, fails=False, **kwargs):
     cmd = ['rpmbuild']
     for var, value in kwargs.items():
         if value is None:
@@ -12,9 +14,12 @@ def rpm_eval(expression, **kwargs):
         else:
             cmd += ['--define', f'{var} {value}']
     cmd += ['--eval', expression]
-    cp = subprocess.run(cmd, text=True,
-                        stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    assert cp.returncode == 0, cp.stderr
+    cp = subprocess.run(cmd, text=True, env={**os.environ, 'LANG': 'C.utf-8'},
+                        stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    if fails:
+        assert cp.returncode != 0, cp.stdout
+    elif fails is not None:
+        assert cp.returncode == 0, cp.stdout
     return cp.stdout.strip().splitlines()
 
 
@@ -209,3 +214,49 @@ def test_py3_shebang_fix_empty_flags():
 def test_py_shebang_fix_custom():
     cmd = rpm_eval('%py_shebang_fix arg1 arg2 arg3', __python='/usr/bin/pypy')[0]
     assert cmd == '/usr/bin/pathfix.py -pni /usr/bin/pypy -ka s arg1 arg2 arg3'
+
+
+def test_pycached_in_sitelib():
+    lines = rpm_eval('%pycached %{python3_sitelib}/foo*.py')
+    assert lines == [
+        f'/usr/lib/python{X_Y}/site-packages/foo*.py',
+        f'/usr/lib/python{X_Y}/site-packages/__pycache__/foo*.cpython-{XY}{{,.opt-?}}.pyc'
+    ]
+
+
+def test_pycached_in_sitearch():
+    lines = rpm_eval('%pycached %{python3_sitearch}/foo*.py')
+    lib = rpm_eval('%_lib')[0]
+    assert lines == [
+        f'/usr/{lib}/python{X_Y}/site-packages/foo*.py',
+        f'/usr/{lib}/python{X_Y}/site-packages/__pycache__/foo*.cpython-{XY}{{,.opt-?}}.pyc'
+    ]
+
+
+def test_pycached_in_36():
+    lines = rpm_eval('%pycached /usr/lib/python3.6/site-packages/foo*.py')
+    assert lines == [
+        '/usr/lib/python3.6/site-packages/foo*.py',
+        '/usr/lib/python3.6/site-packages/__pycache__/foo*.cpython-36{,.opt-?}.pyc'
+    ]
+
+
+def test_pycached_in_custom_dir():
+    lines = rpm_eval('%pycached /bar/foo*.py')
+    assert lines == [
+        '/bar/foo*.py',
+        '/bar/__pycache__/foo*.cpython-3*{,.opt-?}.pyc'
+    ]
+
+
+def test_pycached_with_exclude():
+    lines = rpm_eval('%pycached %exclude %{python3_sitelib}/foo*.py')
+    assert lines == [
+        f'%exclude /usr/lib/python{X_Y}/site-packages/foo*.py',
+        f'%exclude /usr/lib/python{X_Y}/site-packages/__pycache__/foo*.cpython-{XY}{{,.opt-?}}.pyc'
+    ]
+
+
+def test_pycached_fails_with_extension_glob():
+    lines = rpm_eval('%pycached %{python3_sitelib}/foo.py*', fails=True)
+    assert lines[0] == 'error: %pycached can only be used with paths explicitly ending with .py'

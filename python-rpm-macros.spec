@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3.9
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        The common Python RPM macros
 
 # macros and lua: MIT, compileall2.py: PSFv2
@@ -107,6 +107,9 @@ install -m 644 compileall2.py %{buildroot}%{_rpmconfigdir}/redhat/
 
 
 %changelog
+* Thu Jun 11 2020 Miro Hrončok <mhroncok@redhat.com> - 3.9-3
+- Allow to combine %%pycached with other macros (e.g. %%exclude or %%ghost) (#1838992)
+
 * Sat May 30 2020 Miro Hrončok <mhroncok@redhat.com> - 3.9-2
 - Require the exact same version-release of other subpackages of this package
 
