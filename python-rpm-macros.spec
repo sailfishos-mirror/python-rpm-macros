@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        57%{?dist}
+Release:        58%{?dist}
 Summary:        The unversioned Python RPM macros
 
 # macros: MIT, compileall2.py: PSFv2
@@ -80,6 +80,9 @@ install -m 644 %{SOURCE5} \
 
 
 %changelog
+* Mon Jun 15 2020 Miro Hrončok <mhroncok@redhat.com> - 3-58
+- Allow to combine %%pycached with other macros (e.g. %%exclude or %%ghost) (#1838992)
+
 * Wed May 20 2020 Miro Hrončok <mhroncok@redhat.com> - 3-57
 - Implement %%py_provides
 - Implement %%pytest
