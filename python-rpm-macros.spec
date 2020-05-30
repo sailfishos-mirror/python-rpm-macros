@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3.9
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        The common Python RPM macros
 
 # macros and lua: MIT, compileall2.py: PSFv2
@@ -25,7 +25,7 @@ BuildArch:      noarch
 # For %%__default_python3_pkgversion used in %%python_provide
 # For python.lua
 # For compileall2.py
-Requires:       python-srpm-macros >= 3.8-5
+Requires:       python-srpm-macros = %{version}-%{release}
 
 %description
 This package contains the unversioned Python RPM macros, that most
@@ -52,10 +52,10 @@ RPM macros for building Python source packages.
 Summary:        RPM macros for building Python 2 packages
 
 # For %%__python2 and %%python2
-Requires:       python-srpm-macros
+Requires:       python-srpm-macros = %{version}-%{release}
 
 # For %%py_setup
-Requires:       python-rpm-macros
+Requires:       python-rpm-macros = %{version}-%{release}
 
 %description -n python2-rpm-macros
 RPM macros for building Python 2 packages.
@@ -65,10 +65,10 @@ RPM macros for building Python 2 packages.
 Summary:        RPM macros for building Python 3 packages
 
 # For %%__python3 and %%python3
-Requires:       python-srpm-macros
+Requires:       python-srpm-macros = %{version}-%{release}
 
 # For %%py_setup
-Requires:       python-rpm-macros
+Requires:       python-rpm-macros = %{version}-%{release}
 
 %description -n python3-rpm-macros
 RPM macros for building Python 3 packages.
@@ -107,6 +107,9 @@ install -m 644 compileall2.py %{buildroot}%{_rpmconfigdir}/redhat/
 
 
 %changelog
+* Sat May 30 2020 Miro Hrončok <mhroncok@redhat.com> - 3.9-2
+- Require the exact same version-release of other subpackages of this package
+
 * Thu May 21 2020 Miro Hrončok <mhroncok@redhat.com> - 3.9-1
 - https://fedoraproject.org/wiki/Changes/Python3.9
 - Switch the %%py_dist_name macro to convert dots (".") into dashes as defined in PEP 503 (#1791530)
