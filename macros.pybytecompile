@@ -28,9 +28,22 @@ py3_byte_compile () {\
     PYTHONPATH="%{_rpmconfigdir}/redhat" $python_binary -s -B -m compileall2 -o 0 -o 1 -s $RPM_BUILD_ROOT -p / $bytecode_compilation_path \
 }\
 \
+py39_byte_compile () {\
+    python_binary="%1"\
+    bytecode_compilation_path="%2"\
+    $python_binary -s -B -m compileall -o 0 -o 1 -s $RPM_BUILD_ROOT -p / $bytecode_compilation_path \
+}\
+\
 # Path to intepreter should not contain any arguments \
 [[ "%1" =~ " -" ]] && echo "ERROR py_byte_compile: Path to interpreter should not contain any arguments" >&2 && exit 1 \
 # Get version without a dot (36 instead of 3.6), bash doesn't compare floats well \
 python_version=$(%1 -c "import sys; sys.stdout.write('{0.major}{0.minor}'.format(sys.version_info))") \
-# compileall2 Python module is not compatible with Python < 3.4 \
-if [ "$python_version" -ge 34 ]; then py3_byte_compile "%1" "%2"; else py2_byte_compile "%1" "%2"; fi
+# compileall2 is an enhanced fork of stdlib compileall module for Python >= 3.4 \
+# and it was merged back to stdlib in Python >= 3.9 \
+if [ "$python_version" -ge 39 ]; then \
+py39_byte_compile "%1" "%2"; \
+elif [ "$python_version" -ge 34 ]; then \
+py3_byte_compile "%1" "%2"; \
+else \
+py2_byte_compile "%1" "%2"; \
+fi
