@@ -24,14 +24,15 @@ if [ -z "$depth" -o "$depth" -le "1" ]; then
 	exit 0
 fi
 
-# This function now implements Python byte-compilation in two different ways:
-# Python >= 3.4 uses a new module compileall2 - https://github.com/fedora-python/compileall2
+# This function now implements Python byte-compilation in three different ways:
+# Python >= 3.4 and < 3.9 uses a new module compileall2 - https://github.com/fedora-python/compileall2
 # Python < 3.4 (inc. Python 2) uses compileall module from stdlib with some hacks
 # When we drop support for Python 2, we'd be able to use all compileall2 features like:
 # - -s and -p options to manipulate with a path baked into pyc files instead of $real_libdir
 # - -o 0 -o 1 to produce multiple files in one run - each with a different optimization level - instead of $options
 # - removed useless $depth - both compileall and compileall2 are limited by sys.getrecursionlimit()
 # These changes will make this script much simpler
+# In Python >= 3.9, compileall2 was merged back to standard library (compileall) so we can use it directly again.
 function python_bytecompile()
 {
     local options=$1
@@ -44,9 +45,24 @@ function python_bytecompile()
 	python_version=$($python_binary -c "import sys; sys.stdout.write('{0.major}{0.minor}'.format(sys.version_info))")
 
 	#
+	# Python 3.9 and higher
+	#
+	if [ "$python_version" -ge 39 ]; then
+
+		[ ! -z $exclude ] && exclude="-x '$exclude'"
+		# -q disables verbose output
+		# -f forces the process to overwrite existing compiled files
+		# -x excludes paths defined by regex
+		# -e excludes symbolic links pointing outside the build root
+		# -x and -e together implements the same functionality as the Filter class below
+		# -s strips $RPM_BUILD_ROOT from the path
+		# -p prepends the leading slash to the path to make it absolute
+		$python_binary -B $options -m compileall -q -f $exclude -s $RPM_BUILD_ROOT -p / -e $RPM_BUILD_ROOT $python_libdir
+
+	#
 	# Python 3.4 and higher
 	#
-	if [ "$python_version" -ge 34 ]; then
+	elif [ "$python_version" -ge 34 ]; then
 
 		[ ! -z $exclude ] && exclude="-x '$exclude'"
 		# /usr/lib/rpm/redhat/ contains compileall2 Python module
