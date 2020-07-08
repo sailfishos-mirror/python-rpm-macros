@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3.9
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        The common Python RPM macros
 
 # macros and lua: MIT, compileall2.py: PSFv2
@@ -107,6 +107,10 @@ install -m 644 compileall2.py %{buildroot}%{_rpmconfigdir}/redhat/
 
 
 %changelog
+* Wed Jul 08 2020 Miro Hrončok <mhroncok@redhat.com> - 3.9-5
+- Introduce %%python_extras_subpkg
+- https://fedoraproject.org/wiki/Changes/PythonExtras
+
 * Tue Jun 16 2020 Lumír Balhar <lbalhar@redhat.com> - 3.9-4
 - Use compileall from stdlib for Python >= 3.9
 

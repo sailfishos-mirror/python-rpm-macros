@@ -1,6 +1,7 @@
 import os
 import subprocess
 import sys
+import textwrap
 
 X_Y = f'{sys.version_info[0]}.{sys.version_info[1]}'
 XY = f'{sys.version_info[0]}{sys.version_info[1]}'
@@ -260,3 +261,78 @@ def test_pycached_with_exclude():
 def test_pycached_fails_with_extension_glob():
     lines = rpm_eval('%pycached %{python3_sitelib}/foo.py*', fails=True)
     assert lines[0] == 'error: %pycached can only be used with paths explicitly ending with .py'
+
+
+def test_python_extras_subpkg_i():
+    lines = rpm_eval('%python_extras_subpkg -n python3-setuptools_scm -i %{python3_sitelib}/*.egg-info toml yaml',
+                     version='6', release='7')
+    expected = textwrap.dedent(f"""
+        %package -n python3-setuptools_scm+toml
+        Summary: Metapackage for python3-setuptools_scm: toml extras
+        Requires: python3-setuptools_scm = 6-7
+        %description -n python3-setuptools_scm+toml
+        This is a metapackage bringing in toml extras requires for python3-setuptools_scm.
+        It contains no code, just makes sure the dependencies are installed.
+
+        %files -n python3-setuptools_scm+toml
+        %ghost /usr/lib/python{X_Y}/site-packages/*.egg-info
+
+        %package -n python3-setuptools_scm+yaml
+        Summary: Metapackage for python3-setuptools_scm: yaml extras
+        Requires: python3-setuptools_scm = 6-7
+        %description -n python3-setuptools_scm+yaml
+        This is a metapackage bringing in yaml extras requires for python3-setuptools_scm.
+        It contains no code, just makes sure the dependencies are installed.
+
+        %files -n python3-setuptools_scm+yaml
+        %ghost /usr/lib/python{X_Y}/site-packages/*.egg-info
+        """).lstrip().splitlines()
+    assert lines == expected
+
+
+def test_python_extras_subpkg_f():
+    lines = rpm_eval('%python_extras_subpkg -n python3-setuptools_scm -f ghost_filelist toml yaml',
+                     version='6', release='7')
+    expected = textwrap.dedent(f"""
+        %package -n python3-setuptools_scm+toml
+        Summary: Metapackage for python3-setuptools_scm: toml extras
+        Requires: python3-setuptools_scm = 6-7
+        %description -n python3-setuptools_scm+toml
+        This is a metapackage bringing in toml extras requires for python3-setuptools_scm.
+        It contains no code, just makes sure the dependencies are installed.
+
+        %files -n python3-setuptools_scm+toml -f ghost_filelist
+
+        %package -n python3-setuptools_scm+yaml
+        Summary: Metapackage for python3-setuptools_scm: yaml extras
+        Requires: python3-setuptools_scm = 6-7
+        %description -n python3-setuptools_scm+yaml
+        This is a metapackage bringing in yaml extras requires for python3-setuptools_scm.
+        It contains no code, just makes sure the dependencies are installed.
+
+        %files -n python3-setuptools_scm+yaml -f ghost_filelist
+        """).lstrip().splitlines()
+    assert lines == expected
+
+
+def test_python_extras_subpkg_F():
+    lines = rpm_eval('%python_extras_subpkg -n python3-setuptools_scm -F toml yaml',
+                     version='6', release='7')
+    expected = textwrap.dedent(f"""
+        %package -n python3-setuptools_scm+toml
+        Summary: Metapackage for python3-setuptools_scm: toml extras
+        Requires: python3-setuptools_scm = 6-7
+        %description -n python3-setuptools_scm+toml
+        This is a metapackage bringing in toml extras requires for python3-setuptools_scm.
+        It contains no code, just makes sure the dependencies are installed.
+
+
+
+        %package -n python3-setuptools_scm+yaml
+        Summary: Metapackage for python3-setuptools_scm: yaml extras
+        Requires: python3-setuptools_scm = 6-7
+        %description -n python3-setuptools_scm+yaml
+        This is a metapackage bringing in yaml extras requires for python3-setuptools_scm.
+        It contains no code, just makes sure the dependencies are installed.
+        """).lstrip().splitlines()
+    assert lines == expected

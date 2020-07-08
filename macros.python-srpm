@@ -175,3 +175,51 @@
         print('Provides: ' .. provide .. '\\n')
     end
 }
+
+%python_extras_subpkg(n:i:f:F) %{expand:%{lua:
+    local option_n = '-n (name of the base package)'
+    local option_i = '-i (buildroot path to metadata)'
+    local option_f = '-f (builddir path to a filelist)'
+    local option_F = '-F (skip %%files section)'
+    local value_n = rpm.expand('%{-n*}')
+    local value_i = rpm.expand('%{-i*}')
+    local value_f = rpm.expand('%{-f*}')
+    local value_F = rpm.expand('%{-F}')
+    local args = rpm.expand('%{*}')
+    if value_n == '' then
+        rpm.expand('%{error:%%%0: missing option ' .. option_n .. '}')
+    end
+    if value_i == '' and value_f == '' and value_F == '' then
+        rpm.expand('%{error:%%%0: missing option ' .. option_i .. ' or ' .. option_f .. ' or ' .. option_F .. '}')
+    end
+    if value_i ~= '' and value_f ~= '' then
+        rpm.expand('%{error:%%%0: simultaneous ' .. option_i .. ' and ' .. option_f .. ' options are not possible}')
+    end
+    if value_i ~= '' and value_F ~= '' then
+        rpm.expand('%{error:%%%0: simultaneous ' .. option_i .. ' and ' .. option_F .. ' options are not possible}')
+    end
+    if value_f ~= '' and value_F ~= '' then
+        rpm.expand('%{error:%%%0: simultaneous ' .. option_f .. ' and ' .. option_F .. ' options are not possible}')
+    end
+    if args == '' then
+        rpm.expand('%{error:%%%0 requires at least one argument with "extras" name}')
+    end
+    local requires = 'Requires: ' .. value_n .. ' = %{?epoch:%{epoch}:}%{version}-%{release}'
+    for extras in args:gmatch('%w+') do
+        local rpmname = value_n .. '+' .. extras
+        local pkgdef = '%package -n ' .. rpmname
+        local summary = 'Summary: Metapackage for ' .. value_n .. ': ' .. extras .. ' extras'
+        local description = '%description -n ' .. rpmname .. '\\\n' ..
+                            'This is a metapackage bringing in ' .. extras .. ' extras requires for ' .. value_n .. '.\\\n' ..
+                            'It contains no code, just makes sure the dependencies are installed.\\\n'
+        local files = ''
+        if value_i ~= '' then
+            files = '%files -n ' .. rpmname .. '\\\n' .. '%ghost ' .. value_i
+        elseif value_f ~= '' then
+            files = '%files -n ' .. rpmname .. ' -f ' .. value_f
+        end
+        for i, line in ipairs({pkgdef, summary, requires, description, files, ''}) do
+            print(line .. '\\\n')
+        end
+    end
+}}
