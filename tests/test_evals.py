@@ -3,6 +3,8 @@ import subprocess
 import sys
 import textwrap
 
+import pytest
+
 X_Y = f'{sys.version_info[0]}.{sys.version_info[1]}'
 XY = f'{sys.version_info[0]}{sys.version_info[1]}'
 
@@ -22,6 +24,30 @@ def rpm_eval(expression, fails=False, **kwargs):
     elif fails is not None:
         assert cp.returncode == 0, cp.stdout
     return cp.stdout.strip().splitlines()
+
+
+@pytest.mark.parametrize('argument, result', [
+    ('a', 'a'),
+    ('a-a', 'a-a'),
+    ('a_a', 'a-a'),
+    ('a.a', 'a-a'),
+    ('a---a', 'a-a'),
+    ('a-_-a', 'a-a'),
+    ('a-_-a', 'a-a'),
+    ('a[b]', 'a[b]'),
+    ('Aha[Boom]', 'aha[boom]'),
+    ('a.a[b.b]', 'a-a[b-b]'),
+])
+def test_pydist_name(argument, result):
+    assert rpm_eval(f'%py_dist_name {argument}') == [result]
+
+
+def test_py2_dist():
+    assert rpm_eval(f'%py2_dist Aha[Boom] a') == ['python2dist(aha[boom]) python2dist(a)']
+
+
+def test_py3_dist():
+    assert rpm_eval(f'%py3_dist Aha[Boom] a') == ['python3dist(aha[boom]) python3dist(a)']
 
 
 def test_python_provide_python():
