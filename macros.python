@@ -16,19 +16,16 @@
 %py_build() %{expand:\\\
   CFLAGS="${CFLAGS:-${RPM_OPT_FLAGS}}" LDFLAGS="${LDFLAGS:-${RPM_LD_FLAGS}}"\\\
   %{__python} %{py_setup} %{?py_setup_args} build --executable="%{__python} %{py_shbang_opts}" %{?*}
-  sleep 1
 }
 
 %py_build_egg() %{expand:\\\
   CFLAGS="${CFLAGS:-${RPM_OPT_FLAGS}}" LDFLAGS="${LDFLAGS:-${RPM_LD_FLAGS}}"\\\
   %{__python} %{py_setup} %{?py_setup_args} bdist_egg %{?*}
-  sleep 1
 }
 
 %py_build_wheel() %{expand:\\\
   CFLAGS="${CFLAGS:-${RPM_OPT_FLAGS}}" LDFLAGS="${LDFLAGS:-${RPM_LD_FLAGS}}"\\\
   %{__python} %{py_setup} %{?py_setup_args} bdist_wheel %{?*}
-  sleep 1
 }
 
 %py_install() %{expand:\\\
@@ -39,12 +36,12 @@
 
 %py_install_egg() %{expand:\\\
   mkdir -p %{buildroot}%{python_sitelib}
-  easy_install -m --prefix %{buildroot}%{_prefix} -Z dist/*-py%{python_version}.egg %{?*}
+  %{__python} -m easy_install -m --prefix %{buildroot}%{_prefix} -Z dist/*-py%{python_version}.egg %{?*}
   rm -rfv %{buildroot}%{_bindir}/__pycache__
 }
 
 %py_install_wheel() %{expand:\\\
-  pip install -I dist/%{1} --root %{buildroot} --strip-file-prefix %{buildroot} --no-deps
+  %{__python} -m pip install -I dist/%{1} --root %{buildroot} --no-deps
   rm -rfv %{buildroot}%{_bindir}/__pycache__
   for distinfo in %{buildroot}%{python_sitelib}/*.dist-info %{buildroot}%{python_sitearch}/*.dist-info; do
     if [ -f ${distinfo}/direct_url.json ]; then

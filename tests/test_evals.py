@@ -362,3 +362,33 @@ def test_python_extras_subpkg_F():
         It contains no code, just makes sure the dependencies are installed.
         """).lstrip().splitlines()
     assert lines == expected
+
+
+unversioned_macros = pytest.mark.parametrize('macro', [
+    '%__python',
+    '%python',
+    '%python_version',
+    '%python_version_nodots',
+    '%python_sitelib',
+    '%python_sitearch',
+    '%py_shebang_fix',
+    '%py_build',
+    '%py_build_egg',
+    '%py_build_wheel',
+    '%py_install',
+    '%py_install_egg',
+    '%py_install_wheel',
+])
+
+
+@unversioned_macros
+def test_unversioned_python_errors(macro):
+    lines = rpm_eval(macro, fails=True)
+    assert lines[0] == ('error: attempt to use unversioned python, '
+                        'define %__python to /usr/bin/python2 or /usr/bin/python3 explicitly')
+
+
+@unversioned_macros
+def test_unversioned_python_works_when_defined(macro):
+    macro3 = macro.replace('python', 'python3').replace('py_', 'py3_')
+    assert rpm_eval(macro, __python='/usr/bin/python3') == rpm_eval(macro3)
