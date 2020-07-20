@@ -371,6 +371,7 @@ unversioned_macros = pytest.mark.parametrize('macro', [
     '%python_version_nodots',
     '%python_sitelib',
     '%python_sitearch',
+    '%python_platform',
     '%py_shebang_fix',
     '%py_build',
     '%py_build_egg',

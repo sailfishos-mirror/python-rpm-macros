@@ -111,6 +111,7 @@ install -m 644 compileall2.py %{buildroot}%{_rpmconfigdir}/redhat/
 - Make the unversioned %%__python macro error
 - https://fedoraproject.org/wiki/Changes/PythonMacroError
 - Make %%python macros more consistent with %%python3 macros
+- Define %%python_platform (as a Python version agnostic option to %%python3_platform)
 
 * Wed Jul 08 2020 Miro Hrončok <mhroncok@redhat.com> - 3.9-5
 - Introduce %%python_extras_subpkg
