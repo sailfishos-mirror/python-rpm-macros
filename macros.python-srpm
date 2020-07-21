@@ -90,6 +90,7 @@
 #   Needs to first put all arguments into a list, because invoking a different
 #   macro (%py_dist_name) overwrites them
 %py3_dist() %{lua:\
+        python3_pkgversion = rpm.expand("%python3_pkgversion");\
         args = {}\
         arg = 1\
         while (true) do\
@@ -102,7 +103,7 @@
         end\
         for arg, name in ipairs(args) do\
                 canonical = rpm.expand("%py_dist_name " .. name);\
-                print("python3dist(" .. canonical .. ") ");\
+                print("python" .. python3_pkgversion .. "dist(" .. canonical .. ") ");\
         end\
 }
 

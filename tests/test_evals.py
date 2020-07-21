@@ -50,6 +50,10 @@ def test_py3_dist():
     assert rpm_eval(f'%py3_dist Aha[Boom] a') == ['python3dist(aha[boom]) python3dist(a)']
 
 
+def test_py3_dist_with_python3_pkgversion_redefined():
+    assert rpm_eval(f'%py3_dist Aha[Boom] a', python3_pkgversion="3.6") == ['python3.6dist(aha[boom]) python3.6dist(a)']
+
+
 def test_python_provide_python():
     assert rpm_eval('%python_provide python-foo') == []
 
