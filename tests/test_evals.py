@@ -8,9 +8,24 @@ import pytest
 X_Y = f'{sys.version_info[0]}.{sys.version_info[1]}'
 XY = f'{sys.version_info[0]}{sys.version_info[1]}'
 
+# Handy environment variable you can use to run the tests
+# with modified macros files. Multiple files should be
+# separated by colon.
+# To get 'em all, run:
+# ls -1 macros.* | tr "\n" ":"
+# and then:
+# TESTED_FILES="<output of previous command>" pytest -v
+# or both combined:
+# TESTED_FILES=$(ls -1 macros.* | tr "\n" ":") pytest -v
+# Remember that some tests might need more macros files than just
+# the local ones.
+TESTED_FILES = os.getenv("TESTED_FILES", None)
+
 
 def rpm_eval(expression, fails=False, **kwargs):
     cmd = ['rpmbuild']
+    if TESTED_FILES:
+        cmd += ['--macros', TESTED_FILES]
     for var, value in kwargs.items():
         if value is None:
             cmd += ['--undefine', var]
