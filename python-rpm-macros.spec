@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3.9
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        The common Python RPM macros
 
 # macros and lua: MIT, compileall2.py: PSFv2
@@ -107,6 +107,9 @@ install -m 644 compileall2.py %{buildroot}%{_rpmconfigdir}/redhat/
 
 
 %changelog
+* Fri Jul 24 2020 Lumír Balhar <lbalhar@redhat.com> - 3.9-9
+- Adapt %%py[3]_shebang_fix to use versioned pathfixX.Y.py
+
 * Fri Jul 24 2020 Lumír Balhar <lbalhar@redhat.com> - 3.9-8
 - Disable Python hash seed randomization in %%py_byte_compile
 

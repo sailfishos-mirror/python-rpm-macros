@@ -228,23 +228,23 @@ def test_pypi_source_explicit_tilde():
 
 
 def test_py3_shebang_fix():
-    cmd = rpm_eval('%py3_shebang_fix arg1 arg2 arg3')[0]
-    assert cmd == '/usr/bin/pathfix.py -pni /usr/bin/python3 -ka s arg1 arg2 arg3'
+    cmd = rpm_eval('%py3_shebang_fix arg1 arg2 arg3')[-1].strip()
+    assert cmd == '$pathfix -pni /usr/bin/python3 -ka s arg1 arg2 arg3'
 
 
 def test_py3_shebang_fix_custom_flags():
-    cmd = rpm_eval('%py3_shebang_fix arg1 arg2 arg3', py3_shebang_flags='Es')[0]
-    assert cmd == '/usr/bin/pathfix.py -pni /usr/bin/python3 -ka Es arg1 arg2 arg3'
+    cmd = rpm_eval('%py3_shebang_fix arg1 arg2 arg3', py3_shebang_flags='Es')[-1].strip()
+    assert cmd == '$pathfix -pni /usr/bin/python3 -ka Es arg1 arg2 arg3'
 
 
 def test_py3_shebang_fix_empty_flags():
-    cmd = rpm_eval('%py3_shebang_fix arg1 arg2 arg3', py3_shebang_flags=None)[0]
-    assert cmd == '/usr/bin/pathfix.py -pni /usr/bin/python3 -k arg1 arg2 arg3'
+    cmd = rpm_eval('%py3_shebang_fix arg1 arg2 arg3', py3_shebang_flags=None)[-1].strip()
+    assert cmd == '$pathfix -pni /usr/bin/python3 -k arg1 arg2 arg3'
 
 
 def test_py_shebang_fix_custom():
-    cmd = rpm_eval('%py_shebang_fix arg1 arg2 arg3', __python='/usr/bin/pypy')[0]
-    assert cmd == '/usr/bin/pathfix.py -pni /usr/bin/pypy -ka s arg1 arg2 arg3'
+    cmd = rpm_eval('%py_shebang_fix arg1 arg2 arg3', __python='/usr/bin/pypy')[-1].strip()
+    assert cmd == '$pathfix -pni /usr/bin/pypy -ka s arg1 arg2 arg3'
 
 
 def test_pycached_in_sitelib():
