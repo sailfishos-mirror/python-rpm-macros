@@ -16,6 +16,9 @@
     - pytest:
         dir: .
         run: pytest -v
+    - manual_byte_compilation:
+        dir: .
+        run: rpmbuild -ba pythontest.spec
     required_packages:
     - rpm-build
     - python-rpm-macros
