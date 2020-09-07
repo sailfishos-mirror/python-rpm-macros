@@ -188,6 +188,13 @@ def test_pytest_different_command():
     assert 'pytest-3' in lines[-1]
 
 
+def test_pytest_command_suffix():
+    lines = rpm_eval('%pytest -v')
+    assert '/usr/bin/pytest -v' in lines[-1]
+    lines = rpm_eval('%pytest -v', python3_pkgversion="3.6", python3_version="3.6")
+    assert '/usr/bin/pytest-3.6 -v' in lines[-1]
+
+
 def test_pypi_source_default_name():
     url = rpm_eval('%pypi_source',
                    name='foo', version='6')[0]

@@ -73,7 +73,7 @@
 }
 
 # This is intended for Python 3 only, hence also no Python version in the name.
-%__pytest /usr/bin/pytest
+%__pytest /usr/bin/pytest%(test %{python3_pkgversion} == 3 || echo -%{python3_version})
 %pytest %{expand:\\\
   CFLAGS="${CFLAGS:-${RPM_OPT_FLAGS}}" LDFLAGS="${LDFLAGS:-${RPM_LD_FLAGS}}"\\\
   PATH="%{buildroot}%{_bindir}:$PATH"\\\
