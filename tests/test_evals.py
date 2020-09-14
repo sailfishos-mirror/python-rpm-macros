@@ -1,5 +1,6 @@
 import os
 import subprocess
+import platform
 import sys
 import textwrap
 
@@ -398,6 +399,8 @@ unversioned_macros = pytest.mark.parametrize('macro', [
     '%python_sitelib',
     '%python_sitearch',
     '%python_platform',
+    '%python_platform_triplet',
+    '%python_ext_suffix',
     '%py_shebang_fix',
     '%py_build',
     '%py_build_egg',
@@ -419,3 +422,17 @@ def test_unversioned_python_errors(macro):
 def test_unversioned_python_works_when_defined(macro):
     macro3 = macro.replace('python', 'python3').replace('py_', 'py3_')
     assert rpm_eval(macro, __python='/usr/bin/python3') == rpm_eval(macro3)
+
+
+# we could rework the test for multiple architectures, but the Fedora CI currently only runs on x86_64
+x86_64_only = pytest.mark.skipif(platform.machine() != "x86_64", reason="works on x86_64 only")
+
+
+@x86_64_only
+def test_platform_triplet():
+    assert rpm_eval("%python3_platform_triplet")[0] == "x86_64-linux-gnu"
+
+
+@x86_64_only
+def test_ext_suffix():
+    assert rpm_eval("%python3_ext_suffix")[0] == f".cpython-{XY}-x86_64-linux-gnu.so"

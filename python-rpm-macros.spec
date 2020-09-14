@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3.9
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        The common Python RPM macros
 
 # macros and lua: MIT, compileall2.py: PSFv2
@@ -107,6 +107,10 @@ install -m 644 compileall2.py %{buildroot}%{_rpmconfigdir}/redhat/
 
 
 %changelog
+* Mon Sep 14 2020 Miro Hrončok <mhroncok@redhat.com> - 3.9-10
+- Add %%python3_platform_triplet and %%python3_ext_suffix
+- https://fedoraproject.org/wiki/Changes/Python_Upstream_Architecture_Names
+
 * Fri Jul 24 2020 Lumír Balhar <lbalhar@redhat.com> - 3.9-9
 - Adapt %%py[3]_shebang_fix to use versioned pathfixX.Y.py
 
