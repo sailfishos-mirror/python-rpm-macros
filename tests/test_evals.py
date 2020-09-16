@@ -1,6 +1,9 @@
 import os
 import subprocess
+import platform
 import sys
+
+import pytest
 
 X_Y = f'{sys.version_info[0]}.{sys.version_info[1]}'
 XY = f'{sys.version_info[0]}{sys.version_info[1]}'
@@ -221,3 +224,17 @@ def test_pycached_with_exclude():
 def test_pycached_fails_with_extension_glob():
     lines = rpm_eval('%pycached %{python3_sitelib}/foo.py*', fails=True)
     assert lines[0] == 'error: %pycached can only be used with paths explicitly ending with .py'
+
+
+# we could rework the test for multiple architectures, but the Fedora CI currently only runs on x86_64
+x86_64_only = pytest.mark.skipif(platform.machine() != "x86_64", reason="works on x86_64 only")
+
+
+@x86_64_only
+def test_platform_triplet():
+    assert rpm_eval("%python3_platform_triplet")[0] == "x86_64-linux-gnu"
+
+
+@x86_64_only
+def test_ext_suffix():
+    assert rpm_eval("%python3_ext_suffix")[0] == f".cpython-{XY}-x86_64-linux-gnu.so"

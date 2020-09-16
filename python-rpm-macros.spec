@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        58%{?dist}
+Release:        59%{?dist}
 Summary:        The unversioned Python RPM macros
 
 # macros: MIT, compileall2.py: PSFv2
@@ -80,6 +80,10 @@ install -m 644 %{SOURCE5} \
 
 
 %changelog
+* Thu Sep 24 2020 Miro Hrončok <mhroncok@redhat.com> - 3-59
+- Add %%python3_platform_triplet and %%python3_ext_suffix
+- https://fedoraproject.org/wiki/Changes/Python_Upstream_Architecture_Names
+
 * Mon Jun 15 2020 Miro Hrončok <mhroncok@redhat.com> - 3-58
 - Allow to combine %%pycached with other macros (e.g. %%exclude or %%ghost) (#1838992)
 
