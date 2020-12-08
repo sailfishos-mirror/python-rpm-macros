@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3
-Release:        59%{?dist}
+Release:        60%{?dist}
 Summary:        The unversioned Python RPM macros
 
 # macros: MIT, compileall2.py: PSFv2
@@ -80,6 +80,9 @@ install -m 644 %{SOURCE5} \
 
 
 %changelog
+* Tue Dec 08 2020 Miro Hrončok <mhroncok@redhat.com> - 3-60
+- Support defining %%py3_shebang_flags to %%nil
+
 * Thu Sep 24 2020 Miro Hrončok <mhroncok@redhat.com> - 3-59
 - Add %%python3_platform_triplet and %%python3_ext_suffix
 - https://fedoraproject.org/wiki/Changes/Python_Upstream_Architecture_Names

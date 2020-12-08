@@ -10,7 +10,13 @@
 %py3_shbang_opts -s
 %py3_shbang_opts_nodash %(opts=%{py3_shbang_opts}; echo ${opts#-})
 %py3_shebang_flags %(opts=%{py3_shbang_opts}; echo ${opts#-})
-%py3_shebang_fix %{expand:/usr/bin/pathfix.py -pni %{__python3} -k%{?py3_shebang_flags:a %py3_shebang_flags}}
+%py3_shebang_fix %{expand:\\\
+  if [ -z "%{?py3_shebang_flags}" ]; then
+    shebang_flags="-k"
+  else
+    shebang_flags="-ka%{py3_shebang_flags}"
+  fi
+  /usr/bin/pathfix.py -pni %{__python3} $shebang_flags}
 
 # Use the slashes after expand so that the command starts on the same line as
 # the macro

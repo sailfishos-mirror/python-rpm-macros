@@ -26,6 +26,13 @@ def rpm_eval(expression, fails=False, **kwargs):
     return cp.stdout.strip().splitlines()
 
 
+def shell_stdout(script):
+    return subprocess.check_output(script,
+                                   env={**os.environ, 'LANG': 'C.utf-8'},
+                                   text=True,
+                                   shell=True).rstrip()
+
+
 def test_python_provide_python():
     assert rpm_eval('%python_provide python-foo') == []
 
@@ -161,23 +168,32 @@ def test_pypi_source_explicit_tilde():
 
 
 def test_py3_shebang_fix():
-    cmd = rpm_eval('%py3_shebang_fix arg1 arg2 arg3')[0]
-    assert cmd == '/usr/bin/pathfix.py -pni /usr/bin/python3 -ka s arg1 arg2 arg3'
+    cmd = rpm_eval('%py3_shebang_fix arg1 arg2 arg3')[-1].strip()
+    assert cmd == '/usr/bin/pathfix.py -pni /usr/bin/python3 $shebang_flags arg1 arg2 arg3'
 
 
-def test_py3_shebang_fix_custom_flags():
-    cmd = rpm_eval('%py3_shebang_fix arg1 arg2 arg3', py3_shebang_flags='Es')[0]
-    assert cmd == '/usr/bin/pathfix.py -pni /usr/bin/python3 -ka Es arg1 arg2 arg3'
+def test_py3_shebang_fix_default_shebang_flags():
+    lines = rpm_eval('%py3_shebang_fix arg1 arg2')
+    lines[-1] = 'echo $shebang_flags'
+    assert shell_stdout('\n'.join(lines)) == '-kas'
 
 
-def test_py3_shebang_fix_empty_flags():
-    cmd = rpm_eval('%py3_shebang_fix arg1 arg2 arg3', py3_shebang_flags=None)[0]
-    assert cmd == '/usr/bin/pathfix.py -pni /usr/bin/python3 -k arg1 arg2 arg3'
+def test_py3_shebang_fix_custom_shebang_flags():
+    lines = rpm_eval('%py3_shebang_fix arg1 arg2', py3_shebang_flags='Es')
+    lines[-1] = 'echo $shebang_flags'
+    assert shell_stdout('\n'.join(lines)) == '-kaEs'
 
 
-def test_py_shebang_fix_custom():
-    cmd = rpm_eval('%py_shebang_fix arg1 arg2 arg3', __python='/usr/bin/pypy')[0]
-    assert cmd == '/usr/bin/pathfix.py -pni /usr/bin/pypy -ka s arg1 arg2 arg3'
+@pytest.mark.parametrize('flags', [None, '%{nil}'])
+def test_py3_shebang_fix_no_shebang_flags(flags):
+    lines = rpm_eval('%py3_shebang_fix arg1 arg2', py3_shebang_flags=flags)
+    lines[-1] = 'echo $shebang_flags'
+    assert shell_stdout('\n'.join(lines)) == '-k'
+
+
+def test_py_shebang_fix_custom_python():
+    cmd = rpm_eval('%py_shebang_fix arg1 arg2 arg3', __python='/usr/bin/pypy')[-1].strip()
+    assert cmd == '/usr/bin/pathfix.py -pni /usr/bin/pypy $shebang_flags arg1 arg2 arg3'
 
 
 def test_pycached_in_sitelib():
