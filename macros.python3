@@ -17,7 +17,12 @@
     # older versions of Python don't have it and must BR /usr/bin/pathfix.py from python3-devel explicitly
     pathfix=/usr/bin/pathfix.py
   fi
-  $pathfix -pni %{__python3} -k%{?py3_shebang_flags:a %py3_shebang_flags}}
+  if [ -z "%{?py3_shebang_flags}" ]; then
+    shebang_flags="-k"
+  else
+    shebang_flags="-ka%{py3_shebang_flags}"
+  fi
+  $pathfix -pni %{__python3} $shebang_flags}
 
 # Use the slashes after expand so that the command starts on the same line as
 # the macro
