@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3.9
-Release:        13%{?dist}
+Release:        34%{?dist}
 Summary:        The common Python RPM macros
 
 # macros and lua: MIT, compileall2.py: PSFv2
@@ -9,7 +9,6 @@ License:        MIT and Python
 # Macros:
 Source101:      macros.python
 Source102:      macros.python-srpm
-Source103:      macros.python2
 Source104:      macros.python3
 Source105:      macros.pybytecompile
 
@@ -46,19 +45,6 @@ Provides:       bundled(python3dist(compileall2)) = %{compileall2_version}
 
 %description -n python-srpm-macros
 RPM macros for building Python source packages.
-
-
-%package -n python2-rpm-macros
-Summary:        RPM macros for building Python 2 packages
-
-# For %%__python2 and %%python2
-Requires:       python-srpm-macros = %{version}-%{release}
-
-# For %%py_setup
-Requires:       python-rpm-macros = %{version}-%{release}
-
-%description -n python2-rpm-macros
-RPM macros for building Python 2 packages.
 
 
 %package -n python3-rpm-macros
@@ -99,14 +85,15 @@ install -m 644 compileall2.py %{buildroot}%{_rpmconfigdir}/redhat/
 %{_rpmconfigdir}/redhat/compileall2.py
 %{_rpmluadir}/fedora/srpm/python.lua
 
-%files -n python2-rpm-macros
-%{rpmmacrodir}/macros.python2
-
 %files -n python3-rpm-macros
 %{rpmmacrodir}/macros.python3
 
 
 %changelog
+* Mon Feb 08 2021 Miro Hrončok <mhroncok@redhat.com> - 3.9-34
+- Remove python2-rpm-macros
+- https://fedoraproject.org/wiki/Changes/Disable_Python_2_Dist_RPM_Generators_and_Freeze_Python_2_Macros
+
 * Fri Feb 05 2021 Miro Hrončok <mhroncok@redhat.com> - 3.9-13
 - Automatically word-wrap the description of extras subpackages
 - Fixes: rhbz#1922442
