@@ -340,7 +340,8 @@ def test_python_extras_subpkg_i():
         Summary: Metapackage for python3-setuptools_scm: toml extras
         Requires: python3-setuptools_scm = 6-7
         %description -n python3-setuptools_scm+toml
-        This is a metapackage bringing in toml extras requires for python3-setuptools_scm.
+        This is a metapackage bringing in toml extras requires for
+        python3-setuptools_scm.
         It contains no code, just makes sure the dependencies are installed.
 
         %files -n python3-setuptools_scm+toml
@@ -350,7 +351,8 @@ def test_python_extras_subpkg_i():
         Summary: Metapackage for python3-setuptools_scm: yaml extras
         Requires: python3-setuptools_scm = 6-7
         %description -n python3-setuptools_scm+yaml
-        This is a metapackage bringing in yaml extras requires for python3-setuptools_scm.
+        This is a metapackage bringing in yaml extras requires for
+        python3-setuptools_scm.
         It contains no code, just makes sure the dependencies are installed.
 
         %files -n python3-setuptools_scm+yaml
@@ -367,7 +369,8 @@ def test_python_extras_subpkg_f():
         Summary: Metapackage for python3-setuptools_scm: toml extras
         Requires: python3-setuptools_scm = 6-7
         %description -n python3-setuptools_scm+toml
-        This is a metapackage bringing in toml extras requires for python3-setuptools_scm.
+        This is a metapackage bringing in toml extras requires for
+        python3-setuptools_scm.
         It contains no code, just makes sure the dependencies are installed.
 
         %files -n python3-setuptools_scm+toml -f ghost_filelist
@@ -376,7 +379,8 @@ def test_python_extras_subpkg_f():
         Summary: Metapackage for python3-setuptools_scm: yaml extras
         Requires: python3-setuptools_scm = 6-7
         %description -n python3-setuptools_scm+yaml
-        This is a metapackage bringing in yaml extras requires for python3-setuptools_scm.
+        This is a metapackage bringing in yaml extras requires for
+        python3-setuptools_scm.
         It contains no code, just makes sure the dependencies are installed.
 
         %files -n python3-setuptools_scm+yaml -f ghost_filelist
@@ -392,7 +396,8 @@ def test_python_extras_subpkg_F():
         Summary: Metapackage for python3-setuptools_scm: toml extras
         Requires: python3-setuptools_scm = 6-7
         %description -n python3-setuptools_scm+toml
-        This is a metapackage bringing in toml extras requires for python3-setuptools_scm.
+        This is a metapackage bringing in toml extras requires for
+        python3-setuptools_scm.
         It contains no code, just makes sure the dependencies are installed.
 
 
@@ -401,10 +406,33 @@ def test_python_extras_subpkg_F():
         Summary: Metapackage for python3-setuptools_scm: yaml extras
         Requires: python3-setuptools_scm = 6-7
         %description -n python3-setuptools_scm+yaml
-        This is a metapackage bringing in yaml extras requires for python3-setuptools_scm.
+        This is a metapackage bringing in yaml extras requires for
+        python3-setuptools_scm.
         It contains no code, just makes sure the dependencies are installed.
         """).lstrip().splitlines()
     assert lines == expected
+
+
+@pytest.mark.parametrize('basename_len', [1, 10, 30, 45, 78])
+@pytest.mark.parametrize('extra_len', [1, 13, 28, 52, 78])
+def test_python_extras_subpkg_description_wrapping(basename_len, extra_len):
+    basename = 'x' * basename_len
+    extra = 'y' * extra_len
+    lines = rpm_eval(f'%python_extras_subpkg -n {basename} -F {extra}',
+                     version='6', release='7')
+    for idx, line in enumerate(lines):
+        if line.startswith('%description'):
+            start = idx + 1
+    lines = lines[start:]
+    assert all(len(l) < 80 for l in lines)
+    assert len(lines) < 6
+    if len(" ".join(lines[:-1])) < 80:
+        assert len(lines) == 2
+    expected_singleline = (f"This is a metapackage bringing in {extra} extras "
+                           f"requires for {basename}. It contains no code, "
+                           f"just makes sure the dependencies are installed.")
+    description_singleline = " ".join(lines)
+    assert description_singleline == expected_singleline
 
 
 unversioned_macros = pytest.mark.parametrize('macro', [

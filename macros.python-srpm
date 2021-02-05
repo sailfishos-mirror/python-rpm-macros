@@ -202,9 +202,19 @@
         local rpmname = value_n .. '+' .. extras
         local pkgdef = '%package -n ' .. rpmname
         local summary = 'Summary: Metapackage for ' .. value_n .. ': ' .. extras .. ' extras'
-        local description = '%description -n ' .. rpmname .. '\\\n' ..
-                            'This is a metapackage bringing in ' .. extras .. ' extras requires for ' .. value_n .. '.\\\n' ..
-                            'It contains no code, just makes sure the dependencies are installed.\\\n'
+        local description = '%description -n ' .. rpmname .. '\\\n'
+        local current_line = 'This is a metapackage bringing in'
+        for _, word in ipairs({extras, 'extras', 'requires', 'for', value_n .. '.'}) do
+          local line = current_line .. ' ' .. word
+          if line:len() > 79 then
+            description = description .. current_line .. '\\\n'
+            current_line = word
+          else
+            current_line = line
+          end
+        end
+        description = description .. current_line .. '\\\n' ..
+                      'It contains no code, just makes sure the dependencies are installed.\\\n'
         local files = ''
         if value_i ~= '' then
             files = '%files -n ' .. rpmname .. '\\\n' .. '%ghost ' .. value_i

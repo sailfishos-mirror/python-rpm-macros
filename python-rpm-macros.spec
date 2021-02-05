@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3.9
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        The common Python RPM macros
 
 # macros and lua: MIT, compileall2.py: PSFv2
@@ -107,6 +107,10 @@ install -m 644 compileall2.py %{buildroot}%{_rpmconfigdir}/redhat/
 
 
 %changelog
+* Fri Feb 05 2021 Miro Hrončok <mhroncok@redhat.com> - 3.9-13
+- Automatically word-wrap the description of extras subpackages
+- Fixes: rhbz#1922442
+
 * Wed Jan 27 2021 Fedora Release Engineering <releng@fedoraproject.org> - 3.9-12
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
 
