@@ -409,6 +409,21 @@ def test_python_extras_subpkg_F():
     assert lines == expected
 
 
+def test_python_extras_subpkg_underscores():
+    lines = rpm_eval('%python_extras_subpkg -n python3-webscrapbook -F adhoc_ssl',
+                     version='0.33.3', release='1.fc33')
+    expected = textwrap.dedent(f"""
+        %package -n python3-webscrapbook+adhoc_ssl
+        Summary: Metapackage for python3-webscrapbook: adhoc_ssl extras
+        Requires: python3-webscrapbook = 0.33.3-1.fc33
+        %description -n python3-webscrapbook+adhoc_ssl
+        This is a metapackage bringing in adhoc_ssl extras requires for
+        python3-webscrapbook.
+        It contains no code, just makes sure the dependencies are installed.
+        """).lstrip().splitlines()
+    assert lines == expected
+
+
 @pytest.mark.parametrize('basename_len', [1, 10, 30, 45, 78])
 @pytest.mark.parametrize('extra_len', [1, 13, 28, 52, 78])
 def test_python_extras_subpkg_description_wrapping(basename_len, extra_len):
