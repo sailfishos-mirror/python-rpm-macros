@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3.9
-Release:        34%{?dist}
+Release:        35%{?dist}
 Summary:        The common Python RPM macros
 
 # macros and lua: MIT, compileall2.py: PSFv2
@@ -90,6 +90,9 @@ install -m 644 compileall2.py %{buildroot}%{_rpmconfigdir}/redhat/
 
 
 %changelog
+* Sat Feb 20 2021 Miro Hrončok <mhroncok@redhat.com> - 3.9-35
+- Fix %%python_extras_subpkg with underscores in extras names
+
 * Mon Feb 08 2021 Miro Hrončok <mhroncok@redhat.com> - 3.9-34
 - Remove python2-rpm-macros
 - https://fedoraproject.org/wiki/Changes/Disable_Python_2_Dist_RPM_Generators_and_Freeze_Python_2_Macros
