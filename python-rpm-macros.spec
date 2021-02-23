@@ -1,10 +1,5 @@
 Name:           python-rpm-macros
-Version:        3.9
-Release:        35%{?dist}
 Summary:        The common Python RPM macros
-
-# macros and lua: MIT, compileall2.py: PSFv2
-License:        MIT and Python
 
 # Macros:
 Source101:      macros.python
@@ -18,6 +13,16 @@ Source201:      python.lua
 # Python code
 %global compileall2_version 0.7.1
 Source301:      https://github.com/fedora-python/compileall2/raw/v%{compileall2_version}/compileall2.py
+
+# macros and lua: MIT, compileall2.py: PSFv2
+License:        MIT and Python
+
+# The package version MUST be always the same as %%{__default_python3_version}.
+# To have only one source of truth, we load the macro and use it.
+# The macro is defined in python-srpm-macros.
+                %{load:%{SOURCE102}}
+Version:        %{__default_python3_version}
+Release:        35%{?dist}
 
 BuildArch:      noarch
 
