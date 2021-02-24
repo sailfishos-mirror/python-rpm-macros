@@ -3,8 +3,8 @@
 -- Determine alternate names provided from the given name.
 -- Used in pythonname provides generator, python_provide and py_provides.
 -- There are 2 rules:
---  python3-foo  -> python-foo, python3X-foo
---  python3X-foo -> python-foo, python3-foo
+--  python3-foo  -> python-foo, python3.X-foo
+--  python3.X-foo -> python-foo, python3-foo
 -- There is no python-foo -> rule, python-foo packages are version agnostic.
 -- Returns a table/array with strings. Empty when no rule matched.
 local function python_altnames(name)
