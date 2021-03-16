@@ -214,7 +214,7 @@
           end
         end
         description = description .. current_line .. '\\\n' ..
-                      'It contains no code, just makes sure the dependencies are installed.\\\n'
+                      'It makes sure the dependencies are installed.\\\n'
         local files = ''
         if value_i ~= '' then
             files = '%files -n ' .. rpmname .. '\\\n' .. '%ghost ' .. value_i
