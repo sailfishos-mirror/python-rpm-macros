@@ -338,7 +338,7 @@ def test_python_extras_subpkg_i():
         %description -n python3-setuptools_scm+toml
         This is a metapackage bringing in toml extras requires for
         python3-setuptools_scm.
-        It contains no code, just makes sure the dependencies are installed.
+        It makes sure the dependencies are installed.
 
         %files -n python3-setuptools_scm+toml
         %ghost /usr/lib/python{X_Y}/site-packages/*.egg-info
@@ -349,7 +349,7 @@ def test_python_extras_subpkg_i():
         %description -n python3-setuptools_scm+yaml
         This is a metapackage bringing in yaml extras requires for
         python3-setuptools_scm.
-        It contains no code, just makes sure the dependencies are installed.
+        It makes sure the dependencies are installed.
 
         %files -n python3-setuptools_scm+yaml
         %ghost /usr/lib/python{X_Y}/site-packages/*.egg-info
@@ -367,7 +367,7 @@ def test_python_extras_subpkg_f():
         %description -n python3-setuptools_scm+toml
         This is a metapackage bringing in toml extras requires for
         python3-setuptools_scm.
-        It contains no code, just makes sure the dependencies are installed.
+        It makes sure the dependencies are installed.
 
         %files -n python3-setuptools_scm+toml -f ghost_filelist
 
@@ -377,7 +377,7 @@ def test_python_extras_subpkg_f():
         %description -n python3-setuptools_scm+yaml
         This is a metapackage bringing in yaml extras requires for
         python3-setuptools_scm.
-        It contains no code, just makes sure the dependencies are installed.
+        It makes sure the dependencies are installed.
 
         %files -n python3-setuptools_scm+yaml -f ghost_filelist
         """).lstrip().splitlines()
@@ -394,7 +394,7 @@ def test_python_extras_subpkg_F():
         %description -n python3-setuptools_scm+toml
         This is a metapackage bringing in toml extras requires for
         python3-setuptools_scm.
-        It contains no code, just makes sure the dependencies are installed.
+        It makes sure the dependencies are installed.
 
 
 
@@ -404,7 +404,7 @@ def test_python_extras_subpkg_F():
         %description -n python3-setuptools_scm+yaml
         This is a metapackage bringing in yaml extras requires for
         python3-setuptools_scm.
-        It contains no code, just makes sure the dependencies are installed.
+        It makes sure the dependencies are installed.
         """).lstrip().splitlines()
     assert lines == expected
 
@@ -419,7 +419,7 @@ def test_python_extras_subpkg_underscores():
         %description -n python3-webscrapbook+adhoc_ssl
         This is a metapackage bringing in adhoc_ssl extras requires for
         python3-webscrapbook.
-        It contains no code, just makes sure the dependencies are installed.
+        It makes sure the dependencies are installed.
         """).lstrip().splitlines()
     assert lines == expected
 
@@ -440,8 +440,8 @@ def test_python_extras_subpkg_description_wrapping(basename_len, extra_len):
     if len(" ".join(lines[:-1])) < 80:
         assert len(lines) == 2
     expected_singleline = (f"This is a metapackage bringing in {extra} extras "
-                           f"requires for {basename}. It contains no code, "
-                           f"just makes sure the dependencies are installed.")
+                           f"requires for {basename}. "
+                           f"It makes sure the dependencies are installed.")
     description_singleline = " ".join(lines)
     assert description_singleline == expected_singleline
 
