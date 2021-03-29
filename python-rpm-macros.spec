@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3.9
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        The common Python RPM macros
 
 # macros and lua: MIT, compileall2.py: PSFv2
@@ -107,6 +107,10 @@ install -m 644 compileall2.py %{buildroot}%{_rpmconfigdir}/redhat/
 
 
 %changelog
+* Mon Mar 29 2021 Miro Hrončok <mhroncok@redhat.com> - 3.9-15
+- Allow commas as argument separator for extras names in %%python_extras_subpkg
+- Fixes: rhbz#1936486
+
 * Sat Feb 20 2021 Miro Hrončok <mhroncok@redhat.com> - 3.9-14
 - Fix %%python_extras_subpkg with underscores in extras names
 
