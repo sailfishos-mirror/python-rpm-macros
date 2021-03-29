@@ -424,6 +424,47 @@ def test_python_extras_subpkg_underscores():
     assert lines == expected
 
 
+@pytest.mark.parametrize('sep', [pytest.param(('', ' ', ' ', ''), id='spaces'),
+                                 pytest.param(('', ',', ',', ''), id='commas'),
+                                 pytest.param(('', ',', ',', ','), id='commas-trailing'),
+                                 pytest.param((',', ',', ',', ''), id='commas-leading'),
+                                 pytest.param((',', ',', ',', ','), id='commas-trailing-leading'),
+                                 pytest.param(('', ',', ' ', ''), id='mixture'),
+                                 pytest.param(('  ', '   ', '\t\t, ', '\t'), id='chaotic-good'),
+                                 pytest.param(('', '\t ,, \t\r ', ',,\t  , ', ',,'), id='chaotic-evil')])
+def test_python_extras_subpkg_arg_separators(sep):
+    lines = rpm_eval('%python_extras_subpkg -n python3-hypothesis -F {}cli{}ghostwriter{}pytz{}'.format(*sep),
+                     version='6.6.0', release='1.fc35')
+    expected = textwrap.dedent(f"""
+        %package -n python3-hypothesis+cli
+        Summary: Metapackage for python3-hypothesis: cli extras
+        Requires: python3-hypothesis = 6.6.0-1.fc35
+        %description -n python3-hypothesis+cli
+        This is a metapackage bringing in cli extras requires for python3-hypothesis.
+        It makes sure the dependencies are installed.
+
+
+
+        %package -n python3-hypothesis+ghostwriter
+        Summary: Metapackage for python3-hypothesis: ghostwriter extras
+        Requires: python3-hypothesis = 6.6.0-1.fc35
+        %description -n python3-hypothesis+ghostwriter
+        This is a metapackage bringing in ghostwriter extras requires for
+        python3-hypothesis.
+        It makes sure the dependencies are installed.
+
+
+
+        %package -n python3-hypothesis+pytz
+        Summary: Metapackage for python3-hypothesis: pytz extras
+        Requires: python3-hypothesis = 6.6.0-1.fc35
+        %description -n python3-hypothesis+pytz
+        This is a metapackage bringing in pytz extras requires for python3-hypothesis.
+        It makes sure the dependencies are installed.
+        """).lstrip().splitlines()
+    assert lines == expected
+
+
 @pytest.mark.parametrize('basename_len', [1, 10, 30, 45, 78])
 @pytest.mark.parametrize('extra_len', [1, 13, 28, 52, 78])
 def test_python_extras_subpkg_description_wrapping(basename_len, extra_len):

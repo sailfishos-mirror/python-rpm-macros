@@ -198,7 +198,7 @@
         rpm.expand('%{error:%%%0 requires at least one argument with "extras" name}')
     end
     local requires = 'Requires: ' .. value_n .. ' = %{?epoch:%{epoch}:}%{version}-%{release}'
-    for extras in args:gmatch('%S+') do
+    for extras in args:gmatch('[^%s,]+') do
         local rpmname = value_n .. '+' .. extras
         local pkgdef = '%package -n ' .. rpmname
         local summary = 'Summary: Metapackage for ' .. value_n .. ': ' .. extras .. ' extras'
