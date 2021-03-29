@@ -245,7 +245,7 @@ install -m 644 compileall2.py %{buildroot}%{_rpmconfigdir}/redhat/
 - Add %%python_disable_dependency_generator
 
 * Wed Dec 05 2018 Miro Hrončok <mhroncok@redhat.com> - 3-40
-- Workaround leaking buildroot PATH in %py_byte_compile (#1647212)
+- Workaround leaking buildroot PATH in %%py_byte_compile (#1647212)
 
 * Thu Nov 01 2018 Petr Viktorin <pviktori@redhat.com> - 3-39
 - Move "sleep 1" workaround from py3_build to py2_build (#1644923)
