@@ -20,7 +20,7 @@ License:        MIT and Python
 # The package version MUST be always the same as %%{__default_python3_version}.
 # To have only one source of truth, we load the macro and use it.
 # The macro is defined in python-srpm-macros.
-                %{load:%{SOURCE102}}
+                %{?load:%{SOURCE102}}
 Version:        %{__default_python3_version}
 Release:        36%{?dist}
 
