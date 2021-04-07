@@ -38,6 +38,17 @@ def rpm_eval(expression, fails=False, **kwargs):
     return cp.stdout.strip().splitlines()
 
 
+@pytest.fixture(scope="session")
+def lib():
+    lib_eval = rpm_eval("%_lib")[0]
+    if lib_eval == "%_lib" and TESTED_FILES:
+        raise ValueError(
+            "%_lib is not resolved to an actual value. "
+            "You may want to include /usr/lib/rpm/platform/x86_64-linux/macros to TESTED_FILES."
+        )
+    return lib_eval
+
+
 def shell_stdout(script):
     return subprocess.check_output(script,
                                    env={**os.environ, 'LANG': 'C.utf-8'},
@@ -290,9 +301,8 @@ def test_pycached_in_sitelib():
     ]
 
 
-def test_pycached_in_sitearch():
+def test_pycached_in_sitearch(lib):
     lines = rpm_eval('%pycached %{python3_sitearch}/foo*.py')
-    lib = rpm_eval('%_lib')[0]
     assert lines == [
         f'/usr/{lib}/python{X_Y}/site-packages/foo*.py',
         f'/usr/{lib}/python{X_Y}/site-packages/__pycache__/foo*.cpython-{XY}{{,.opt-?}}.pyc'
@@ -532,3 +542,27 @@ def test_platform_triplet():
 @x86_64_only
 def test_ext_suffix():
     assert rpm_eval("%python3_ext_suffix")[0] == f".cpython-{XY}-x86_64-linux-gnu.so"
+
+
+def test_python_sitelib_value():
+    macro = '%python_sitelib'
+    assert rpm_eval(macro, __python='/usr/bin/python3.6')[0] == f'/usr/lib/python3.6/site-packages'
+    assert rpm_eval(macro, __python='%__python3')[0] == f'/usr/lib/python{X_Y}/site-packages'
+
+
+def test_python3_sitelib_value():
+    macro = '%python3_sitelib'
+    assert rpm_eval(macro, __python3='/usr/bin/python3.6')[0] == f'/usr/lib/python3.6/site-packages'
+    assert rpm_eval(macro)[0] == f'/usr/lib/python{X_Y}/site-packages'
+
+
+def test_python_sitearch_value(lib):
+    macro = '%python_sitearch'
+    assert rpm_eval(macro, __python='/usr/bin/python3.6')[0] == f'/usr/{lib}/python3.6/site-packages'
+    assert rpm_eval(macro, __python='%__python3')[0] == f'/usr/{lib}/python{X_Y}/site-packages'
+
+
+def test_python3_sitearch_value(lib):
+    macro = '%python3_sitearch'
+    assert rpm_eval(macro, __python3='/usr/bin/python3.6')[0] == f'/usr/{lib}/python3.6/site-packages'
+    assert rpm_eval(macro)[0] == f'/usr/{lib}/python{X_Y}/site-packages'
