@@ -38,6 +38,17 @@ def rpm_eval(expression, fails=False, **kwargs):
     return cp.stdout.strip().splitlines()
 
 
+@pytest.fixture(scope="session")
+def lib():
+    lib_eval = rpm_eval("%_lib")[0]
+    if lib_eval == "%_lib" and TESTED_FILES:
+        raise ValueError(
+            "%_lib is not resolved to an actual value. "
+            "You may want to include /usr/lib/rpm/platform/x86_64-linux/macros to TESTED_FILES."
+        )
+    return lib_eval
+
+
 def shell_stdout(script):
     return subprocess.check_output(script,
                                    env={**os.environ, 'LANG': 'C.utf-8'},
@@ -233,57 +244,57 @@ def test_pytest_addopts_preserves_envvar(__pytest_addopts):
 
 
 def test_pypi_source_default_name():
-    url = rpm_eval('%pypi_source',
-                   name='foo', version='6')[0]
-    assert url == 'https://files.pythonhosted.org/packages/source/f/foo/foo-6.tar.gz'
+    urls = rpm_eval('%pypi_source',
+                    name='foo', version='6')
+    assert urls == ['https://files.pythonhosted.org/packages/source/f/foo/foo-6.tar.gz']
 
 
 def test_pypi_source_default_srcname():
-    url = rpm_eval('%pypi_source',
-                   name='python-foo', srcname='foo', version='6')[0]
-    assert url == 'https://files.pythonhosted.org/packages/source/f/foo/foo-6.tar.gz'
+    urls = rpm_eval('%pypi_source',
+                    name='python-foo', srcname='foo', version='6')
+    assert urls == ['https://files.pythonhosted.org/packages/source/f/foo/foo-6.tar.gz']
 
 
 def test_pypi_source_default_pypi_name():
-    url = rpm_eval('%pypi_source',
-                   name='python-foo', pypi_name='foo', version='6')[0]
-    assert url == 'https://files.pythonhosted.org/packages/source/f/foo/foo-6.tar.gz'
+    urls = rpm_eval('%pypi_source',
+                    name='python-foo', pypi_name='foo', version='6')
+    assert urls == ['https://files.pythonhosted.org/packages/source/f/foo/foo-6.tar.gz']
 
 
 def test_pypi_source_default_name_uppercase():
-    url = rpm_eval('%pypi_source',
-                   name='Foo', version='6')[0]
-    assert url == 'https://files.pythonhosted.org/packages/source/F/Foo/Foo-6.tar.gz'
+    urls = rpm_eval('%pypi_source',
+                    name='Foo', version='6')
+    assert urls == ['https://files.pythonhosted.org/packages/source/F/Foo/Foo-6.tar.gz']
 
 
 def test_pypi_source_provided_name():
-    url = rpm_eval('%pypi_source foo',
-                   name='python-bar', pypi_name='bar', version='6')[0]
-    assert url == 'https://files.pythonhosted.org/packages/source/f/foo/foo-6.tar.gz'
+    urls = rpm_eval('%pypi_source foo',
+                    name='python-bar', pypi_name='bar', version='6')
+    assert urls == ['https://files.pythonhosted.org/packages/source/f/foo/foo-6.tar.gz']
 
 
 def test_pypi_source_provided_name_version():
-    url = rpm_eval('%pypi_source foo 6',
-                   name='python-bar', pypi_name='bar', version='3')[0]
-    assert url == 'https://files.pythonhosted.org/packages/source/f/foo/foo-6.tar.gz'
+    urls = rpm_eval('%pypi_source foo 6',
+                    name='python-bar', pypi_name='bar', version='3')
+    assert urls == ['https://files.pythonhosted.org/packages/source/f/foo/foo-6.tar.gz']
 
 
 def test_pypi_source_provided_name_version_ext():
     url = rpm_eval('%pypi_source foo 6 zip',
-                   name='python-bar', pypi_name='bar', version='3')[0]
-    assert url == 'https://files.pythonhosted.org/packages/source/f/foo/foo-6.zip'
+                   name='python-bar', pypi_name='bar', version='3')
+    assert url == ['https://files.pythonhosted.org/packages/source/f/foo/foo-6.zip']
 
 
 def test_pypi_source_prerelease():
-    url = rpm_eval('%pypi_source',
-                   name='python-foo', pypi_name='foo', version='6~b2')[0]
-    assert url == 'https://files.pythonhosted.org/packages/source/f/foo/foo-6b2.tar.gz'
+    urls = rpm_eval('%pypi_source',
+                    name='python-foo', pypi_name='foo', version='6~b2')
+    assert urls == ['https://files.pythonhosted.org/packages/source/f/foo/foo-6b2.tar.gz']
 
 
 def test_pypi_source_explicit_tilde():
-    url = rpm_eval('%pypi_source foo 6~6',
-                   name='python-foo', pypi_name='foo', version='6')[0]
-    assert url == 'https://files.pythonhosted.org/packages/source/f/foo/foo-6~6.tar.gz'
+    urls = rpm_eval('%pypi_source foo 6~6',
+                    name='python-foo', pypi_name='foo', version='6')
+    assert urls == ['https://files.pythonhosted.org/packages/source/f/foo/foo-6~6.tar.gz']
 
 
 def test_py3_shebang_fix():
@@ -323,9 +334,8 @@ def test_pycached_in_sitelib():
     ]
 
 
-def test_pycached_in_sitearch():
+def test_pycached_in_sitearch(lib):
     lines = rpm_eval('%pycached %{python3_sitearch}/foo*.py')
-    lib = rpm_eval('%_lib')[0]
     assert lines == [
         f'/usr/{lib}/python{X_Y}/site-packages/foo*.py',
         f'/usr/{lib}/python{X_Y}/site-packages/__pycache__/foo*.cpython-{XY}{{,.opt-?}}.pyc'
@@ -543,8 +553,8 @@ unversioned_macros = pytest.mark.parametrize('macro', [
 @unversioned_macros
 def test_unversioned_python_errors(macro):
     lines = rpm_eval(macro, fails=True)
-    assert lines[0] == ('error: attempt to use unversioned python, '
-                        'define %__python to /usr/bin/python2 or /usr/bin/python3 explicitly')
+    assert lines == ['error: attempt to use unversioned python, '
+                     'define %__python to /usr/bin/python2 or /usr/bin/python3 explicitly']
 
 
 @unversioned_macros
@@ -559,9 +569,33 @@ x86_64_only = pytest.mark.skipif(platform.machine() != "x86_64", reason="works o
 
 @x86_64_only
 def test_platform_triplet():
-    assert rpm_eval("%python3_platform_triplet")[0] == "x86_64-linux-gnu"
+    assert rpm_eval("%python3_platform_triplet") == ["x86_64-linux-gnu"]
 
 
 @x86_64_only
 def test_ext_suffix():
-    assert rpm_eval("%python3_ext_suffix")[0] == f".cpython-{XY}-x86_64-linux-gnu.so"
+    assert rpm_eval("%python3_ext_suffix") == [f".cpython-{XY}-x86_64-linux-gnu.so"]
+
+
+def test_python_sitelib_value():
+    macro = '%python_sitelib'
+    assert rpm_eval(macro, __python='/usr/bin/python3.6') == [f'/usr/lib/python3.6/site-packages']
+    assert rpm_eval(macro, __python='%__python3') == [f'/usr/lib/python{X_Y}/site-packages']
+
+
+def test_python3_sitelib_value():
+    macro = '%python3_sitelib'
+    assert rpm_eval(macro, __python3='/usr/bin/python3.6') == [f'/usr/lib/python3.6/site-packages']
+    assert rpm_eval(macro) == [f'/usr/lib/python{X_Y}/site-packages']
+
+
+def test_python_sitearch_value(lib):
+    macro = '%python_sitearch'
+    assert rpm_eval(macro, __python='/usr/bin/python3.6') == [f'/usr/{lib}/python3.6/site-packages']
+    assert rpm_eval(macro, __python='%__python3') == [f'/usr/{lib}/python{X_Y}/site-packages']
+
+
+def test_python3_sitearch_value(lib):
+    macro = '%python3_sitearch'
+    assert rpm_eval(macro, __python3='/usr/bin/python3.6') == [f'/usr/{lib}/python3.6/site-packages']
+    assert rpm_eval(macro) == [f'/usr/{lib}/python{X_Y}/site-packages']
