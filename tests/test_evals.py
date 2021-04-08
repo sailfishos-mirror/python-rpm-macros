@@ -15,7 +15,8 @@ XY = f'{sys.version_info[0]}{sys.version_info[1]}'
 # You can use * if you escape it from your Shell:
 # TESTED_FILES='macros.*' pytest -v
 # Remember that some tests might need more macros files than just
-# the local ones.
+# the local ones. You might need to use:
+# TESTED_FILES='/usr/lib/rpm/macros:/usr/lib/rpm/platform/x86_64-linux/macros:macros.*'
 TESTED_FILES = os.getenv("TESTED_FILES", None)
 
 
