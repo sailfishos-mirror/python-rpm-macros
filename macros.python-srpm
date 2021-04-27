@@ -47,13 +47,6 @@
 # a specific version (e.g. 34 in Fedora EPEL7)
 %python3_pkgversion 3
 
-# Set to /bin/true to avoid %%ifdefs and %%{? in specfiles
-%__python3_other /bin/true
-%py3_other_build /bin/true
-%py3_other_install /bin/true
-
-
-
 # === Macros for Build/Requires tags using Python dist tags ===
 # - https://fedoraproject.org/wiki/Changes/Automatic_Provides_for_Python_RPM_Packages
 # - These macros need to be in macros.python-srpm, because BuildRequires tags
