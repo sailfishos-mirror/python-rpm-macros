@@ -29,7 +29,7 @@ elseif posix.stat('macros.python-srpm') then
 end
 }
 Version:        %{__default_python3_version}
-Release:        37%{?dist}
+Release:        38%{?dist}
 
 BuildArch:      noarch
 
@@ -88,6 +88,11 @@ mkdir -p %{buildroot}%{_rpmconfigdir}/redhat
 install -m 644 compileall2.py %{buildroot}%{_rpmconfigdir}/redhat/
 
 
+%check
+# no macros in comments
+! grep -E '^#[^%%]*%%[^%%]' %{buildroot}%{rpmmacrodir}/macros.*
+
+
 %files
 %{rpmmacrodir}/macros.python
 %{rpmmacrodir}/macros.pybytecompile
@@ -102,6 +107,10 @@ install -m 644 compileall2.py %{buildroot}%{_rpmconfigdir}/redhat/
 
 
 %changelog
+* Tue Apr 27 2021 Miro Hrončok <mhroncok@redhat.com> - 3.9-38
+- Escape %% symbols in macro files comments
+- Fixes: rhbz#1953910
+
 * Wed Apr 07 2021 Karolina Surma <ksurma@redhat.com> - 3.9-37
 - Use sysconfig.get_path() to get %%python3_sitelib and %%python3_sitearch
 - Fixes: rhbz#1946972

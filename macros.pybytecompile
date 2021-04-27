@@ -4,13 +4,13 @@
 # Which unfortunately makes the definition more complicated than it should be
 
 # Usage:
-#    %py_byte_compile <interpereter> <path>
+#    %%py_byte_compile <interpereter> <path>
 # Example:
-#    %py_byte_compile %{__python3} %{buildroot}%{_datadir}/spam/plugins/
+#    %%py_byte_compile %%{__python3} %%{buildroot}%%{_datadir}/spam/plugins/
 
 # This will terminate build on SyntaxErrors, if you want to avoid that,
 # use it in a subshell like this:
-#    (%{py_byte_compile <interpereter> <path>}) || :
+#    (%%{py_byte_compile <interpereter> <path>}) || :
 
 # Setting PYTHONHASHSEED=0 disables Python hash seed randomization
 # This should help with byte-compilation reproducibility: https://bugzilla.redhat.com/show_bug.cgi?id=1686078

@@ -47,7 +47,7 @@
 # a specific version (e.g. 34 in Fedora EPEL7)
 %python3_pkgversion 3
 
-# Set to /bin/true to avoid %ifdefs and %{? in specfiles
+# Set to /bin/true to avoid %%ifdefs and %%{? in specfiles
 %__python3_other /bin/true
 %py3_other_build /bin/true
 %py3_other_install /bin/true
@@ -68,7 +68,7 @@
 
 # Creates Python 2 dist tag(s) after converting names to canonical format
 #   Needs to first put all arguments into a list, because invoking a different
-#   macro (%py_dist_name) overwrites them
+#   macro (%%py_dist_name) overwrites them
 %py2_dist() %{lua:\
         args = {}\
         arg = 1\
@@ -88,7 +88,7 @@
 
 # Creates Python 3 dist tag(s) after converting names to canonical format
 #   Needs to first put all arguments into a list, because invoking a different
-#   macro (%py_dist_name) overwrites them
+#   macro (%%py_dist_name) overwrites them
 %py3_dist() %{lua:\
         python3_pkgversion = rpm.expand("%python3_pkgversion");\
         args = {}\
@@ -110,12 +110,12 @@
 # Macro to replace overly complicated references to PyPI source files.
 # Expands to the pythonhosted URL for a package
 # Accepts zero to three arguments:
-# 1:  The PyPI project name, defaulting to %srcname if it is defined, then
-#     %pypi_name if it is defined, then just %name.
-# 2:  The PYPI version, defaulting to %version with tildes stripped.
+# 1:  The PyPI project name, defaulting to %%srcname if it is defined, then
+#     %%pypi_name if it is defined, then just %%name.
+# 2:  The PYPI version, defaulting to %%version with tildes stripped.
 # 3:  The file extension, defaulting to "tar.gz".  (A period will be added
 #     automatically.)
-# Requires %__pypi_url and %__pypi_default_extension to be defined.
+# Requires %%__pypi_url and %%__pypi_default_extension to be defined.
 %__pypi_url https://files.pythonhosted.org/packages/source/
 %__pypi_default_extension tar.gz
 
