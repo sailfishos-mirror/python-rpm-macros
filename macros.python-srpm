@@ -43,8 +43,10 @@
 # This is left intentionally a separate macro, in case the naming convention ever changes.
 %__default_python3_pkgversion %__default_python3_version
 
-# python3_pkgversion specifies the version of Python 3 in the distro.  It can be
-# a specific version (e.g. 34 in Fedora EPEL7)
+# python3_pkgversion specifies the version of Python 3 in the distro.
+# For Fedora, this is usually just "3".
+# It can be a specific version distro-wide (e.g. "36" in EPEL7).
+# Alternatively, it can be overridden in spec (e.g. to "3.8") when building for alternate Python stacks.
 %python3_pkgversion 3
 
 # === Macros for Build/Requires tags using Python dist tags ===
