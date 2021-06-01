@@ -29,7 +29,7 @@ elseif posix.stat('macros.python-srpm') then
 end
 }
 Version:        %{__default_python3_version}
-Release:        38%{?dist}
+Release:        1%{?dist}
 
 BuildArch:      noarch
 
@@ -107,6 +107,10 @@ install -m 644 compileall2.py %{buildroot}%{_rpmconfigdir}/redhat/
 
 
 %changelog
+* Tue Jun 01 2021 Miro Hrončok <mhroncok@redhat.com> - 3.10-1
+- Update main Python to Python 3.10
+- https://fedoraproject.org/wiki/Changes/Python3.10
+
 * Tue Apr 27 2021 Miro Hrončok <mhroncok@redhat.com> - 3.9-38
 - Escape %% symbols in macro files comments
 - Fixes: rhbz#1953910
