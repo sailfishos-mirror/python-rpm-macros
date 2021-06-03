@@ -1,6 +1,8 @@
 Name:           python-rpm-macros
 Summary:        The common Python RPM macros
 
+URL:            https://src.fedoraproject.org/rpms/python-rpm-macros/
+
 # Macros:
 Source101:      macros.python
 Source102:      macros.python-srpm
