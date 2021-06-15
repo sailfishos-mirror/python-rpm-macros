@@ -31,7 +31,7 @@ elseif posix.stat('macros.python-srpm') then
 end
 }
 Version:        %{__default_python3_version}
-Release:        1%{?dist}
+Release:        2%{?dist}
 
 BuildArch:      noarch
 
@@ -109,6 +109,9 @@ install -m 644 compileall2.py %{buildroot}%{_rpmconfigdir}/redhat/
 
 
 %changelog
+* Tue Jun 15 2021 Miro Hrončok <mhroncok@redhat.com> - 3.10-2
+- Fix %%python_provide when fed python3.10-foo to obsolete python-foo instead of python--foo
+
 * Tue Jun 01 2021 Miro Hrončok <mhroncok@redhat.com> - 3.10-1
 - Update main Python to Python 3.10
 - https://fedoraproject.org/wiki/Changes/Python3.10

@@ -74,6 +74,7 @@
   local package = rpm.expand("%{?1}")
   local vr = rpm.expand("%{?epoch:%{epoch}:}%{version}-%{release}")
   local provides = python.python_altprovides(package, vr)
+  local default_python3_pkgversion = rpm.expand("%{__default_python3_pkgversion}")
   if (string.starts(package, "python3-")) then
     for i, provide in ipairs(provides) do
       print("\\nProvides: " .. provide)
@@ -84,14 +85,14 @@
       print(string.sub(package,9,string.len(package)))
       print(" < " .. vr)
     end
-  elseif (string.starts(package, "python" .. rpm.expand("%{__default_python3_pkgversion}") .. "-")) then
+  elseif (string.starts(package, "python" .. default_python3_pkgversion .. "-")) then
     for i, provide in ipairs(provides) do
       print("\\nProvides: " .. provide)
     end
     --Obsoleting the previous default python package (if it doesn't have isa)
     if (string.sub(package, "-1") ~= ")") then
       print("\\nObsoletes: python-")
-      print(string.sub(package,11,string.len(package)))
+      print(string.sub(package,8+string.len(default_python3_pkgversion),string.len(package)))
       print(" < " .. vr)
     end
   elseif (string.starts(package, "python")) then
