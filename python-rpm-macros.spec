@@ -22,7 +22,7 @@ License:        MIT and Python
 # The macro is defined in python-srpm-macros.
                 %{?load:%{SOURCE102}}
 Version:        %{__default_python3_version}
-Release:        36%{?dist}
+Release:        37%{?dist}
 
 BuildArch:      noarch
 
@@ -95,6 +95,10 @@ install -m 644 compileall2.py %{buildroot}%{_rpmconfigdir}/redhat/
 
 
 %changelog
+* Mon Jun 28 2021 Miro Hrončok <mhroncok@redhat.com> - 3.9-37
+- %%pytest: Set $PYTEST_ADDOPTS when %%{__pytest_addopts} is defined
+- Related: rhzb#1935212
+
 * Mon Mar 29 2021 Miro Hrončok <mhroncok@redhat.com> - 3.9-36
 - Allow commas as argument separator for extras names in %%python_extras_subpkg
 - Fixes: rhbz#1936486

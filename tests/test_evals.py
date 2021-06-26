@@ -199,6 +199,39 @@ def test_pytest_command_suffix():
     assert '/usr/bin/pytest-3.6 -v' in lines[-1]
 
 
+def test_pytest_undefined_addopts_are_not_set():
+    lines = rpm_eval('%pytest', __pytest_addopts=None)
+    assert 'PYTEST_ADDOPTS' not in '\n'.join(lines)
+
+
+def test_pytest_defined_addopts_are_set():
+    lines = rpm_eval('%pytest', __pytest_addopts="--ignore=stuff")
+    assert 'PYTEST_ADDOPTS="${PYTEST_ADDOPTS:-} --ignore=stuff"' in '\n'.join(lines)
+
+
+@pytest.mark.parametrize('__pytest_addopts', ['--macronized-option', 'x y z', None])
+def test_pytest_addopts_preserves_envvar(__pytest_addopts):
+    # this is the line a packager might put in the spec file before running %pytest:
+    spec_line = 'export PYTEST_ADDOPTS="--exported-option1 --exported-option2"'
+
+    # instead of actually running /usr/bin/pytest,
+    # we run a small shell script that echoes the tested value for inspection
+    lines = rpm_eval('%pytest', __pytest_addopts=__pytest_addopts,
+                     __pytest="sh -c 'echo $PYTEST_ADDOPTS'")
+
+    echoed = shell_stdout('\n'.join([spec_line] + lines))
+
+    # assert all values were echoed
+    assert '--exported-option1' in echoed
+    assert '--exported-option2' in echoed
+    if __pytest_addopts is not None:
+        assert __pytest_addopts in echoed
+
+    # assert the options are separated
+    assert 'option--' not in echoed
+    assert 'z--' not in echoed
+
+
 def test_pypi_source_default_name():
     url = rpm_eval('%pypi_source',
                    name='foo', version='6')[0]
