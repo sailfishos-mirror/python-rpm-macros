@@ -31,7 +31,7 @@ elseif posix.stat('macros.python-srpm') then
 end
 }
 Version:        %{__default_python3_version}
-Release:        2%{?dist}
+Release:        3%{?dist}
 
 BuildArch:      noarch
 
@@ -109,6 +109,10 @@ install -m 644 compileall2.py %{buildroot}%{_rpmconfigdir}/redhat/
 
 
 %changelog
+* Mon Jun 28 2021 Miro Hrončok <mhroncok@redhat.com> - 3.10-3
+- %%pytest: Set $PYTEST_ADDOPTS when %%{__pytest_addopts} is defined
+- Related: rhzb#1935212
+
 * Tue Jun 15 2021 Miro Hrončok <mhroncok@redhat.com> - 3.10-2
 - Fix %%python_provide when fed python3.10-foo to obsolete python-foo instead of python--foo
 
