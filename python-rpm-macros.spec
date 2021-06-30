@@ -16,8 +16,16 @@ Source201:      python.lua
 %global compileall2_version 0.7.1
 Source301:      https://github.com/fedora-python/compileall2/raw/v%{compileall2_version}/compileall2.py
 
-# macros and lua: MIT, compileall2.py: PSFv2
-License:        MIT and Python
+# BRP scripts
+# This one is from https://github.com/rpm-software-management/python-rpm-packaging/blob/main/scripts/brp-python-hardlink
+# But we don't use a link in case it changes in upstream, there are no "versions" there yet
+# This was removed from RPM 4.17+ so we maintain it here instead
+Source401:      brp-python-hardlink
+
+# macros and lua: MIT
+# compileall2.py: PSFv2
+# brp-python-hardlink: GPLv2+
+License:        MIT and Python and GPLv2+
 
 # The package version MUST be always the same as %%{__default_python3_version}.
 # To have only one source of truth, we load the macro and use it.
@@ -31,7 +39,7 @@ elseif posix.stat('macros.python-srpm') then
 end
 }
 Version:        %{__default_python3_version}
-Release:        3%{?dist}
+Release:        4%{?dist}
 
 BuildArch:      noarch
 
@@ -89,6 +97,16 @@ install -p -m 644 -t %{buildroot}%{_rpmluadir}/fedora/srpm python.lua
 mkdir -p %{buildroot}%{_rpmconfigdir}/redhat
 install -m 644 compileall2.py %{buildroot}%{_rpmconfigdir}/redhat/
 
+install -m 755 brp-* %{buildroot}%{_rpmconfigdir}/redhat/
+
+
+# We define our own BRPs here to use the ones from the %%{buildroot},
+# that way, this package can be built when it includes them for the first time.
+# It also ensures that:
+#  - our BRPs can execute
+#  - if our BRPs affect this package, we don't need to build it twice
+%global __brp_python_hardlink %{buildroot}%{__brp_python_hardlink}
+
 
 %check
 # no macros in comments
@@ -102,6 +120,7 @@ install -m 644 compileall2.py %{buildroot}%{_rpmconfigdir}/redhat/
 %files -n python-srpm-macros
 %{rpmmacrodir}/macros.python-srpm
 %{_rpmconfigdir}/redhat/compileall2.py
+%{_rpmconfigdir}/redhat/brp-python-hardlink
 %{_rpmluadir}/fedora/srpm/python.lua
 
 %files -n python3-rpm-macros
@@ -109,6 +128,9 @@ install -m 644 compileall2.py %{buildroot}%{_rpmconfigdir}/redhat/
 
 
 %changelog
+* Wed Jun 30 2021 Miro Hrončok <mhroncok@redhat.com> - 3.10-4
+- Include brp-python-hardlink in python-srpm-macros since it is no longer in RPM 4.17+
+
 * Mon Jun 28 2021 Miro Hrončok <mhroncok@redhat.com> - 3.10-3
 - %%pytest: Set $PYTEST_ADDOPTS when %%{__pytest_addopts} is defined
 - Related: rhzb#1935212

@@ -49,6 +49,11 @@
 # Alternatively, it can be overridden in spec (e.g. to "3.8") when building for alternate Python stacks.
 %python3_pkgversion 3
 
+
+# BRP scripts, they need to be included in redhat-rpm-macros, in %%__os_install_post
+%__brp_python_hardlink %{_rpmconfigdir}/redhat/brp-python-hardlink
+
+
 # === Macros for Build/Requires tags using Python dist tags ===
 # - https://fedoraproject.org/wiki/Changes/Automatic_Provides_for_Python_RPM_Packages
 # - These macros need to be in macros.python-srpm, because BuildRequires tags
