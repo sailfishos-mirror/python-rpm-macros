@@ -66,6 +66,19 @@
   done
 }
 
+# With $PATH and $PYTHONPATH set to the %%buildroot,
+# try to import the given Python module(s).
+# Useful as a smoke test in %%check when running tests is not feasible.
+# Use spaces or commas as separators.
+%py_check_import() %{expand:\\\
+  (cd %{_topdir} &&\\\
+  PATH="%{buildroot}%{_bindir}:$PATH"\\\
+  PYTHONPATH="${PYTHONPATH:-%{buildroot}%{python_sitearch}:%{buildroot}%{python_sitelib}}"\\\
+  PYTHONDONTWRITEBYTECODE=1\\\
+  %{__python} -c "import %{lua:local m=rpm.expand('%{?*}'):gsub('[%s,]+', ', ');print(m)}"
+  )
+}
+
 %python_provide() %{lua:
   local python = require "fedora.srpm.python"
   function string.starts(String,Start)

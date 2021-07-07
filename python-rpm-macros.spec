@@ -22,7 +22,7 @@ License:        MIT and Python
 # The macro is defined in python-srpm-macros.
                 %{?load:%{SOURCE102}}
 Version:        %{__default_python3_version}
-Release:        37%{?dist}
+Release:        38%{?dist}
 
 BuildArch:      noarch
 
@@ -95,6 +95,9 @@ install -m 644 compileall2.py %{buildroot}%{_rpmconfigdir}/redhat/
 
 
 %changelog
+* Wed Jul 07 2021 Miro Hrončok <mhroncok@redhat.com> - 3.9-38
+- Introduce %%py3_check_import
+
 * Mon Jun 28 2021 Miro Hrončok <mhroncok@redhat.com> - 3.9-37
 - %%pytest: Set $PYTEST_ADDOPTS when %%{__pytest_addopts} is defined
 - Related: rhzb#1935212

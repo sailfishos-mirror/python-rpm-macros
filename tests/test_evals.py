@@ -1,6 +1,7 @@
 import os
 import subprocess
 import platform
+import re
 import sys
 import textwrap
 
@@ -547,6 +548,7 @@ unversioned_macros = pytest.mark.parametrize('macro', [
     '%py_install',
     '%py_install_egg',
     '%py_install_wheel',
+    '%py_check_import',
 ])
 
 
@@ -599,3 +601,46 @@ def test_python3_sitearch_value(lib):
     macro = '%python3_sitearch'
     assert rpm_eval(macro, __python3='/usr/bin/python3.6') == [f'/usr/{lib}/python3.6/site-packages']
     assert rpm_eval(macro) == [f'/usr/{lib}/python{X_Y}/site-packages']
+
+
+@pytest.mark.parametrize(
+    'args, imports',
+    [
+        ('six', 'six'),
+        ('five  six seven', 'five, six, seven'),
+        ('six,seven, eight', 'six, seven, eight'),
+        ('six.quarter  six.half,, SIX', 'six.quarter, six.half, SIX'),
+    ]
+)
+@pytest.mark.parametrize('__python3', [None, f'/usr/bin/python{X_Y}', '/usr/bin/python3.6'])
+def test_py3_check_import(args, imports, __python3, lib):
+    x_y = X_Y
+    macors = {
+        'buildroot': 'BUILDROOT',
+        '_topdir': 'TOPDIR',
+    }
+    if __python3 is not None:
+        macors['__python3'] = __python3
+        # If the __python3 command has version at the end, parse it and expect it.
+        # Note that the command is used to determine %python3_sitelib and %python3_sitearch,
+        # so we only test known CPython schemes here and not PyPy for simplicity.
+        # We also only test main Python + 3.6 because those are required by the CI config.
+        if (match := re.match(r'.+python(\d+\.\d+)$', __python3)):
+            x_y = match.group(1)
+
+    lines = rpm_eval(f'%py3_check_import {args}', **macors)
+
+    # An equality check is a bit inflexible here,
+    # every time we change the macro we need to change this test.
+    # However actually executing it and verifying the result is much harder :/
+    # At least, let's make the lines saner to check:
+    lines = [line.rstrip('\\').strip() for line in lines]
+    expected = textwrap.dedent(fr"""
+        (cd TOPDIR &&
+        PATH="BUILDROOT/usr/bin:$PATH"
+        PYTHONPATH="${{PYTHONPATH:-BUILDROOT/usr/{lib}/python{x_y}/site-packages:BUILDROOT/usr/lib/python{x_y}/site-packages}}"
+        PYTHONDONTWRITEBYTECODE=1
+        {__python3 or '/usr/bin/python3'} -c "import {imports}"
+        )
+        """)
+    assert lines == expected.splitlines()
