@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3.9
-Release:        16%{?dist}
+Release:        17%{?dist}
 Summary:        The common Python RPM macros
 
 # macros and lua: MIT, compileall2.py: PSFv2
@@ -107,6 +107,9 @@ install -m 644 compileall2.py %{buildroot}%{_rpmconfigdir}/redhat/
 
 
 %changelog
+* Wed Jul 07 2021 Miro Hrončok <mhroncok@redhat.com> - 3.9-17
+- Introduce %%py3_check_import
+
 * Mon Jun 28 2021 Miro Hrončok <mhroncok@redhat.com> - 3.9-16
 - %%pytest: Set $PYTEST_ADDOPTS when %%{__pytest_addopts} is defined
 - Related: rhzb#1935212
