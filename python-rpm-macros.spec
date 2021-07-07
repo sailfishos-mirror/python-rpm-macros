@@ -39,7 +39,7 @@ elseif posix.stat('macros.python-srpm') then
 end
 }
 Version:        %{__default_python3_version}
-Release:        4%{?dist}
+Release:        5%{?dist}
 
 BuildArch:      noarch
 
@@ -128,6 +128,9 @@ install -m 755 brp-* %{buildroot}%{_rpmconfigdir}/redhat/
 
 
 %changelog
+* Wed Jul 07 2021 Miro Hrončok <mhroncok@redhat.com> - 3.10-5
+- Introduce %%py3_check_import
+
 * Wed Jun 30 2021 Miro Hrončok <mhroncok@redhat.com> - 3.10-4
 - Include brp-python-hardlink in python-srpm-macros since it is no longer in RPM 4.17+
 
