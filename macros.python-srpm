@@ -50,8 +50,31 @@
 %python3_pkgversion 3
 
 
-# BRP scripts, they need to be included in redhat-rpm-macros, in %%__os_install_post
+### BRP scripts (and related macros)
+
+## Automatically compile python files
+%py_auto_byte_compile 1
+## Should python bytecompilation errors terminate a build?
+%_python_bytecompile_errors_terminate_build 1
+## Should python bytecompilation compile outside python specific directories?
+## This always causes errors when enabled, see https://fedoraproject.org/wiki/Changes/No_more_automagic_Python_bytecompilation_phase_3
+%_python_bytecompile_extra 0
+
+## The individual BRP scripts
+%__brp_python_bytecompile %{_rpmconfigdir}/redhat/brp-python-bytecompile "" "%{?_python_bytecompile_errors_terminate_build}" "%{?_python_bytecompile_extra}"
+%__brp_fix_pyc_reproducibility %{_rpmconfigdir}/redhat/brp-fix-pyc-reproducibility
 %__brp_python_hardlink %{_rpmconfigdir}/redhat/brp-python-hardlink
+
+## This macro is included in redhat-rpm-config's %%__os_install_post
+# Note that the order matters:
+#  1. brp-python-bytecompile can create (or replace) pyc files
+#  2. brp-fix-pyc-reproducibility can modify the pyc files from above
+#  3. brp-python-hardlink de-duplicates identical pyc files
+%__os_install_post_python \
+    %{?py_auto_byte_compile:%{?__brp_python_bytecompile}} \
+    %{?py_reproducible_pyc_path:%{?__brp_fix_pyc_reproducibility} "%{py_reproducible_pyc_path}"} \
+    %{?__brp_python_hardlink} \
+%{nil}
 
 
 # === Macros for Build/Requires tags using Python dist tags ===

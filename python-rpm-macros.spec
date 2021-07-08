@@ -17,14 +17,22 @@ Source201:      python.lua
 Source301:      https://github.com/fedora-python/compileall2/raw/v%{compileall2_version}/compileall2.py
 
 # BRP scripts
+# This one is from redhat-rpm-config < 190
+# A new upstream is forming in https://github.com/rpm-software-management/python-rpm-packaging/blob/main/scripts/brp-python-bytecompile
+# But our version is riddled with Fedora-isms
+# We might eventually move to upstream source + Fedora patches, but we are not there yet
+Source401:      brp-python-bytecompile
 # This one is from https://github.com/rpm-software-management/python-rpm-packaging/blob/main/scripts/brp-python-hardlink
 # But we don't use a link in case it changes in upstream, there are no "versions" there yet
 # This was removed from RPM 4.17+ so we maintain it here instead
-Source401:      brp-python-hardlink
+Source402:      brp-python-hardlink
+# This one is from redhat-rpm-config < 190
+# It has no upstream yet
+Source403:      brp-fix-pyc-reproducibility
 
 # macros and lua: MIT
 # compileall2.py: PSFv2
-# brp-python-hardlink: GPLv2+
+# brp scripts: GPLv2+
 License:        MIT and Python and GPLv2+
 
 # The package version MUST be always the same as %%{__default_python3_version}.
@@ -39,7 +47,7 @@ elseif posix.stat('macros.python-srpm') then
 end
 }
 Version:        %{__default_python3_version}
-Release:        5%{?dist}
+Release:        6%{?dist}
 
 BuildArch:      noarch
 
@@ -60,7 +68,8 @@ python?-devel packages require it. So install a python-devel package instead.
 Summary:        RPM macros for building Python source packages
 
 # For directory structure and flags macros
-Requires:       redhat-rpm-config
+# Versions before 190 contained some brp scripts moved into python-srpm-macros
+Requires:       redhat-rpm-config >= 190
 
 # We bundle our own software here :/
 Provides:       bundled(python3dist(compileall2)) = %{compileall2_version}
@@ -105,7 +114,9 @@ install -m 755 brp-* %{buildroot}%{_rpmconfigdir}/redhat/
 # It also ensures that:
 #  - our BRPs can execute
 #  - if our BRPs affect this package, we don't need to build it twice
+%global __brp_python_bytecompile %{buildroot}%{__brp_python_bytecompile}
 %global __brp_python_hardlink %{buildroot}%{__brp_python_hardlink}
+%global __brp_fix_pyc_reproducibility %{buildroot}%{__brp_fix_pyc_reproducibility}
 
 
 %check
@@ -120,7 +131,9 @@ install -m 755 brp-* %{buildroot}%{_rpmconfigdir}/redhat/
 %files -n python-srpm-macros
 %{rpmmacrodir}/macros.python-srpm
 %{_rpmconfigdir}/redhat/compileall2.py
+%{_rpmconfigdir}/redhat/brp-python-bytecompile
 %{_rpmconfigdir}/redhat/brp-python-hardlink
+%{_rpmconfigdir}/redhat/brp-fix-pyc-reproducibility
 %{_rpmluadir}/fedora/srpm/python.lua
 
 %files -n python3-rpm-macros
@@ -128,6 +141,9 @@ install -m 755 brp-* %{buildroot}%{_rpmconfigdir}/redhat/
 
 
 %changelog
+* Wed Jul 07 2021 Miro Hrončok <mhroncok@redhat.com> - 3.10-6
+- Move Python related BuildRoot Policy scripts from redhat-rpm-config to python-srpm-macros
+
 * Wed Jul 07 2021 Miro Hrončok <mhroncok@redhat.com> - 3.10-5
 - Introduce %%py3_check_import
 
