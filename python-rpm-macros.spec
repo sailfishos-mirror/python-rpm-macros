@@ -47,7 +47,7 @@ elseif posix.stat('macros.python-srpm') then
 end
 }
 Version:        %{__default_python3_version}
-Release:        6%{?dist}
+Release:        7%{?dist}
 
 BuildArch:      noarch
 
@@ -141,6 +141,9 @@ install -m 755 brp-* %{buildroot}%{_rpmconfigdir}/redhat/
 
 
 %changelog
+* Fri Jul 23 2021 Fedora Release Engineering <releng@fedoraproject.org> - 3.9-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_35_Mass_Rebuild
+
 * Wed Jul 07 2021 Miro Hrončok <mhroncok@redhat.com> - 3.10-6
 - Move Python related BuildRoot Policy scripts from redhat-rpm-config to python-srpm-macros
 
