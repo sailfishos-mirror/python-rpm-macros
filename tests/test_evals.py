@@ -51,6 +51,31 @@ def lib():
     return lib_eval
 
 
+def get_alt_x_y():
+    """
+    Some tests require alternate Python version to be installed.
+    In order to allow any Python version (or none at all),
+    this function/fixture exists.
+    You can control the behavior by setting the $ALTERNATE_PYTHON_VERSION
+    environment variable to X.Y (e.g. 3.6) or SKIP.
+    The environment variable must be set.
+    """
+    env_name = "ALTERNATE_PYTHON_VERSION"
+    alternate_python_version = os.getenv(env_name, "")
+    if alternate_python_version.upper() == "SKIP":
+        pytest.skip(f"${env_name} set to SKIP")
+    if not alternate_python_version:
+        raise ValueError(f"${env_name} must be set, "
+                         f"set it to SKIP if you want to skip tests that "
+                         f"require alternate Python version.")
+    if not re.match(r"^\d+\.\d+$", alternate_python_version):
+        raise ValueError(f"${env_name} must be X.Y")
+    return alternate_python_version
+
+# We don't use the decorator, to be able to call the function itselef
+alt_x_y = pytest.fixture(scope="session")(get_alt_x_y)
+
+
 def shell_stdout(script):
     return subprocess.check_output(script,
                                    env={**os.environ, 'LANG': 'C.utf-8'},
@@ -82,8 +107,8 @@ def test_py3_dist():
     assert rpm_eval(f'%py3_dist Aha[Boom] a') == ['python3dist(aha[boom]) python3dist(a)']
 
 
-def test_py3_dist_with_python3_pkgversion_redefined():
-    assert rpm_eval(f'%py3_dist Aha[Boom] a', python3_pkgversion="3.6") == ['python3.6dist(aha[boom]) python3.6dist(a)']
+def test_py3_dist_with_python3_pkgversion_redefined(alt_x_y):
+    assert rpm_eval(f'%py3_dist Aha[Boom] a', python3_pkgversion=alt_x_y) == [f'python{alt_x_y}dist(aha[boom]) python{alt_x_y}dist(a)']
 
 
 def test_python_provide_python():
@@ -208,8 +233,12 @@ def test_pytest_different_command():
 def test_pytest_command_suffix():
     lines = rpm_eval('%pytest -v')
     assert '/usr/bin/pytest -v' in lines[-1]
-    lines = rpm_eval('%pytest -v', python3_pkgversion="3.6", python3_version="3.6")
-    assert '/usr/bin/pytest-3.6 -v' in lines[-1]
+
+# this test does not require alternate Pythons to be installed
+@pytest.mark.parametrize('version', ['3.6', '3.7', '3.12'])
+def test_pytest_command_suffix_alternate_pkgversion(version):
+    lines = rpm_eval('%pytest -v', python3_pkgversion=version, python3_version=version)
+    assert f'/usr/bin/pytest-{version} -v' in lines[-1]
 
 
 def test_pytest_undefined_addopts_are_not_set():
@@ -344,11 +373,14 @@ def test_pycached_in_sitearch(lib):
     ]
 
 
-def test_pycached_in_36():
-    lines = rpm_eval('%pycached /usr/lib/python3.6/site-packages/foo*.py')
+# this test does not require alternate Pythons to be installed
+@pytest.mark.parametrize('version', ['3.6', '3.7', '3.12'])
+def test_pycached_with_alternate_version(version):
+    version_nodot = version.replace('.', '')
+    lines = rpm_eval(f'%pycached /usr/lib/python{version}/site-packages/foo*.py')
     assert lines == [
-        '/usr/lib/python3.6/site-packages/foo*.py',
-        '/usr/lib/python3.6/site-packages/__pycache__/foo*.cpython-36{,.opt-?}.pyc'
+        f'/usr/lib/python{version}/site-packages/foo*.py',
+        f'/usr/lib/python{version}/site-packages/__pycache__/foo*.cpython-{version_nodot}{{,.opt-?}}.pyc'
     ]
 
 
@@ -580,28 +612,44 @@ def test_ext_suffix():
     assert rpm_eval("%python3_ext_suffix") == [f".cpython-{XY}-x86_64-linux-gnu.so"]
 
 
-def test_python_sitelib_value():
+def test_python_sitelib_value_python3():
     macro = '%python_sitelib'
-    assert rpm_eval(macro, __python='/usr/bin/python3.6') == [f'/usr/lib/python3.6/site-packages']
     assert rpm_eval(macro, __python='%__python3') == [f'/usr/lib/python{X_Y}/site-packages']
 
 
-def test_python3_sitelib_value():
+def test_python_sitelib_value_alternate_python(alt_x_y):
+    macro = '%python_sitelib'
+    assert rpm_eval(macro, __python=f'/usr/bin/python{alt_x_y}') == [f'/usr/lib/python{alt_x_y}/site-packages']
+
+
+def test_python3_sitelib_value_default():
     macro = '%python3_sitelib'
-    assert rpm_eval(macro, __python3='/usr/bin/python3.6') == [f'/usr/lib/python3.6/site-packages']
     assert rpm_eval(macro) == [f'/usr/lib/python{X_Y}/site-packages']
 
 
-def test_python_sitearch_value(lib):
+def test_python3_sitelib_value_alternate_python(alt_x_y):
+    macro = '%python3_sitelib'
+    assert rpm_eval(macro, __python3=f'/usr/bin/python{alt_x_y}') == [f'/usr/lib/python{alt_x_y}/site-packages']
+
+
+def test_python_sitearch_value_python3(lib):
     macro = '%python_sitearch'
-    assert rpm_eval(macro, __python='/usr/bin/python3.6') == [f'/usr/{lib}/python3.6/site-packages']
     assert rpm_eval(macro, __python='%__python3') == [f'/usr/{lib}/python{X_Y}/site-packages']
 
 
-def test_python3_sitearch_value(lib):
+def test_python_sitearch_value_alternate_python(lib, alt_x_y):
+    macro = '%python_sitearch'
+    assert rpm_eval(macro, __python=f'/usr/bin/python{alt_x_y}') == [f'/usr/{lib}/python{alt_x_y}/site-packages']
+
+
+def test_python3_sitearch_value_default(lib):
     macro = '%python3_sitearch'
-    assert rpm_eval(macro, __python3='/usr/bin/python3.6') == [f'/usr/{lib}/python3.6/site-packages']
     assert rpm_eval(macro) == [f'/usr/{lib}/python{X_Y}/site-packages']
+
+
+def test_python3_sitearch_value_alternate_python(lib, alt_x_y):
+    macro = '%python3_sitearch'
+    assert rpm_eval(macro, __python3=f'/usr/bin/python{alt_x_y}') == [f'/usr/{lib}/python{alt_x_y}/site-packages']
 
 
 @pytest.mark.parametrize(
@@ -613,7 +661,10 @@ def test_python3_sitearch_value(lib):
         ('six.quarter  six.half,, SIX', 'six.quarter, six.half, SIX'),
     ]
 )
-@pytest.mark.parametrize('__python3', [None, f'/usr/bin/python{X_Y}', '/usr/bin/python3.6'])
+@pytest.mark.parametrize('__python3',
+                         [None,
+                          f'/usr/bin/python{X_Y}',
+                          '/usr/bin/pythonX.Y'])
 def test_py3_check_import(args, imports, __python3, lib):
     x_y = X_Y
     macors = {
@@ -621,11 +672,12 @@ def test_py3_check_import(args, imports, __python3, lib):
         '_topdir': 'TOPDIR',
     }
     if __python3 is not None:
+        if 'X.Y' in __python3:
+            __python3 = __python3.replace('X.Y', get_alt_x_y())
         macors['__python3'] = __python3
         # If the __python3 command has version at the end, parse it and expect it.
         # Note that the command is used to determine %python3_sitelib and %python3_sitearch,
         # so we only test known CPython schemes here and not PyPy for simplicity.
-        # We also only test main Python + 3.6 because those are required by the CI config.
         if (match := re.match(r'.+python(\d+\.\d+)$', __python3)):
             x_y = match.group(1)
 

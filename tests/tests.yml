@@ -15,7 +15,7 @@
     tests:
     - pytest:
         dir: .
-        run: pytest -v
+        run: ALTERNATE_PYTHON_VERSION=3.6 pytest -v
     - manual_byte_compilation:
         dir: .
         run: rpmbuild -ba pythontest.spec
