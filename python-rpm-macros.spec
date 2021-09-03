@@ -49,7 +49,7 @@ elseif posix.stat('macros.python-srpm') then
 end
 }
 Version:        %{__default_python3_version}
-Release:        10%{?dist}
+Release:        11%{?dist}
 
 
 BuildArch:      noarch
@@ -146,6 +146,10 @@ install -m 755 brp-* %{buildroot}%{_rpmconfigdir}/redhat/
 
 
 %changelog
+* Mon Feb 07 2022 Miro Hrončok <mhroncok@redhat.com> - 3.10-11
+- Set $RPM_BUILD_ROOT in %%{python3_...} macros
+  to allow selecting alternate sysconfig install scheme based on that variable
+
 * Mon Nov 01 2021 Karolina Surma <ksurma@redhat.com> - 3.10-10
 - Fix multiline arguments processing for %%py_check_import
 Resolves: rhbz#2018809
