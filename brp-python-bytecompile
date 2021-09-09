@@ -29,7 +29,6 @@ fi
 # Python < 3.4 (inc. Python 2) uses compileall module from stdlib with some hacks
 # When we drop support for Python 2, we'd be able to use all compileall2 features like:
 # - -s and -p options to manipulate with a path baked into pyc files instead of $real_libdir
-# - -o 0 -o 1 to produce multiple files in one run - each with a different optimization level - instead of $options
 # - removed useless $depth - both compileall and compileall2 are limited by sys.getrecursionlimit()
 # These changes will make this script much simpler
 # In Python >= 3.9, compileall2 was merged back to standard library (compileall) so we can use it directly again.
@@ -49,6 +48,12 @@ function python_bytecompile()
 	#
 	if [ "$python_version" -ge 39 ]; then
 
+		# For Python 3.9+, we compile all opt levels in one go: only
+		# when $options is empty.
+		if [ -n "$options" ]; then
+		    return
+		fi
+
 		[ ! -z $exclude ] && exclude="-x '$exclude'"
 		# -q disables verbose output
 		# -f forces the process to overwrite existing compiled files
@@ -57,7 +62,7 @@ function python_bytecompile()
 		# -x and -e together implements the same functionality as the Filter class below
 		# -s strips $RPM_BUILD_ROOT from the path
 		# -p prepends the leading slash to the path to make it absolute
-		$python_binary -B $options -m compileall -q -f $exclude -s "$RPM_BUILD_ROOT" -p / -e "$RPM_BUILD_ROOT" "$python_libdir"
+		$python_binary -B -m compileall -o 0 -o 1 -q -f $exclude -s "$RPM_BUILD_ROOT" -p / --hardlink-dupes -e "$RPM_BUILD_ROOT" "$python_libdir"
 
 	#
 	# Python 3.4 and higher
@@ -133,6 +138,7 @@ do
 	fi
 
 	# Generate optimized (.pyo) byte-compiled files.
+	# N.B. For Python 3.9+, this call does nothing
 	python_bytecompile "-O" "$python_binary" "" "$python_libdir" "$depth" "$real_libdir"
 	if [ $? -ne 0 -a 0$errors_terminate -ne 0 ]; then
 		# One or more of the files had a syntax error

@@ -47,7 +47,7 @@ elseif posix.stat('macros.python-srpm') then
 end
 }
 Version:        %{__default_python3_version}
-Release:        7%{?dist}
+Release:        8%{?dist}
 
 BuildArch:      noarch
 
@@ -141,6 +141,11 @@ install -m 755 brp-* %{buildroot}%{_rpmconfigdir}/redhat/
 
 
 %changelog
+* Thu Sep 09 2021 Petr Viktorin <pviktori@redhat.com> - 3.10-8
+- Use --hardlink-dupes in %%py_byte_compile and brp-python-bytecompile
+  (for Python 3.9+)
+- Resolves: rhbz#1977895
+
 * Fri Jul 23 2021 Fedora Release Engineering <releng@fedoraproject.org> - 3.9-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_35_Mass_Rebuild
 
