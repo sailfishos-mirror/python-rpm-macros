@@ -143,7 +143,7 @@ install -m 755 brp-* %{buildroot}%{_rpmconfigdir}/redhat/
 %changelog
 * Thu Sep 09 2021 Petr Viktorin <pviktori@redhat.com> - 3.10-8
 - Use --hardlink-dupes in %%py_byte_compile and brp-python-bytecompile
-  (for Python 3.9+)
+  (for Python 3)
 - Resolves: rhbz#1977895
 
 * Fri Jul 23 2021 Fedora Release Engineering <releng@fedoraproject.org> - 3.9-7
