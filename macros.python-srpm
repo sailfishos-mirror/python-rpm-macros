@@ -52,6 +52,20 @@
 %py3_other_build /bin/true
 %py3_other_install /bin/true
 
+# Define where Python wheels will be stored and the prefix of -wheel packages
+# - In Fedora we want wheel subpackages named e.g. `python-pip-wheel` that
+#   install packages into `/usr/share/python-wheels`. Both names are not
+#   versioned, because they're used by all Python 3 stacks.
+# - In RHEL we want wheel packages named e.g. `python3-pip-wheel` and
+#   `python3.11-pip-wheel` that install packages into similarly versioned
+#   locations. We want each Python stack in RHEL to have their own wheels,
+#   because the main python3 wheels (which we can't upgrade) will likely be
+#   quite old by the time we're adding new alternate Python stacks.
+# - In ELN we want to follow Fedora, because builds for ELN and Fedora rawhide
+#   need to be interoperable.
+%python_wheel_pkg_prefix python%{?rhel:%{!?eln:%{python3_pkgversion}}}
+%python_wheel_dir %{_datadir}/%{python_wheel_pkg_prefix}-wheels
+
 
 
 # === Macros for Build/Requires tags using Python dist tags ===

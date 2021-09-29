@@ -194,6 +194,24 @@ def test_py_provides_with_evr():
     assert len(lines) == 3
 
 
+def test_python_wheel_pkg_prefix():
+    assert rpm_eval('%python_wheel_pkg_prefix', fedora='44', rhel=None, eln=None) == ['python']
+    assert rpm_eval('%python_wheel_pkg_prefix', fedora='44', rhel=None, eln=None, python3_pkgversion='3.9') == ['python']
+    assert rpm_eval('%python_wheel_pkg_prefix', fedora=None, rhel='1', eln='1') == ['python']
+    assert rpm_eval('%python_wheel_pkg_prefix', fedora=None, rhel='1', eln=None) == ['python3']
+    assert rpm_eval('%python_wheel_pkg_prefix', fedora=None, rhel='1', eln=None, python3_pkgversion='3.10') == ['python3.10']
+    assert rpm_eval('%python_wheel_pkg_prefix', fedora=None, rhel='1', eln=None, python3_pkgversion='3.11') == ['python3.11']
+
+
+def test_python_wheel_dir():
+    assert rpm_eval('%python_wheel_dir', fedora='44', rhel=None, eln=None) == ['/usr/share/python-wheels']
+    assert rpm_eval('%python_wheel_dir', fedora='44', rhel=None, eln=None, python3_pkgversion='3.9') == ['/usr/share/python-wheels']
+    assert rpm_eval('%python_wheel_dir', fedora=None, rhel='1', eln='1') == ['/usr/share/python-wheels']
+    assert rpm_eval('%python_wheel_dir', fedora=None, rhel='1', eln=None) == ['/usr/share/python3-wheels']
+    assert rpm_eval('%python_wheel_dir', fedora=None, rhel='1', eln=None, python3_pkgversion='3.10') == ['/usr/share/python3.10-wheels']
+    assert rpm_eval('%python_wheel_dir', fedora=None, rhel='1', eln=None, python3_pkgversion='3.11') == ['/usr/share/python3.11-wheels']
+
+
 def test_pytest_passes_options_naturally():
     lines = rpm_eval('%pytest -k foo')
     assert '/usr/bin/pytest -k foo' in lines[-1]

@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3.9
-Release:        17%{?dist}
+Release:        18%{?dist}
 Summary:        The common Python RPM macros
 
 # macros and lua: MIT, compileall2.py: PSFv2
@@ -107,6 +107,9 @@ install -m 644 compileall2.py %{buildroot}%{_rpmconfigdir}/redhat/
 
 
 %changelog
+* Tue Oct 26 2021 Tomas Orsava <torsava@redhat.com> - 3.9-18
+- Define a new macros %%python_wheel_dir and %%python_wheel_pkg_prefix
+
 * Wed Jul 07 2021 Miro Hrončok <mhroncok@redhat.com> - 3.9-17
 - Introduce %%py3_check_import
 
