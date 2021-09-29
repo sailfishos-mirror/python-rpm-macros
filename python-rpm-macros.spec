@@ -47,7 +47,7 @@ elseif posix.stat('macros.python-srpm') then
 end
 }
 Version:        %{__default_python3_version}
-Release:        10%{?dist}
+Release:        11%{?dist}
 
 BuildArch:      noarch
 
@@ -141,6 +141,9 @@ install -m 755 brp-* %{buildroot}%{_rpmconfigdir}/redhat/
 
 
 %changelog
+* Wed Oct 20 2021 Tomas Orsava <torsava@redhat.com> - 3.10-11
+- Define a new macros %%python_wheel_dir and %%python_wheel_pkg_prefix
+
 * Tue Oct 12 2021 Lumír Balhar <lbalhar@redhat.com> - 3.10-10
 - Non-existing path in py_reproducible_pyc_path causes build to fail
 Resolves: rhbz#2011056
