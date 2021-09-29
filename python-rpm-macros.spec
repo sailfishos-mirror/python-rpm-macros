@@ -47,7 +47,7 @@ elseif posix.stat('macros.python-srpm') then
 end
 }
 Version:        %{__default_python3_version}
-Release:        7%{?dist}
+Release:        8%{?dist}
 
 BuildArch:      noarch
 
@@ -141,6 +141,9 @@ install -m 755 brp-* %{buildroot}%{_rpmconfigdir}/redhat/
 
 
 %changelog
+* Wed Sep 29 2021 Tomas Orsava <torsava@redhat.com> - 3.9-8
+- Define a new macros %%python_wheel_dir and %%python_wheel_pkg_prefix
+
 * Fri Jul 23 2021 Fedora Release Engineering <releng@fedoraproject.org> - 3.9-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_35_Mass_Rebuild
 
