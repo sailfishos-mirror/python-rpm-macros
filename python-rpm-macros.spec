@@ -22,7 +22,7 @@ License:        MIT and Python
 # The macro is defined in python-srpm-macros.
                 %{?load:%{SOURCE102}}
 Version:        %{__default_python3_version}
-Release:        38%{?dist}
+Release:        39%{?dist}
 
 BuildArch:      noarch
 
@@ -95,6 +95,9 @@ install -m 644 compileall2.py %{buildroot}%{_rpmconfigdir}/redhat/
 
 
 %changelog
+* Wed Sep 29 2021 Tomas Orsava <torsava@redhat.com> - 3.9-39
+- Define a new macros %%python_wheel_dir and %%python_wheel_pkg_prefix
+
 * Wed Jul 07 2021 Miro Hrončok <mhroncok@redhat.com> - 3.9-38
 - Introduce %%py3_check_import
 
