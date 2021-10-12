@@ -15,4 +15,6 @@ if [ ! -x /usr/bin/marshalparser ]; then
   exit 1
 fi
 
+# Set pipefail so if $path_to_fix does not exist, the build fails
+set -o pipefail
 find "$path_to_fix" -type f -name "*.pyc" | xargs /usr/bin/marshalparser --fix --overwrite

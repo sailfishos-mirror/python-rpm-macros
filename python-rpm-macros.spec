@@ -47,7 +47,7 @@ elseif posix.stat('macros.python-srpm') then
 end
 }
 Version:        %{__default_python3_version}
-Release:        9%{?dist}
+Release:        10%{?dist}
 
 BuildArch:      noarch
 
@@ -141,6 +141,10 @@ install -m 755 brp-* %{buildroot}%{_rpmconfigdir}/redhat/
 
 
 %changelog
+* Tue Oct 12 2021 Lumír Balhar <lbalhar@redhat.com> - 3.10-10
+- Non-existing path in py_reproducible_pyc_path causes build to fail
+Resolves: rhbz#2011056
+
 * Thu Sep 09 2021 Miro Hrončok <mhroncok@redhat.com> - 3.10-9
 - Set $RPM_BUILD_ROOT in %%{python3_...} macros
   to allow selecting alternate sysconfig install scheme based on that variable
