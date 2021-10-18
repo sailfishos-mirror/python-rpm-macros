@@ -67,16 +67,17 @@
 }
 
 # With $PATH and $PYTHONPATH set to the %%buildroot,
-# try to import the given Python module(s).
+# try to import the Python module(s) given as command-line args or read from file (-f).
+# Filter and check import on only top-level modules using -t flag.
+# Exclude unwanted modules by passing their globs to -e option.
 # Useful as a smoke test in %%check when running tests is not feasible.
-# Use spaces or commas as separators.
-%py_check_import() %{expand:\\\
-  (cd %{_topdir} &&\\\
+# Use spaces or commas as separators if providing list directly.
+# Use newlines as separators if providing list in a file.
+%py_check_import(e:tf:) %{expand:\\\
   PATH="%{buildroot}%{_bindir}:$PATH"\\\
   PYTHONPATH="${PYTHONPATH:-%{buildroot}%{python_sitearch}:%{buildroot}%{python_sitelib}}"\\\
   PYTHONDONTWRITEBYTECODE=1\\\
-  %{__python} -c "import %{lua:local m=rpm.expand('%{?*}'):gsub('[%s,]+', ', ');print(m)}"
-  )
+  %{__python} -%{py_shebang_flags} %{_rpmconfigdir}/redhat/import_all_modules.py %{?**}
 }
 
 %python_provide() %{lua:
