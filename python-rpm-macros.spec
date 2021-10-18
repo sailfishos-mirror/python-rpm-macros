@@ -15,6 +15,7 @@ Source201:      python.lua
 # Python code
 %global compileall2_version 0.7.1
 Source301:      https://github.com/fedora-python/compileall2/raw/v%{compileall2_version}/compileall2.py
+Source302:      import_all_modules.py
 
 # BRP scripts
 # This one is from redhat-rpm-config < 190
@@ -31,6 +32,7 @@ Source402:      brp-python-hardlink
 Source403:      brp-fix-pyc-reproducibility
 
 # macros and lua: MIT
+# import_all_modules.py: MIT
 # compileall2.py: PSFv2
 # brp scripts: GPLv2+
 License:        MIT and Python and GPLv2+
@@ -47,7 +49,8 @@ elseif posix.stat('macros.python-srpm') then
 end
 }
 Version:        %{__default_python3_version}
-Release:        8%{?dist}
+Release:        9%{?dist}
+
 
 BuildArch:      noarch
 
@@ -105,6 +108,7 @@ install -p -m 644 -t %{buildroot}%{_rpmluadir}/fedora/srpm python.lua
 
 mkdir -p %{buildroot}%{_rpmconfigdir}/redhat
 install -m 644 compileall2.py %{buildroot}%{_rpmconfigdir}/redhat/
+install -m 644 import_all_modules.py %{buildroot}%{_rpmconfigdir}/redhat/
 
 install -m 755 brp-* %{buildroot}%{_rpmconfigdir}/redhat/
 
@@ -131,6 +135,7 @@ install -m 755 brp-* %{buildroot}%{_rpmconfigdir}/redhat/
 %files -n python-srpm-macros
 %{rpmmacrodir}/macros.python-srpm
 %{_rpmconfigdir}/redhat/compileall2.py
+%{_rpmconfigdir}/redhat/import_all_modules.py
 %{_rpmconfigdir}/redhat/brp-python-bytecompile
 %{_rpmconfigdir}/redhat/brp-python-hardlink
 %{_rpmconfigdir}/redhat/brp-fix-pyc-reproducibility
@@ -141,6 +146,11 @@ install -m 755 brp-* %{buildroot}%{_rpmconfigdir}/redhat/
 
 
 %changelog
+* Mon Oct 25 2021 Karolina Surma <ksurma@redhat.com> - 3.10-9
+- Introduce -f (read from file) option to %%py{3}_check_import
+- Introduce -t (filter top-level modules) option to %%py{3}_check_import
+- Introduce -e (exclude module globs) option to %%py{3}_check_import
+
 * Wed Sep 29 2021 Tomas Orsava <torsava@redhat.com> - 3.9-8
 - Define a new macros %%python_wheel_dir and %%python_wheel_pkg_prefix
 

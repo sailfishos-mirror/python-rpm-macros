@@ -623,23 +623,27 @@ def test_python3_sitearch_value(lib):
 
 
 @pytest.mark.parametrize(
-    'args, imports',
+    'args',
     [
-        ('six', 'six'),
-        ('five  six seven', 'five, six, seven'),
-        ('six,seven, eight', 'six, seven, eight'),
-        ('six.quarter  six.half,, SIX', 'six.quarter, six.half, SIX'),
+        'six',
+        '-f foo.txt',
+        '-t -f foo.txt six, seven',
+        '-e "foo*" -f foo.txt six, seven',
+        'six.quarter six.half,, SIX',
     ]
 )
-@pytest.mark.parametrize('__python3', [None, f'/usr/bin/python{X_Y}', '/usr/bin/python3.6'])
-def test_py3_check_import(args, imports, __python3, lib):
+@pytest.mark.parametrize('__python3',
+                         [None,
+                          f'/usr/bin/python{X_Y}',
+                          '/usr/bin/python3.6'])
+def test_py3_check_import(args, __python3, lib):
     x_y = X_Y
-    macors = {
+    macros = {
         'buildroot': 'BUILDROOT',
-        '_topdir': 'TOPDIR',
+        '_rpmconfigdir': 'RPMCONFIGDIR',
     }
     if __python3 is not None:
-        macors['__python3'] = __python3
+        macros['__python3'] = __python3
         # If the __python3 command has version at the end, parse it and expect it.
         # Note that the command is used to determine %python3_sitelib and %python3_sitearch,
         # so we only test known CPython schemes here and not PyPy for simplicity.
@@ -647,7 +651,7 @@ def test_py3_check_import(args, imports, __python3, lib):
         if (match := re.match(r'.+python(\d+\.\d+)$', __python3)):
             x_y = match.group(1)
 
-    lines = rpm_eval(f'%py3_check_import {args}', **macors)
+    lines = rpm_eval(f'%py3_check_import {args}', **macros)
 
     # An equality check is a bit inflexible here,
     # every time we change the macro we need to change this test.
@@ -655,11 +659,9 @@ def test_py3_check_import(args, imports, __python3, lib):
     # At least, let's make the lines saner to check:
     lines = [line.rstrip('\\').strip() for line in lines]
     expected = textwrap.dedent(fr"""
-        (cd TOPDIR &&
         PATH="BUILDROOT/usr/bin:$PATH"
         PYTHONPATH="${{PYTHONPATH:-BUILDROOT/usr/{lib}/python{x_y}/site-packages:BUILDROOT/usr/lib/python{x_y}/site-packages}}"
         PYTHONDONTWRITEBYTECODE=1
-        {__python3 or '/usr/bin/python3'} -c "import {imports}"
-        )
+        {__python3 or '/usr/bin/python3'} -s RPMCONFIGDIR/redhat/import_all_modules.py {args}
         """)
     assert lines == expected.splitlines()
