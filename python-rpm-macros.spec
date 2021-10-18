@@ -13,8 +13,9 @@ Source201:      python.lua
 # Python code
 %global compileall2_version 0.7.1
 Source301:      https://github.com/fedora-python/compileall2/raw/v%{compileall2_version}/compileall2.py
+Source302:      import_all_modules.py
 
-# macros and lua: MIT, compileall2.py: PSFv2
+# macros and lua: MIT, compileall2.py: PSFv2, import_all_modules.py: MIT
 License:        MIT and Python
 
 # The package version MUST be always the same as %%{__default_python3_version}.
@@ -22,7 +23,7 @@ License:        MIT and Python
 # The macro is defined in python-srpm-macros.
                 %{?load:%{SOURCE102}}
 Version:        %{__default_python3_version}
-Release:        39%{?dist}
+Release:        40%{?dist}
 
 BuildArch:      noarch
 
@@ -79,6 +80,7 @@ install -p -m 644 -t %{buildroot}%{_rpmluadir}/fedora/srpm python.lua
 
 mkdir -p %{buildroot}%{_rpmconfigdir}/redhat
 install -m 644 compileall2.py %{buildroot}%{_rpmconfigdir}/redhat/
+install -m 644 import_all_modules.py %{buildroot}%{_rpmconfigdir}/redhat/
 
 
 %files
@@ -88,6 +90,7 @@ install -m 644 compileall2.py %{buildroot}%{_rpmconfigdir}/redhat/
 %files -n python-srpm-macros
 %{rpmmacrodir}/macros.python-srpm
 %{_rpmconfigdir}/redhat/compileall2.py
+%{_rpmconfigdir}/redhat/import_all_modules.py
 %{_rpmluadir}/fedora/srpm/python.lua
 
 %files -n python3-rpm-macros
@@ -95,6 +98,11 @@ install -m 644 compileall2.py %{buildroot}%{_rpmconfigdir}/redhat/
 
 
 %changelog
+* Mon Oct 25 2021 Karolina Surma <ksurma@redhat.com> - 3.9-40
+- Introduce -f (read from file) option to %%py{3}_check_import
+- Introduce -t (filter top-level modules) option to %%py{3}_check_import
+- Introduce -e (exclude module globs) option to %%py{3}_check_import
+
 * Wed Sep 29 2021 Tomas Orsava <torsava@redhat.com> - 3.9-39
 - Define a new macros %%python_wheel_dir and %%python_wheel_pkg_prefix
 
