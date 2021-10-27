@@ -151,10 +151,10 @@ install -m 755 brp-* %{buildroot}%{_rpmconfigdir}/redhat/
 - Introduce -t (filter top-level modules) option to %%py{3}_check_import
 - Introduce -e (exclude module globs) option to %%py{3}_check_import
 
-* Wed Sep 29 2021 Tomas Orsava <torsava@redhat.com> - 3.9-8
+* Wed Sep 29 2021 Tomas Orsava <torsava@redhat.com> - 3.10-8
 - Define a new macros %%python_wheel_dir and %%python_wheel_pkg_prefix
 
-* Fri Jul 23 2021 Fedora Release Engineering <releng@fedoraproject.org> - 3.9-7
+* Fri Jul 23 2021 Fedora Release Engineering <releng@fedoraproject.org> - 3.10-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_35_Mass_Rebuild
 
 * Wed Jul 07 2021 Miro Hrončok <mhroncok@redhat.com> - 3.10-6
