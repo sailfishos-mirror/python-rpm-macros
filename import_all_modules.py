@@ -3,7 +3,9 @@
 import argparse
 import importlib
 import fnmatch
+import os
 import re
+import site
 import sys
 
 from contextlib import contextmanager
@@ -139,6 +141,18 @@ def remove_unwanteds_from_sys_path():
         sys.path = old_sys_path
 
 
+def addsitedirs_from_environ():
+    '''Load directories from the _PYTHONSITE environment variable (separated by :)
+    and load the ones already present in sys.path via site.addsitedir()
+    to handle .pth files in them.
+
+    This is needed to properly import old-style namespace packages with nspkg.pth files.
+    See https://bugzilla.redhat.com/2018551 for a more detailed rationale.'''
+    for path in os.getenv('_PYTHONSITE', '').split(':'):
+        if path in sys.path:
+            site.addsitedir(path)
+
+
 def main(argv=None):
 
     cli_args = argparser().parse_args(argv)
@@ -149,6 +163,7 @@ def main(argv=None):
     modules = read_modules_from_all_args(cli_args)
 
     with remove_unwanteds_from_sys_path():
+        addsitedirs_from_environ()
         import_modules(modules)
 
 

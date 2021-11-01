@@ -115,6 +115,8 @@ install -m 644 import_all_modules.py %{buildroot}%{_rpmconfigdir}/redhat/
 Resolves: rhbz#2018809
 - Fix %%py_shebang_flags handling within %%py_check_import
 Resolves: rhbz#2018615
+- Process .pth files in buildroot's sitedirs in %%py_check_import
+Resolves: rhbz#2018551
 
 * Wed Oct 27 2021 Karolina Surma <ksurma@redhat.com> - 3.9-19
 - Introduce -f (read from file) option to %%py{3}_check_import
