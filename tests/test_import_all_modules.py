@@ -30,6 +30,7 @@ def preserve_sys_modules():
         ('five  six seven', ['five', 'six', 'seven']),
         ('six,seven, eight', ['six', 'seven', 'eight']),
         ('six.quarter  six.half,, SIX', ['six.quarter', 'six.half', 'SIX']),
+        ('six.quarter  six.half,, SIX \\ ', ['six.quarter', 'six.half', 'SIX']),
     ]
 )
 def test_read_modules_from_cli(args, imports):

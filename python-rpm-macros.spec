@@ -49,7 +49,7 @@ elseif posix.stat('macros.python-srpm') then
 end
 }
 Version:        %{__default_python3_version}
-Release:        9%{?dist}
+Release:        10%{?dist}
 
 
 BuildArch:      noarch
@@ -146,6 +146,10 @@ install -m 755 brp-* %{buildroot}%{_rpmconfigdir}/redhat/
 
 
 %changelog
+* Mon Nov 01 2021 Karolina Surma <ksurma@redhat.com> - 3.10-10
+- Fix multiline arguments processing for %%py_check_import
+Resolves: rhbz#2018809
+
 * Mon Oct 25 2021 Karolina Surma <ksurma@redhat.com> - 3.10-9
 - Introduce -f (read from file) option to %%py{3}_check_import
 - Introduce -t (filter top-level modules) option to %%py{3}_check_import
