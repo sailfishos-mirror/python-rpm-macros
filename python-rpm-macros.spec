@@ -1,6 +1,6 @@
 Name:           python-rpm-macros
 Version:        3.9
-Release:        19%{?dist}
+Release:        20%{?dist}
 Summary:        The common Python RPM macros
 
 # macros and lua: MIT, compileall2.py: PSFv2, import_all_modules.py: MIT
@@ -110,6 +110,10 @@ install -m 644 import_all_modules.py %{buildroot}%{_rpmconfigdir}/redhat/
 
 
 %changelog
+* Mon Nov 01 2021 Karolina Surma <ksurma@redhat.com> - 3.9-20
+- Fix multiline arguments processing for %%py_check_import
+Resolves: rhbz#2018809
+
 * Wed Oct 27 2021 Karolina Surma <ksurma@redhat.com> - 3.9-19
 - Introduce -f (read from file) option to %%py{3}_check_import
 - Introduce -t (filter top-level modules) option to %%py{3}_check_import
