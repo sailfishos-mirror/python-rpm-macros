@@ -691,6 +691,7 @@ def test_py3_check_import(args, expected_args, __python3, lib):
     macros = {
         'buildroot': 'BUILDROOT',
         '_rpmconfigdir': 'RPMCONFIGDIR',
+        'py3_shebang_flags': 's',
     }
     if __python3 is not None:
         if 'X.Y' in __python3:
@@ -714,7 +715,27 @@ def test_py3_check_import(args, expected_args, __python3, lib):
         PATH="BUILDROOT/usr/bin:$PATH"
         PYTHONPATH="${{PYTHONPATH:-BUILDROOT/usr/{lib}/python{x_y}/site-packages:BUILDROOT/usr/lib/python{x_y}/site-packages}}"
         PYTHONDONTWRITEBYTECODE=1
-        {__python3 or '/usr/bin/python3'} -s RPMCONFIGDIR/redhat/import_all_modules.py
-        {expected_args}
+        {__python3 or '/usr/bin/python3'} -s RPMCONFIGDIR/redhat/import_all_modules.py {expected_args}
         """)
     assert lines == expected.splitlines()
+
+
+@pytest.mark.parametrize(
+    'shebang_flags_value, expected_shebang_flags',
+    [
+        ('s', '-s'),
+        ('%{nil}', ''),
+        (None, ''),
+        ('Es', '-Es'),
+    ]
+)
+def test_py3_check_import_respects_shebang_flags(shebang_flags_value, expected_shebang_flags, lib):
+    macros = {
+        '_rpmconfigdir': 'RPMCONFIGDIR',
+        '__python3': '/usr/bin/python3',
+        'py3_shebang_flags': shebang_flags_value,
+    }
+    lines = rpm_eval('%py3_check_import sys', **macros)
+    # Compare the last line of the command, that's where lua part is evaluated
+    expected = f'/usr/bin/python3 {expected_shebang_flags} RPMCONFIGDIR/redhat/import_all_modules.py sys'
+    assert  lines[-1].strip() == expected

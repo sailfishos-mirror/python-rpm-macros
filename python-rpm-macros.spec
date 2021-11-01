@@ -148,6 +148,8 @@ install -m 755 brp-* %{buildroot}%{_rpmconfigdir}/redhat/
 * Mon Nov 01 2021 Karolina Surma <ksurma@redhat.com> - 3.10-13
 - Fix multiline arguments processing for %%py_check_import
 Resolves: rhbz#2018809
+- Fix %%py_shebang_flags handling within %%py_check_import
+Resolves: rhbz#2018615
 
 * Mon Oct 25 2021 Karolina Surma <ksurma@redhat.com> - 3.10-12
 - Introduce -f (read from file) option to %%py{3}_check_import
