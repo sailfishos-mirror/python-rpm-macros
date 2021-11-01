@@ -23,7 +23,7 @@ License:        MIT and Python
 # The macro is defined in python-srpm-macros.
                 %{?load:%{SOURCE102}}
 Version:        %{__default_python3_version}
-Release:        40%{?dist}
+Release:        41%{?dist}
 
 BuildArch:      noarch
 
@@ -98,6 +98,10 @@ install -m 644 import_all_modules.py %{buildroot}%{_rpmconfigdir}/redhat/
 
 
 %changelog
+* Mon Nov 01 2021 Karolina Surma <ksurma@redhat.com> - 3.9-41
+- Fix multiline arguments processing for %%py_check_import
+Resolves: rhbz#2018809
+
 * Mon Oct 25 2021 Karolina Surma <ksurma@redhat.com> - 3.9-40
 - Introduce -f (read from file) option to %%py{3}_check_import
 - Introduce -t (filter top-level modules) option to %%py{3}_check_import

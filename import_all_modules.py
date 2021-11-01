@@ -39,6 +39,10 @@ def read_modules_from_cli(argv):
     # we need to unify the output to a list of particular elements
     modules_as_str = ' '.join(argv)
     modules = re.split(r'[\s,]+', modules_as_str)
+    # Because of shell expansion in some less typical cases it may happen
+    # that a trailing space will occur at the end of the list.
+    # Remove the empty items from the list before passing it further
+    modules = [m for m in modules if m]
     return modules
 
 
