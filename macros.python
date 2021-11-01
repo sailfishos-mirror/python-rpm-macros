@@ -79,6 +79,7 @@
 %py_check_import(e:tf:) %{expand:\\\
   PATH="%{buildroot}%{_bindir}:$PATH"\\\
   PYTHONPATH="${PYTHONPATH:-%{buildroot}%{python_sitearch}:%{buildroot}%{python_sitelib}}"\\\
+  _PYTHONSITE="%{buildroot}%{python_sitearch}:%{buildroot}%{python_sitelib}"\\\
   PYTHONDONTWRITEBYTECODE=1\\\
   %{lua:
   local command = "%{__python} "

@@ -391,3 +391,36 @@ def test_module_list_from_relative_path(tmp_path, monkeypatch):
     ])
 
     assert 'wave' in sys.modules
+
+
+@pytest.mark.parametrize('arch_in_path', [True, False])
+def test_pth_files_are_read_from__PYTHONSITE(arch_in_path, tmp_path, monkeypatch, capsys):
+    sitearch = tmp_path / 'lib64'
+    sitearch.mkdir()
+    sitelib = tmp_path / 'lib'
+    sitelib.mkdir()
+
+    for where, word in (sitearch, "ARCH"), (sitelib, "LIB"), (sitelib, "MOD"):
+        module = where / f'print{word}.py'
+        module.write_text(f'print("{word}")')
+
+    pth_sitearch = sitearch / 'ARCH.pth'
+    pth_sitearch.write_text('import printARCH\n')
+
+    pth_sitelib = sitelib / 'LIB.pth'
+    pth_sitelib.write_text('import printLIB\n')
+
+    if arch_in_path:
+        sys.path.append(str(sitearch))
+    sys.path.append(str(sitelib))
+
+    # we always add sitearch to _PYTHONSITE
+    # but when not in sys.path, it should not be processed for .pth files
+    monkeypatch.setenv('_PYTHONSITE', f'{sitearch}:{sitelib}')
+
+    modules_main(['printMOD'])
+    out, err = capsys.readouterr()
+    if arch_in_path:
+        assert out == 'ARCH\nLIB\nMOD\n'
+    else:
+        assert out == 'LIB\nMOD\n'
