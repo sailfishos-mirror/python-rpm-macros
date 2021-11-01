@@ -87,7 +87,7 @@ Summary:        RPM macros for building Python 3 packages
 # For %%__python3 and %%python3
 Requires:       python-srpm-macros = %{version}-%{release}
 
-# For %%py_setup
+# For %%py_setup and import_all_modules.py
 Requires:       python-rpm-macros = %{version}-%{release}
 
 %description -n python3-rpm-macros
@@ -131,11 +131,11 @@ install -m 755 brp-* %{buildroot}%{_rpmconfigdir}/redhat/
 %files
 %{rpmmacrodir}/macros.python
 %{rpmmacrodir}/macros.pybytecompile
+%{_rpmconfigdir}/redhat/import_all_modules.py
 
 %files -n python-srpm-macros
 %{rpmmacrodir}/macros.python-srpm
 %{_rpmconfigdir}/redhat/compileall2.py
-%{_rpmconfigdir}/redhat/import_all_modules.py
 %{_rpmconfigdir}/redhat/brp-python-bytecompile
 %{_rpmconfigdir}/redhat/brp-python-hardlink
 %{_rpmconfigdir}/redhat/brp-fix-pyc-reproducibility
@@ -153,6 +153,7 @@ Resolves: rhbz#2018809
 Resolves: rhbz#2018615
 - Process .pth files in buildroot's sitedirs in %%py_check_import
 Resolves: rhbz#2018551
+- Move import_all_modules.py from python-srpm-macros to python-rpm-macros
 
 * Mon Oct 25 2021 Karolina Surma <ksurma@redhat.com> - 3.10-9
 - Introduce -f (read from file) option to %%py{3}_check_import
