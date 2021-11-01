@@ -68,6 +68,7 @@
 
 # With $PATH and $PYTHONPATH set to the %%buildroot,
 # try to import the Python module(s) given as command-line args or read from file (-f).
+# Respect the custom values of %%py_shebang_flags or set nothing if it's undefined.
 # Filter and check import on only top-level modules using -t flag.
 # Exclude unwanted modules by passing their globs to -e option.
 # Useful as a smoke test in %%check when running tests is not feasible.
@@ -77,11 +78,17 @@
   PATH="%{buildroot}%{_bindir}:$PATH"\\\
   PYTHONPATH="${PYTHONPATH:-%{buildroot}%{python_sitearch}:%{buildroot}%{python_sitelib}}"\\\
   PYTHONDONTWRITEBYTECODE=1\\\
-  %{__python} -%{py_shebang_flags} %{_rpmconfigdir}/redhat/import_all_modules.py\\\
   %{lua:
+  local command = "%{__python} "
+  if rpm.expand("%{?py_shebang_flags}") ~= "" then
+    command = command .. "-%{py_shebang_flags}"
+  end
+  command = command .. " %{_rpmconfigdir}/redhat/import_all_modules.py "
   -- handle multiline arguments correctly, see https://bugzilla.redhat.com/2018809
-  local args=rpm.expand('%{?**}'):gsub("[%s\\\\]*%s+", " ");print(args)
-  }}
+  local args=rpm.expand('%{?**}'):gsub("[%s\\\\]*%s+", " ")
+  print(command .. args)
+  }
+}
 
 %python_provide() %{lua:
   local python = require "fedora.srpm.python"
