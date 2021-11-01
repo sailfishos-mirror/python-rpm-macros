@@ -77,8 +77,11 @@
   PATH="%{buildroot}%{_bindir}:$PATH"\\\
   PYTHONPATH="${PYTHONPATH:-%{buildroot}%{python3_sitearch}:%{buildroot}%{python3_sitelib}}"\\\
   PYTHONDONTWRITEBYTECODE=1\\\
-  %{__python3} -%{py3_shebang_flags} %{_rpmconfigdir}/redhat/import_all_modules.py %{?**}
-}
+  %{__python3} -%{py3_shebang_flags} %{_rpmconfigdir}/redhat/import_all_modules.py\\\
+  %{lua:
+  -- handle multiline arguments correctly, see https://bugzilla.redhat.com/2018809
+  local args=rpm.expand('%{?**}'):gsub("[%s\\\\]*%s+", " ");print(args)
+  }}
 
 # This only supports Python 3.5+ and will never work with Python 2.
 # Hence, it has no Python version in the name.

@@ -671,20 +671,22 @@ def test_python3_sitearch_value_alternate_python(lib, alt_x_y):
 
 
 @pytest.mark.parametrize(
-    'args',
+    'args, expected_args',
     [
-        'six',
-        '-f foo.txt',
-        '-t -f foo.txt six, seven',
-        '-e "foo*" -f foo.txt six, seven',
-        'six.quarter six.half,, SIX',
+        ('six', 'six'),
+        ('-f foo.txt', '-f foo.txt'),
+        ('-t -f foo.txt six, seven', '-t -f foo.txt six, seven'),
+        ('-e "foo*" -f foo.txt six, seven', '-e "foo*" -f foo.txt six, seven'),
+        ('six.quarter six.half,, SIX', 'six.quarter six.half,, SIX'),
+        ('-f foo.txt six\nsix.half\nSIX', '-f foo.txt six six.half SIX'),
+        ('six \\ -e six.half', 'six -e six.half'),
     ]
 )
 @pytest.mark.parametrize('__python3',
                          [None,
                           f'/usr/bin/python{X_Y}',
                           '/usr/bin/pythonX.Y'])
-def test_py3_check_import(args, __python3, lib):
+def test_py3_check_import(args, expected_args, __python3, lib):
     x_y = X_Y
     macros = {
         'buildroot': 'BUILDROOT',
@@ -700,7 +702,8 @@ def test_py3_check_import(args, __python3, lib):
         if (match := re.match(r'.+python(\d+\.\d+)$', __python3)):
             x_y = match.group(1)
 
-    lines = rpm_eval(f'%py3_check_import {args}', **macros)
+    invocation = '%{py3_check_import ' + args +'}'
+    lines = rpm_eval(invocation, **macros)
 
     # An equality check is a bit inflexible here,
     # every time we change the macro we need to change this test.
@@ -711,6 +714,7 @@ def test_py3_check_import(args, __python3, lib):
         PATH="BUILDROOT/usr/bin:$PATH"
         PYTHONPATH="${{PYTHONPATH:-BUILDROOT/usr/{lib}/python{x_y}/site-packages:BUILDROOT/usr/lib/python{x_y}/site-packages}}"
         PYTHONDONTWRITEBYTECODE=1
-        {__python3 or '/usr/bin/python3'} -s RPMCONFIGDIR/redhat/import_all_modules.py {args}
+        {__python3 or '/usr/bin/python3'} -s RPMCONFIGDIR/redhat/import_all_modules.py
+        {expected_args}
         """)
     assert lines == expected.splitlines()
