@@ -664,6 +664,7 @@ def test_py3_check_import(args, expected_args, __python3, lib):
     expected = textwrap.dedent(fr"""
         PATH="BUILDROOT/usr/bin:$PATH"
         PYTHONPATH="${{PYTHONPATH:-BUILDROOT/usr/{lib}/python{x_y}/site-packages:BUILDROOT/usr/lib/python{x_y}/site-packages}}"
+        _PYTHONSITE="BUILDROOT/usr/{lib}/python{x_y}/site-packages:BUILDROOT/usr/lib/python{x_y}/site-packages"
         PYTHONDONTWRITEBYTECODE=1
         {__python3 or '/usr/bin/python3'} -s RPMCONFIGDIR/redhat/import_all_modules.py {expected_args}
         """)

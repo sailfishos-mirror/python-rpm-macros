@@ -75,6 +75,7 @@
 %py3_check_import(e:tf:) %{expand:\\\
   PATH="%{buildroot}%{_bindir}:$PATH"\\\
   PYTHONPATH="${PYTHONPATH:-%{buildroot}%{python3_sitearch}:%{buildroot}%{python3_sitelib}}"\\\
+  _PYTHONSITE="%{buildroot}%{python3_sitearch}:%{buildroot}%{python3_sitelib}"\\\
   PYTHONDONTWRITEBYTECODE=1\\\
   %{lua:
   local command = "%{__python3} "
