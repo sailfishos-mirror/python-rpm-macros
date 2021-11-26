@@ -191,6 +191,7 @@
 
 %py_provides() %{lua:
     local python = require 'fedora.srpm.python'
+    local rhel = rpm.expand('%{?rhel}')
     local name = rpm.expand('%1')
     if name == '%1' then
         rpm.expand('%{error:%%py_provides requires at least 1 argument, the name to provide}')
@@ -203,6 +204,16 @@
     local provides = python.python_altprovides(name, evr)
     for i, provide in ipairs(provides) do
         print('Provides: ' .. provide .. '\\n')
+    end
+    -- We only generate these Obsoletes on CentOS/RHEL to provide clean upgrade
+    -- path, e.g. python3-foo obsoletes python3.9-foo from previous RHEL.
+    -- In Fedora this is not needed as we don't ship ecosystem packages
+    -- for alternative Python interpreters.
+    if rhel ~= '' then
+        local obsoletes = python.python_altobsoletes(name, evr)
+        for i, obsolete in ipairs(obsoletes) do
+            print('Obsoletes: ' .. obsolete .. '\\n')
+        end
     end
 }
 

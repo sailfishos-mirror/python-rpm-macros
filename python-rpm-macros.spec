@@ -49,7 +49,7 @@ elseif posix.stat('macros.python-srpm') then
 end
 }
 Version:        %{__default_python3_version}
-Release:        14%{?dist}
+Release:        15%{?dist}
 
 BuildArch:      noarch
 
@@ -145,6 +145,11 @@ install -m 755 brp-* %{buildroot}%{_rpmconfigdir}/redhat/
 
 
 %changelog
+* Tue Dec 21 2021 Tomas Orsava <torsava@redhat.com> - 3.10-15
+- Add lua helper functions to make it possible to automatically generate
+  Obsoletes tags
+- Modify the %%py_provides macro to also generate Obsoletes tags on CentOS/RHEL
+
 * Wed Dec 08 2021 Miro Hrončok <mhroncok@redhat.com> - 3.10-14
 - Set %%__python3 value according to %%python3_pkgversion
   I.e. when %%python3_pkgversion is 3.12, %%__python3 is /usr/bin/python3.12
