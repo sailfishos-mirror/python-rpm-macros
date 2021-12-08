@@ -49,7 +49,7 @@ elseif posix.stat('macros.python-srpm') then
 end
 }
 Version:        %{__default_python3_version}
-Release:        13%{?dist}
+Release:        14%{?dist}
 
 BuildArch:      noarch
 
@@ -145,6 +145,10 @@ install -m 755 brp-* %{buildroot}%{_rpmconfigdir}/redhat/
 
 
 %changelog
+* Wed Dec 08 2021 Miro Hrončok <mhroncok@redhat.com> - 3.10-14
+- Set %%__python3 value according to %%python3_pkgversion
+  I.e. when %%python3_pkgversion is 3.12, %%__python3 is /usr/bin/python3.12
+
 * Mon Nov 01 2021 Karolina Surma <ksurma@redhat.com> - 3.10-13
 - Fix multiline arguments processing for %%py_check_import
 Resolves: rhbz#2018809

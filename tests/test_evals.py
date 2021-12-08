@@ -83,6 +83,17 @@ def shell_stdout(script):
                                    shell=True).rstrip()
 
 
+@pytest.mark.parametrize('macro', ['%__python3', '%python3'])
+def test_python3(macro):
+    assert rpm_eval(macro) == ['/usr/bin/python3']
+
+
+@pytest.mark.parametrize('macro', ['%__python3', '%python3'])
+@pytest.mark.parametrize('pkgversion', ['3', '3.9', '3.12'])
+def test_python3_with_pkgversion(macro, pkgversion):
+    assert rpm_eval(macro, python3_pkgversion=pkgversion) == [f'/usr/bin/python{pkgversion}']
+
+
 @pytest.mark.parametrize('argument, result', [
     ('a', 'a'),
     ('a-a', 'a-a'),
@@ -647,7 +658,9 @@ def test_python3_sitelib_value_default():
 
 def test_python3_sitelib_value_alternate_python(alt_x_y):
     macro = '%python3_sitelib'
-    assert rpm_eval(macro, __python3=f'/usr/bin/python{alt_x_y}') == [f'/usr/lib/python{alt_x_y}/site-packages']
+    assert (rpm_eval(macro, __python3=f'/usr/bin/python{alt_x_y}') ==
+            rpm_eval(macro, python3_pkgversion=alt_x_y) ==
+            [f'/usr/lib/python{alt_x_y}/site-packages'])
 
 
 def test_python_sitearch_value_python3(lib):
@@ -667,7 +680,9 @@ def test_python3_sitearch_value_default(lib):
 
 def test_python3_sitearch_value_alternate_python(lib, alt_x_y):
     macro = '%python3_sitearch'
-    assert rpm_eval(macro, __python3=f'/usr/bin/python{alt_x_y}') == [f'/usr/{lib}/python{alt_x_y}/site-packages']
+    assert (rpm_eval(macro, __python3=f'/usr/bin/python{alt_x_y}') ==
+            rpm_eval(macro, python3_pkgversion=alt_x_y) ==
+            [f'/usr/{lib}/python{alt_x_y}/site-packages'])
 
 
 @pytest.mark.parametrize(
