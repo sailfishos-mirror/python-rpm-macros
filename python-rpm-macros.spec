@@ -49,7 +49,7 @@ elseif posix.stat('macros.python-srpm') then
 end
 }
 Version:        %{__default_python3_version}
-Release:        15%{?dist}
+Release:        16%{?dist}
 
 BuildArch:      noarch
 
@@ -57,6 +57,12 @@ BuildArch:      noarch
 # For python.lua
 # For compileall2.py
 Requires:       python-srpm-macros = %{version}-%{release}
+
+# The packages are called python(3)-(s)rpm-macros
+# We never want python3-rpm-macros to provide python-rpm-macros
+# We opt out from all Python name-based automatic provides and obsoletes
+%undefine __pythonname_provides
+%undefine __pythonname_obsoletes
 
 %description
 This package contains the unversioned Python RPM macros, that most
@@ -145,6 +151,9 @@ install -m 755 brp-* %{buildroot}%{_rpmconfigdir}/redhat/
 
 
 %changelog
+* Mon Jan 31 2022 Miro Hrončok <mhroncok@redhat.com> - 3.10-16
+- Explicitly opt-out from Python name-based provides and obsoletes generators
+
 * Tue Dec 21 2021 Tomas Orsava <torsava@redhat.com> - 3.10-15
 - Add lua helper functions to make it possible to automatically generate
   Obsoletes tags
