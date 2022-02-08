@@ -210,9 +210,14 @@
     -- In Fedora this is not needed as we don't ship ecosystem packages
     -- for alternative Python interpreters.
     if rhel ~= '' then
-        local obsoletes = python.python_altobsoletes(name, evr)
-        for i, obsolete in ipairs(obsoletes) do
-            print('Obsoletes: ' .. obsolete .. '\\n')
+        -- Create Obsoletes only if the name does not end in a parenthesis,
+        -- as Obsoletes can't include parentheses.
+        -- This most commonly happens when the name contains an isa.
+        if (string.sub(name, "-1") ~= ")") then
+            local obsoletes = python.python_altobsoletes(name, evr)
+            for i, obsolete in ipairs(obsoletes) do
+                print('Obsoletes: ' .. obsolete .. '\\n')
+            end
         end
     end
 }

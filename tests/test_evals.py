@@ -195,6 +195,16 @@ def test_py_provides_python3(rhel):
         assert len(lines) == 3
 
 
+@pytest.mark.parametrize('rhel', [None, 9])
+def test_py_provides_python3_with_isa(rhel):
+    lines = rpm_eval('%py_provides python3-foo(x86_64)', version='6', release='1.fc66', rhel=rhel)
+    assert 'Provides: python3-foo(x86_64) = 6-1.fc66' in lines
+    assert 'Provides: python-foo(x86_64) = 6-1.fc66' in lines
+    assert f'Provides: python{X_Y}-foo(x86_64) = 6-1.fc66' in lines
+    assert f'Obsoletes: python{X_Y}-foo(x86_64) < 6-1.fc66' not in lines
+    assert len(lines) == 3
+
+
 @pytest.mark.parametrize('rhel', [None, 13])
 def test_py_provides_python3_epoched(rhel):
     lines = rpm_eval('%py_provides python3-foo', epoch='1', version='6', release='1.fc66', rhel=rhel)

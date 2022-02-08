@@ -49,7 +49,7 @@ elseif posix.stat('macros.python-srpm') then
 end
 }
 Version:        %{__default_python3_version}
-Release:        16%{?dist}
+Release:        17%{?dist}
 
 BuildArch:      noarch
 
@@ -151,6 +151,9 @@ install -m 755 brp-* %{buildroot}%{_rpmconfigdir}/redhat/
 
 
 %changelog
+* Tue Feb 08 2022 Tomas Orsava <torsava@redhat.com> - 3.10-17
+- %%py_provides: Do not generate Obsoletes for names containing parentheses
+
 * Mon Jan 31 2022 Miro Hrončok <mhroncok@redhat.com> - 3.10-16
 - Explicitly opt-out from Python name-based provides and obsoletes generators
 
