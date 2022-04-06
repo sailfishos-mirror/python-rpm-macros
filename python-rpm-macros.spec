@@ -130,7 +130,7 @@ install -m 755 brp-* %{buildroot}%{_rpmconfigdir}/redhat/
 
 %check
 # no macros in comments
-! grep -E '^#[^%%]*%%[^%%]' %{buildroot}%{rpmmacrodir}/macros.*
+grep -E '^#[^%%]*%%[^%%]' %{buildroot}%{rpmmacrodir}/macros.* && exit 1 || true
 
 
 %files
