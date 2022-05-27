@@ -1,7 +1,8 @@
 # nb: $RPM_BUILD_ROOT is not set when the macros are expanded (at spec parse time)
 #     so we set it manually (to empty string), making our Python prefer the correct install scheme location
-%python3_sitelib %(RPM_BUILD_ROOT= %{__python3} -Ic "import sysconfig; print(sysconfig.get_path('purelib'))")
-%python3_sitearch %(RPM_BUILD_ROOT= %{__python3} -Ic "import sysconfig; print(sysconfig.get_path('platlib'))")
+# platbase/base is explicitly set to %%{_prefix} to support custom values, such as /app for flatpaks
+%python3_sitelib %(RPM_BUILD_ROOT= %{__python3} -Ic "import sysconfig; print(sysconfig.get_path('purelib', vars={'platbase': '%{_prefix}', 'base': '%{_prefix}'}))")
+%python3_sitearch %(RPM_BUILD_ROOT= %{__python3} -Ic "import sysconfig; print(sysconfig.get_path('platlib', vars={'platbase': '%{_prefix}', 'base': '%{_prefix}'}))")
 %python3_version %(RPM_BUILD_ROOT= %{__python3} -Ic "import sys; sys.stdout.write('{0.major}.{0.minor}'.format(sys.version_info))")
 %python3_version_nodots %(RPM_BUILD_ROOT= %{__python3} -Ic "import sys; sys.stdout.write('{0.major}{0.minor}'.format(sys.version_info))")
 %python3_platform %(RPM_BUILD_ROOT= %{__python3} -Ic "import sysconfig; print(sysconfig.get_platform())")
@@ -45,7 +46,7 @@
 
 %py3_install() %{expand:\\\
   CFLAGS="${CFLAGS:-${RPM_OPT_FLAGS}}" LDFLAGS="${LDFLAGS:-${RPM_LD_FLAGS}}"\\\
-  %{__python3} %{py_setup} %{?py_setup_args} install -O1 --skip-build --root %{buildroot} %{?*}
+  %{__python3} %{py_setup} %{?py_setup_args} install -O1 --skip-build --root %{buildroot} --prefix %{_prefix} %{?*}
   rm -rfv %{buildroot}%{_bindir}/__pycache__
 }
 
@@ -56,7 +57,7 @@
 }
 
 %py3_install_wheel() %{expand:\\\
-  %{__python3} -m pip install -I dist/%{1} --root %{buildroot} --no-deps --no-index --no-warn-script-location
+  %{__python3} -m pip install -I dist/%{1} --root %{buildroot} --prefix %{_prefix} --no-deps --no-index --no-warn-script-location
   rm -rfv %{buildroot}%{_bindir}/__pycache__
   for distinfo in %{buildroot}%{python3_sitelib}/*.dist-info %{buildroot}%{python3_sitearch}/*.dist-info; do
     if [ -f ${distinfo}/direct_url.json ]; then
