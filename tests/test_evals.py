@@ -698,6 +698,11 @@ def test_python3_sitelib_value_alternate_python(alt_x_y):
             [f'/usr/lib/python{alt_x_y}/site-packages'])
 
 
+def test_python3_sitelib_value_alternate_prefix():
+    macro = '%python3_sitelib'
+    assert rpm_eval(macro, _prefix='/app') == [f'/app/lib/python{X_Y}/site-packages']
+
+
 def test_python_sitearch_value_python3(lib):
     macro = '%python_sitearch'
     assert rpm_eval(macro, __python='%__python3') == [f'/usr/{lib}/python{X_Y}/site-packages']
@@ -718,6 +723,11 @@ def test_python3_sitearch_value_alternate_python(lib, alt_x_y):
     assert (rpm_eval(macro, __python3=f'/usr/bin/python{alt_x_y}') ==
             rpm_eval(macro, python3_pkgversion=alt_x_y) ==
             [f'/usr/{lib}/python{alt_x_y}/site-packages'])
+
+
+def test_python3_sitearch_value_alternate_prefix(lib):
+    macro = '%python3_sitearch'
+    assert rpm_eval(macro, _prefix='/app') == [f'/app/{lib}/python{X_Y}/site-packages']
 
 
 @pytest.mark.parametrize(

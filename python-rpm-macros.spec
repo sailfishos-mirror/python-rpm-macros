@@ -49,7 +49,7 @@ elseif posix.stat('macros.python-srpm') then
 end
 }
 Version:        %{__default_python3_version}
-Release:        17%{?dist}
+Release:        18%{?dist}
 
 BuildArch:      noarch
 
@@ -151,6 +151,9 @@ grep -E '^#[^%%]*%%[^%%]' %{buildroot}%{rpmmacrodir}/macros.* && exit 1 || true
 
 
 %changelog
+* Thu May 26 2022 Owen Taylor <otaylor@redhat.com> - 3.10-18
+- Support installing to %%{_prefix} other than /usr
+
 * Tue Feb 08 2022 Tomas Orsava <torsava@redhat.com> - 3.10-17
 - %%py_provides: Do not generate Obsoletes for names containing parentheses
 
