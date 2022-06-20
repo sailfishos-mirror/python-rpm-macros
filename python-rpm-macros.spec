@@ -49,7 +49,7 @@ elseif posix.stat('macros.python-srpm') then
 end
 }
 Version:        %{__default_python3_version}
-Release:        1%{?dist}
+Release:        2%{?dist}
 
 BuildArch:      noarch
 
@@ -151,6 +151,9 @@ grep -E '^#[^%%]*%%[^%%]' %{buildroot}%{rpmmacrodir}/macros.* && exit 1 || true
 
 
 %changelog
+* Mon Jun 20 2022 Miro Hrončok <mhroncok@redhat.com> - 3.11-2
+- Define %%python3_cache_tag / %%python_cache_tag, e.g. cpython-311
+
 * Mon Jun 13 2022 Tomáš Hrnčiar <thrnciar@redhat.com> - 3.11-1
 - Update main Python to Python 3.11
 - https://fedoraproject.org/wiki/Changes/Python3.11

@@ -72,8 +72,17 @@ def get_alt_x_y():
         raise ValueError(f"${env_name} must be X.Y")
     return alternate_python_version
 
-# We don't use the decorator, to be able to call the function itselef
+
+def get_alt_xy():
+    """
+    Same as get_alt_x_y() but without a dot
+    """
+    return get_alt_x_y().replace(".", "")
+
+
+# We don't use decorators, to be able to call the functions directly
 alt_x_y = pytest.fixture(scope="session")(get_alt_x_y)
+alt_xy = pytest.fixture(scope="session")(get_alt_xy)
 
 
 def shell_stdout(script):
@@ -638,6 +647,7 @@ unversioned_macros = pytest.mark.parametrize('macro', [
     '%python_platform',
     '%python_platform_triplet',
     '%python_ext_suffix',
+    '%python_cache_tag',
     '%py_shebang_fix',
     '%py_build',
     '%py_build_egg',
@@ -674,6 +684,18 @@ def test_platform_triplet():
 @x86_64_only
 def test_ext_suffix():
     assert rpm_eval("%python3_ext_suffix") == [f".cpython-{XY}-x86_64-linux-gnu.so"]
+
+
+def test_cache_tag():
+    assert rpm_eval("%python3_cache_tag") == [f"cpython-{XY}"]
+
+
+def test_cache_tag_alternate_python(alt_x_y, alt_xy):
+    assert rpm_eval("%python_cache_tag", __python=f"/usr/bin/python{alt_x_y}") == [f"cpython-{alt_xy}"]
+
+
+def test_cache_tag_alternate_python3(alt_x_y, alt_xy):
+    assert rpm_eval("%python3_cache_tag", __python3=f"/usr/bin/python{alt_x_y}") == [f"cpython-{alt_xy}"]
 
 
 def test_python_sitelib_value_python3():
