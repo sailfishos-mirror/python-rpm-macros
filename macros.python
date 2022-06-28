@@ -13,7 +13,7 @@
 %python_cache_tag %(RPM_BUILD_ROOT= %{__python} -Esc "import sys; print(sys.implementation.cache_tag)")
 
 %py_setup setup.py
-%py_shbang_opts -s
+%py_shbang_opts -s%(RPM_BUILD_ROOT= %{__python} -Esc "import sys; print('P' if hasattr(sys.flags, 'safe_path') else '')")
 %py_shbang_opts_nodash %(opts=%{py_shbang_opts}; echo ${opts#-})
 %py_shebang_flags %(opts=%{py_shbang_opts}; echo ${opts#-})
 %py_shebang_fix %{expand:\\\

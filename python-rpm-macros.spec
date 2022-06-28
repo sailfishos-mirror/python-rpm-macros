@@ -49,7 +49,7 @@ elseif posix.stat('macros.python-srpm') then
 end
 }
 Version:        %{__default_python3_version}
-Release:        2%{?dist}
+Release:        3%{?dist}
 
 BuildArch:      noarch
 
@@ -151,6 +151,11 @@ grep -E '^#[^%%]*%%[^%%]' %{buildroot}%{rpmmacrodir}/macros.* && exit 1 || true
 
 
 %changelog
+* Tue Jul 19 2022 Miro Hrončok <mhroncok@redhat.com> - 3.11-3
+- Add "P" to %%py3_shbang_opts, %%py3_shbang_opts_nodash, %%py3_shebang_flags
+  and to %%py_shbang_opts, %%py_shbang_opts_nodash, %%py_shebang_flags
+- https://fedoraproject.org/wiki/Changes/PythonSafePath
+
 * Mon Jun 20 2022 Miro Hrončok <mhroncok@redhat.com> - 3.11-2
 - Define %%python3_cache_tag / %%python_cache_tag, e.g. cpython-311
 

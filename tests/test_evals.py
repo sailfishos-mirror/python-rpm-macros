@@ -85,6 +85,11 @@ alt_x_y = pytest.fixture(scope="session")(get_alt_x_y)
 alt_xy = pytest.fixture(scope="session")(get_alt_xy)
 
 
+# https://fedoraproject.org/wiki/Changes/PythonSafePath
+def safe_path_flag(x_y):
+    return 'P' if tuple(int(i) for i in x_y.split('.')) >= (3, 11) else ''
+
+
 def shell_stdout(script):
     return subprocess.check_output(script,
                                    env={**os.environ, 'LANG': 'C.utf-8'},
@@ -409,7 +414,7 @@ def test_py3_shebang_fix():
 def test_py3_shebang_fix_default_shebang_flags():
     lines = rpm_eval('%py3_shebang_fix arg1 arg2')
     lines[-1] = 'echo $shebang_flags'
-    assert shell_stdout('\n'.join(lines)) == '-kas'
+    assert shell_stdout('\n'.join(lines)) == f'-kas{safe_path_flag(X_Y)}'
 
 
 def test_py3_shebang_fix_custom_shebang_flags():
@@ -773,7 +778,6 @@ def test_py3_check_import(args, expected_args, __python3, lib):
     macros = {
         'buildroot': 'BUILDROOT',
         '_rpmconfigdir': 'RPMCONFIGDIR',
-        'py3_shebang_flags': 's',
     }
     if __python3 is not None:
         if 'X.Y' in __python3:
@@ -798,7 +802,7 @@ def test_py3_check_import(args, expected_args, __python3, lib):
         PYTHONPATH="${{PYTHONPATH:-BUILDROOT/usr/{lib}/python{x_y}/site-packages:BUILDROOT/usr/lib/python{x_y}/site-packages}}"
         _PYTHONSITE="BUILDROOT/usr/{lib}/python{x_y}/site-packages:BUILDROOT/usr/lib/python{x_y}/site-packages"
         PYTHONDONTWRITEBYTECODE=1
-        {__python3 or '/usr/bin/python3'} -s RPMCONFIGDIR/redhat/import_all_modules.py {expected_args}
+        {__python3 or '/usr/bin/python3'} -s{safe_path_flag(x_y)} RPMCONFIGDIR/redhat/import_all_modules.py {expected_args}
         """)
     assert lines == expected.splitlines()
 
@@ -806,6 +810,7 @@ def test_py3_check_import(args, expected_args, __python3, lib):
 @pytest.mark.parametrize(
     'shebang_flags_value, expected_shebang_flags',
     [
+        ('sP', '-sP'),
         ('s', '-s'),
         ('%{nil}', ''),
         (None, ''),
