@@ -423,6 +423,31 @@ def test_py3_shebang_fix_custom_shebang_flags():
     assert shell_stdout('\n'.join(lines)) == '-kaEs'
 
 
+@pytest.mark.parametrize('_py3_shebang_s', [None, '%{nil}'])
+def test_py3_shebang_fix_undefined_py3_shebang_s(_py3_shebang_s):
+    lines = rpm_eval('%py3_shebang_fix arg1 arg2', _py3_shebang_s=_py3_shebang_s)
+    lines[-1] = 'echo $shebang_flags'
+    expected = f'-ka{safe_path_flag(X_Y)}' if safe_path_flag(X_Y) else '-k'
+    assert shell_stdout('\n'.join(lines)) == expected
+
+
+@pytest.mark.parametrize('_py3_shebang_P', [None, '%{nil}'])
+def test_py3_shebang_fix_undefined_py3_shebang_P(_py3_shebang_P):
+    lines = rpm_eval('%py3_shebang_fix arg1 arg2', _py3_shebang_P=_py3_shebang_P)
+    lines[-1] = 'echo $shebang_flags'
+    assert shell_stdout('\n'.join(lines)) == '-kas'
+
+
+@pytest.mark.parametrize('_py3_shebang_s', [None, '%{nil}'])
+@pytest.mark.parametrize('_py3_shebang_P', [None, '%{nil}'])
+def test_py3_shebang_fix_undefined_py3_shebang_sP(_py3_shebang_s, _py3_shebang_P):
+    lines = rpm_eval('%py3_shebang_fix arg1 arg2',
+                     _py3_shebang_s=_py3_shebang_s,
+                     _py3_shebang_P=_py3_shebang_P)
+    lines[-1] = 'echo $shebang_flags'
+    assert shell_stdout('\n'.join(lines)) == '-k'
+
+
 @pytest.mark.parametrize('flags', [None, '%{nil}'])
 def test_py3_shebang_fix_no_shebang_flags(flags):
     lines = rpm_eval('%py3_shebang_fix arg1 arg2', py3_shebang_flags=flags)

@@ -11,7 +11,9 @@
 %python3_cache_tag %(RPM_BUILD_ROOT= %{__python3} -Ic "import sys; print(sys.implementation.cache_tag)")
 %py3dir %{_builddir}/python3-%{name}-%{version}-%{release}
 
-%py3_shbang_opts -s%(RPM_BUILD_ROOT= %{__python3} -Ic "import sys; print('P' if hasattr(sys.flags, 'safe_path') else '')")
+%_py3_shebang_s s
+%_py3_shebang_P %(RPM_BUILD_ROOT= %{__python3} -Ic "import sys; print('P' if hasattr(sys.flags, 'safe_path') else '')")
+%py3_shbang_opts -%{?_py3_shebang_s}%{?_py3_shebang_P}
 %py3_shbang_opts_nodash %(opts=%{py3_shbang_opts}; echo ${opts#-})
 %py3_shebang_flags %(opts=%{py3_shbang_opts}; echo ${opts#-})
 %py3_shebang_fix %{expand:\\\
