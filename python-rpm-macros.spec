@@ -148,6 +148,7 @@ install -m 755 brp-* %{buildroot}%{_rpmconfigdir}/redhat/
 %changelog
 * Tue Jul 19 2022 Miro Hrončok <mhroncok@redhat.com> - 3.10-12
 - Define %%python3_cache_tag / %%python_cache_tag, e.g. cpython-311
+- Define and use %%{_py3_shebang_s} in the shebang macros for easier opt-out
 
 * Mon Feb 07 2022 Miro Hrončok <mhroncok@redhat.com> - 3.10-11
 - Set $RPM_BUILD_ROOT in %%{python3_...} macros
