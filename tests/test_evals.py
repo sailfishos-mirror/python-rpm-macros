@@ -560,6 +560,7 @@ unversioned_macros = pytest.mark.parametrize('macro', [
     '%python_platform',
     '%python_platform_triplet',
     '%python_ext_suffix',
+    '%python_cache_tag',
     '%py_shebang_fix',
     '%py_build',
     '%py_build_egg',
@@ -596,6 +597,18 @@ def test_platform_triplet():
 @x86_64_only
 def test_ext_suffix():
     assert rpm_eval("%python3_ext_suffix") == [f".cpython-{XY}-x86_64-linux-gnu.so"]
+
+
+def test_cache_tag():
+    assert rpm_eval("%python3_cache_tag") == [f"cpython-{XY}"]
+
+
+def test_cache_tag_alternate_python():
+    assert rpm_eval("%python_cache_tag", __python=f"/usr/bin/python3.6") == [f"cpython-36"]
+
+
+def test_cache_tag_alternate_python3():
+    assert rpm_eval("%python3_cache_tag", __python3=f"/usr/bin/python3.6") == [f"cpython-36"]
 
 
 def test_python_sitelib_value():
