@@ -153,6 +153,7 @@ grep -E '^#[^%%]*%%[^%%]' %{buildroot}%{rpmmacrodir}/macros.* && exit 1 || true
 %changelog
 * Tue Jul 19 2022 Miro Hrončok <mhroncok@redhat.com> - 3.10-19
 - Define %%python3_cache_tag / %%python_cache_tag, e.g. cpython-311
+- Define and use %%{_py3_shebang_s} in the shebang macros for easier opt-out
 
 * Thu May 26 2022 Owen Taylor <otaylor@redhat.com> - 3.10-18
 - Support installing to %%{_prefix} other than /usr
