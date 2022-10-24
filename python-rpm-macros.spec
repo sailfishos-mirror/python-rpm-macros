@@ -52,7 +52,7 @@ elseif posix.stat('macros.python-srpm') then
 end
 }
 Version:        %{__default_python3_version}
-Release:        5%{?dist}
+Release:        6%{?dist}
 
 BuildArch:      noarch
 
@@ -159,6 +159,9 @@ grep -E '^#[^%%]*%%[^%%]' %{buildroot}%{rpmmacrodir}/macros.* && exit 1 || true
 
 
 %changelog
+* Sun Nov 13 2022 Miro Hrončok <mhroncok@redhat.com> - 3.11-6
+- Expose the environment variables used by %%pytest via %%{py3_test_envvars}
+
 * Tue Oct 25 2022 Lumír Balhar <lbalhar@redhat.com> - 3.11-5
 - Include pathfix.py in this package
 
