@@ -319,6 +319,11 @@ def test_pytest_command_suffix_alternate_pkgversion(version):
     assert f'/usr/bin/pytest-{version} -v' in lines[-1]
 
 
+def test_pytest_sets_pytest_xdist_auto_num_workers():
+    lines = rpm_eval('%pytest', _smp_build_ncpus=2)
+    assert 'PYTEST_XDIST_AUTO_NUM_WORKERS=2' in '\n'.join(lines)
+
+
 def test_pytest_undefined_addopts_are_not_set():
     lines = rpm_eval('%pytest', __pytest_addopts=None)
     assert 'PYTEST_ADDOPTS' not in '\n'.join(lines)
