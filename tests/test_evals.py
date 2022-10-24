@@ -357,6 +357,28 @@ def test_pytest_addopts_preserves_envvar(__pytest_addopts):
     assert 'z--' not in echoed
 
 
+@pytest.mark.parametrize('__pytest_addopts', ['-X', None])
+def test_py3_test_envvars(lib, __pytest_addopts):
+    lines = rpm_eval('%{py3_test_envvars}\\\n%{python3} -m unittest',
+                     buildroot='BUILDROOT',
+                     _smp_build_ncpus='3',
+                     __pytest_addopts=__pytest_addopts)
+    assert all(l.endswith('\\') for l in lines[:-1])
+    stripped_lines = [l.strip(' \\') for l in lines]
+    sitearch = f'BUILDROOT/usr/{lib}/python{X_Y}/site-packages'
+    sitelib = f'BUILDROOT/usr/lib/python{X_Y}/site-packages'
+    assert f'PYTHONPATH="${{PYTHONPATH:-{sitearch}:{sitelib}}}"' in stripped_lines
+    assert 'PATH="BUILDROOT/usr/bin:$PATH"' in stripped_lines
+    assert 'CFLAGS="${CFLAGS:-${RPM_OPT_FLAGS}}" LDFLAGS="${LDFLAGS:-${RPM_LD_FLAGS}}"' in stripped_lines
+    assert 'PYTHONDONTWRITEBYTECODE=1' in stripped_lines
+    assert 'PYTEST_XDIST_AUTO_NUM_WORKERS=3' in stripped_lines
+    if __pytest_addopts:
+        assert f'PYTEST_ADDOPTS="${{PYTEST_ADDOPTS:-}} {__pytest_addopts}"' in stripped_lines
+    else:
+        assert 'PYTEST_ADDOPTS' not in ''.join(lines)
+    assert stripped_lines[-1] == '/usr/bin/python3 -m unittest'
+
+
 def test_pypi_source_default_name():
     urls = rpm_eval('%pypi_source',
                     name='foo', version='6')
@@ -691,6 +713,7 @@ unversioned_macros = pytest.mark.parametrize('macro', [
     '%py_install_egg',
     '%py_install_wheel',
     '%py_check_import',
+    '%py_test_envvars',
 ])
 
 

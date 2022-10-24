@@ -162,6 +162,7 @@ grep -E '^#[^%%]*%%[^%%]' %{buildroot}%{rpmmacrodir}/macros.* && exit 1 || true
 * Sun Nov 13 2022 Miro Hrončok <mhroncok@redhat.com> - 3.11-6
 - Set PYTEST_XDIST_AUTO_NUM_WORKERS=%%{_smp_build_ncpus} from %%pytest
 - pytest-xdist 3+ respects this value when -n auto is used
+- Expose the environment variables used by %%pytest via %%{py3_test_envvars}
 
 * Tue Oct 25 2022 Lumír Balhar <lbalhar@redhat.com> - 3.11-5
 - Include pathfix.py in this package
