@@ -17,18 +17,12 @@
 %py_shbang_opts_nodash %(opts=%{py_shbang_opts}; echo ${opts#-})
 %py_shebang_flags %(opts=%{py_shbang_opts}; echo ${opts#-})
 %py_shebang_fix %{expand:\\\
-  if [ -f /usr/bin/pathfix%{python_version}.py ]; then
-    pathfix=/usr/bin/pathfix%{python_version}.py
-  else
-    # older versions of Python don't have it and must BR /usr/bin/pathfix.py from python3-devel explicitly
-    pathfix=/usr/bin/pathfix.py
-  fi
   if [ -z "%{?py_shebang_flags}" ]; then
     shebang_flags="-k"
   else
     shebang_flags="-ka%{py_shebang_flags}"
   fi
-  $pathfix -pni %{__python} $shebang_flags}
+  %{__python} -B %{_rpmconfigdir}/redhat/pathfix.py -pni %{__python} $shebang_flags}
 
 # Use the slashes after expand so that the command starts on the same line as
 # the macro

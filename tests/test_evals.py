@@ -319,7 +319,7 @@ def test_pypi_source_explicit_tilde():
 
 def test_py3_shebang_fix():
     cmd = rpm_eval('%py3_shebang_fix arg1 arg2 arg3')[-1].strip()
-    assert cmd == '$pathfix -pni /usr/bin/python3 $shebang_flags arg1 arg2 arg3'
+    assert cmd == '/usr/bin/python3 -B /usr/lib/rpm/redhat/pathfix.py -pni /usr/bin/python3 $shebang_flags arg1 arg2 arg3'
 
 
 def test_py3_shebang_fix_default_shebang_flags():
@@ -350,7 +350,7 @@ def test_py3_shebang_fix_no_shebang_flags(flags):
 
 def test_py_shebang_fix_custom_python():
     cmd = rpm_eval('%py_shebang_fix arg1 arg2 arg3', __python='/usr/bin/pypy')[-1].strip()
-    assert cmd == '$pathfix -pni /usr/bin/pypy $shebang_flags arg1 arg2 arg3'
+    assert cmd == '/usr/bin/pypy -B /usr/lib/rpm/redhat/pathfix.py -pni /usr/bin/pypy $shebang_flags arg1 arg2 arg3'
 
 
 def test_pycached_in_sitelib():
