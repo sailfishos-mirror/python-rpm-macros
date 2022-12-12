@@ -52,7 +52,7 @@ elseif posix.stat('macros.python-srpm') then
 end
 }
 Version:        %{__default_python3_version}
-Release:        6%{?dist}
+Release:        7%{?dist}
 
 BuildArch:      noarch
 
@@ -130,9 +130,10 @@ install -m 755 brp-* %{buildroot}%{_rpmconfigdir}/redhat/
 # It also ensures that:
 #  - our BRPs can execute
 #  - if our BRPs affect this package, we don't need to build it twice
-%global __brp_python_bytecompile %{buildroot}%{__brp_python_bytecompile}
-%global __brp_python_hardlink %{buildroot}%{__brp_python_hardlink}
-%global __brp_fix_pyc_reproducibility %{buildroot}%{__brp_fix_pyc_reproducibility}
+%define add_buildroot() %{lua:print((macros[macros[1]]:gsub(macros._rpmconfigdir, macros.buildroot .. macros._rpmconfigdir)))}
+%global __brp_python_bytecompile %{add_buildroot __brp_python_bytecompile}
+%global __brp_python_hardlink %{add_buildroot __brp_python_hardlink}
+%global __brp_fix_pyc_reproducibility %{add_buildroot __brp_fix_pyc_reproducibility}
 
 
 %check
@@ -159,6 +160,9 @@ grep -E '^#[^%%]*%%[^%%]' %{buildroot}%{rpmmacrodir}/macros.* && exit 1 || true
 
 
 %changelog
+* Mon Dec 19 2022 Miro Hrončok <mhroncok@redhat.com> - 3.11-7
+- Bytecompilation: Unset $SOURCE_DATE_EPOCH when %%clamp_mtime_to_source_date_epoch is not set
+
 * Sun Nov 13 2022 Miro Hrončok <mhroncok@redhat.com> - 3.11-6
 - Set PYTEST_XDIST_AUTO_NUM_WORKERS=%%{_smp_build_ncpus} from %%pytest
 - pytest-xdist 3+ respects this value when -n auto is used
