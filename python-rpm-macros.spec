@@ -162,6 +162,7 @@ grep -E '^#[^%%]*%%[^%%]' %{buildroot}%{rpmmacrodir}/macros.* && exit 1 || true
 %changelog
 * Mon Dec 19 2022 Miro Hrončok <mhroncok@redhat.com> - 3.11-7
 - Bytecompilation: Unset $SOURCE_DATE_EPOCH when %%clamp_mtime_to_source_date_epoch is not set
+- Bytecompilation: Pass --invalidation-mode=timestamp to compileall (on Python 3.7+)
 
 * Sun Nov 13 2022 Miro Hrončok <mhroncok@redhat.com> - 3.11-6
 - Set PYTEST_XDIST_AUTO_NUM_WORKERS=%%{_smp_build_ncpus} from %%pytest

@@ -47,6 +47,15 @@ function python_bytecompile()
             compileall_module=compileall2
         fi
 
+        if [ "$python_version" -ge 37 ]; then
+            # Force the TIMESTAMP invalidation mode
+            invalidation_option=--invalidation-mode=timestamp
+        else
+            # For older Pythons, the option does not exist
+            # as the invalidation is always based on size+mtime
+            invalidation_option=
+        fi
+
         [ ! -z $exclude ] && exclude="-x '$exclude'"
 
         # PYTHONPATH is needed for compileall2, but doesn't hurt for the stdlib
@@ -58,7 +67,7 @@ function python_bytecompile()
         # -x and -e together implements the same functionality as the Filter class below
         # -s strips $RPM_BUILD_ROOT from the path
         # -p prepends the leading slash to the path to make it absolute
-        PYTHONPATH=/usr/lib/rpm/redhat/ $python_binary -B -m $compileall_module -o 0 -o 1 -q -f $exclude -s "$RPM_BUILD_ROOT" -p / --hardlink-dupes -e "$RPM_BUILD_ROOT" "$python_libdir"
+        PYTHONPATH=/usr/lib/rpm/redhat/ $python_binary -B -m $compileall_module -o 0 -o 1 -q -f $exclude -s "$RPM_BUILD_ROOT" -p / --hardlink-dupes $invalidation_option -e "$RPM_BUILD_ROOT" "$python_libdir"
 
     else
 #

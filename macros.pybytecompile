@@ -26,16 +26,21 @@ py2_byte_compile () {\
     test $failure -eq 0\
 }\
 \
-py3_byte_compile () {\
+py34_byte_compile () {\
     python_binary="%{__env_unset_source_date_epoch_if_not_clamp_mtime} PYTHONHASHSEED=0 %1"\
     bytecode_compilation_path="%2"\
     PYTHONPATH="%{_rpmconfigdir}/redhat" $python_binary -s -B -m compileall2 -o 0 -o 1 -s $RPM_BUILD_ROOT -p / --hardlink-dupes $bytecode_compilation_path \
+}\
+py37_byte_compile () {\
+    python_binary="%{__env_unset_source_date_epoch_if_not_clamp_mtime} PYTHONHASHSEED=0 %1"\
+    bytecode_compilation_path="%2"\
+    PYTHONPATH="%{_rpmconfigdir}/redhat" $python_binary -s -B -m compileall2 -o 0 -o 1 -s $RPM_BUILD_ROOT -p / --hardlink-dupes --invalidation-mode=timestamp $bytecode_compilation_path \
 }\
 \
 py39_byte_compile () {\
     python_binary="%{__env_unset_source_date_epoch_if_not_clamp_mtime} PYTHONHASHSEED=0 %1"\
     bytecode_compilation_path="%2"\
-    $python_binary -s -B -m compileall -o 0 -o 1 -s $RPM_BUILD_ROOT -p / --hardlink-dupes $bytecode_compilation_path \
+    $python_binary -s -B -m compileall -o 0 -o 1 -s $RPM_BUILD_ROOT -p / --hardlink-dupes --invalidation-mode=timestamp $bytecode_compilation_path \
 }\
 \
 # Path to intepreter should not contain any arguments \
@@ -44,10 +49,13 @@ py39_byte_compile () {\
 python_version=$(%1 -c "import sys; sys.stdout.write('{0.major}{0.minor}'.format(sys.version_info))") \
 # compileall2 is an enhanced fork of stdlib compileall module for Python >= 3.4 \
 # and it was merged back to stdlib in Python >= 3.9 \
+# Only Python 3.7+ supports and needs the --invalidation-mode option \
 if [ "$python_version" -ge 39 ]; then \
 py39_byte_compile "%1" "%2"; \
+elif [ "$python_version" -ge 37 ]; then \
+py37_byte_compile "%1" "%2"; \
 elif [ "$python_version" -ge 34 ]; then \
-py3_byte_compile "%1" "%2"; \
+py34_byte_compile "%1" "%2"; \
 else \
 py2_byte_compile "%1" "%2"; \
 fi
