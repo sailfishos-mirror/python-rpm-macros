@@ -16,6 +16,16 @@ if [ -z "$RPM_BUILD_ROOT" -o "$RPM_BUILD_ROOT" = "/" ]; then
 	exit 0
 fi
 
+# This function clamps the source mtime, see https://fedoraproject.org/wiki/Changes/ReproducibleBuildsClampMtimes
+function python_clamp_source_mtime()
+{
+    local _=$1
+    local python_binary=$2
+    local _=$3
+    local python_libdir="$4"
+    PYTHONPATH=/usr/lib/rpm/redhat/ $python_binary -B -m clamp_source_mtime -q "$python_libdir"
+}
+
 # This function now implements Python byte-compilation in three different ways:
 # Python >= 3.4 and < 3.9 uses a new module compileall2 - https://github.com/fedora-python/compileall2
 # In Python >= 3.9, compileall2 was merged back to standard library (compileall) so we can use it directly again.
@@ -123,6 +133,11 @@ do
 	echo "Bytecompiling .py files below $python_libdir using $python_binary"
 
 	# Generate normal (.pyc) byte-compiled files.
+	python_clamp_source_mtime "" "$python_binary" "" "$python_libdir"
+	if [ $? -ne 0 -a 0$errors_terminate -ne 0 ]; then
+		# One or more of the files had inaccessible mtime
+		exit 1
+	fi
 	python_bytecompile "" "$python_binary" "" "$python_libdir"
 	if [ $? -ne 0 -a 0$errors_terminate -ne 0 ]; then
 		# One or more of the files had a syntax error
