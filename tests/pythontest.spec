@@ -71,3 +71,8 @@ test $PY -ge $INODES
 %pycached %{python3_sitelib}/directory/file.py
 %pycached %{python36_sitelib}/directory/file.py
 %{python27_sitelib}/directory/file.py*
+
+
+%changelog
+* Thu Jan 01 2015 Fedora Packager <nobody@fedoraproject.org> - 0-0
+- This changelog entry exists and is deliberately set in the past

@@ -16,9 +16,12 @@
     - pytest:
         dir: .
         run: PYTHONPATH=/usr/lib/rpm/redhat ALTERNATE_PYTHON_VERSION=3.6 pytest -v
-    - manual_byte_compilation:
+    - manual_byte_compilation_clamp_mtime_off:
         dir: .
-        run: rpmbuild -ba pythontest.spec
+        run: rpmbuild --define 'clamp_mtime_to_source_date_epoch 0' -ba pythontest.spec
+    - manual_byte_compilation_clamp_mtime_on:
+        dir: .
+        run: rpmbuild --define 'clamp_mtime_to_source_date_epoch 1' -ba pythontest.spec
     required_packages:
     - rpm-build
     - python-rpm-macros
