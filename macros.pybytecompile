@@ -35,18 +35,18 @@ py2_byte_compile () {\
 py34_byte_compile () {\
     python_binary="%{__env_unset_source_date_epoch_if_not_clamp_mtime} PYTHONHASHSEED=0 %1"\
     bytecode_compilation_path="%2"\
-    PYTHONPATH="%{_rpmconfigdir}/redhat" $python_binary -s -B -m compileall2 -o 0 -o 1 -s $RPM_BUILD_ROOT -p / --hardlink-dupes $bytecode_compilation_path \
+    PYTHONPATH="%{_rpmconfigdir}/redhat" $python_binary -s -B -m compileall2 %{?_smp_mflags} -o 0 -o 1 -s $RPM_BUILD_ROOT -p / --hardlink-dupes $bytecode_compilation_path \
 }\
 py37_byte_compile () {\
     python_binary="%{__env_unset_source_date_epoch_if_not_clamp_mtime} PYTHONHASHSEED=0 %1"\
     bytecode_compilation_path="%2"\
-    PYTHONPATH="%{_rpmconfigdir}/redhat" $python_binary -s -B -m compileall2 -o 0 -o 1 -s $RPM_BUILD_ROOT -p / --hardlink-dupes --invalidation-mode=timestamp $bytecode_compilation_path \
+    PYTHONPATH="%{_rpmconfigdir}/redhat" $python_binary -s -B -m compileall2 %{?_smp_mflags} -o 0 -o 1 -s $RPM_BUILD_ROOT -p / --hardlink-dupes --invalidation-mode=timestamp $bytecode_compilation_path \
 }\
 \
 py39_byte_compile () {\
     python_binary="%{__env_unset_source_date_epoch_if_not_clamp_mtime} PYTHONHASHSEED=0 %1"\
     bytecode_compilation_path="%2"\
-    $python_binary -s -B -m compileall -o 0 -o 1 -s $RPM_BUILD_ROOT -p / --hardlink-dupes --invalidation-mode=timestamp $bytecode_compilation_path \
+    $python_binary -s -B -m compileall %{?_smp_mflags} -o 0 -o 1 -s $RPM_BUILD_ROOT -p / --hardlink-dupes --invalidation-mode=timestamp $bytecode_compilation_path \
 }\
 \
 # Path to intepreter should not contain any arguments \

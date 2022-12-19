@@ -11,6 +11,8 @@ if [ 0$extra -eq 1 ]; then
     exit 1
 fi
 
+compileall_flags="$4"
+
 # If using normal root, avoid changing anything.
 if [ -z "$RPM_BUILD_ROOT" -o "$RPM_BUILD_ROOT" = "/" ]; then
 	exit 0
@@ -36,6 +38,7 @@ function python_bytecompile()
     local python_binary=$2
     local exclude=$3
     local python_libdir="$4"
+    local compileall_flags="$5"
 
     python_version=$($python_binary -c "import sys; sys.stdout.write('{0.major}{0.minor}'.format(sys.version_info))")
 
@@ -77,7 +80,7 @@ function python_bytecompile()
         # -x and -e together implements the same functionality as the Filter class below
         # -s strips $RPM_BUILD_ROOT from the path
         # -p prepends the leading slash to the path to make it absolute
-        PYTHONPATH=/usr/lib/rpm/redhat/ $python_binary -B -m $compileall_module -o 0 -o 1 -q -f $exclude -s "$RPM_BUILD_ROOT" -p / --hardlink-dupes $invalidation_option -e "$RPM_BUILD_ROOT" "$python_libdir"
+        PYTHONPATH=/usr/lib/rpm/redhat/ $python_binary -B -m $compileall_module $compileall_flags -o 0 -o 1 -q -f $exclude -s "$RPM_BUILD_ROOT" -p / --hardlink-dupes $invalidation_option -e "$RPM_BUILD_ROOT" "$python_libdir"
 
     else
 #
@@ -133,12 +136,12 @@ do
 	echo "Bytecompiling .py files below $python_libdir using $python_binary"
 
 	# Generate normal (.pyc) byte-compiled files.
-	python_clamp_source_mtime "" "$python_binary" "" "$python_libdir"
+	python_clamp_source_mtime "" "$python_binary" "" "$python_libdir" ""
 	if [ $? -ne 0 -a 0$errors_terminate -ne 0 ]; then
 		# One or more of the files had inaccessible mtime
 		exit 1
 	fi
-	python_bytecompile "" "$python_binary" "" "$python_libdir"
+	python_bytecompile "" "$python_binary" "" "$python_libdir" "$compileall_flags"
 	if [ $? -ne 0 -a 0$errors_terminate -ne 0 ]; then
 		# One or more of the files had a syntax error
 		exit 1
@@ -146,7 +149,7 @@ do
 
 	# Generate optimized (.pyo) byte-compiled files.
 	# N.B. For Python 3.4+, this call does nothing
-	python_bytecompile "-O" "$python_binary" "" "$python_libdir"
+	python_bytecompile "-O" "$python_binary" "" "$python_libdir" "$compileall_flags"
 	if [ $? -ne 0 -a 0$errors_terminate -ne 0 ]; then
 		# One or more of the files had a syntax error
 		exit 1
