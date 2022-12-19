@@ -7,7 +7,7 @@
 
 Name:           pythontest
 Version:        0
-Release:        0
+Release:        0%{?dist}
 Summary:        ...
 License:        MIT
 BuildRequires:  python3-devel
