@@ -10,6 +10,7 @@ License:
 This has been derived from the Python's compileall module
 and it follows Python licensing. For more info see: https://www.python.org/psf/license/
 """
+from __future__ import print_function
 import os
 import sys
 
@@ -41,8 +42,9 @@ def _walk_dir(dir, maxlevels, quiet=0):
             yield fullname
         elif (maxlevels > 0 and name != os.curdir and name != os.pardir and
               os.path.isdir(fullname) and not os.path.islink(fullname)):
-            yield from _walk_dir(fullname, maxlevels=maxlevels - 1,
-                                 quiet=quiet)
+                for result in _walk_dir(fullname, maxlevels=maxlevels - 1,
+                                        quiet=quiet):
+                    yield result
 
 
 def clamp_dir(dir, source_date_epoch, quiet=0):
