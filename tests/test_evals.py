@@ -720,8 +720,18 @@ unversioned_macros = pytest.mark.parametrize('macro', [
 @unversioned_macros
 def test_unversioned_python_errors(macro):
     lines = rpm_eval(macro, fails=True)
-    assert lines == ['error: attempt to use unversioned python, '
-                     'define %__python to /usr/bin/python2 or /usr/bin/python3 explicitly']
+    assert lines[0] == (
+        'error: attempt to use unversioned python, '
+        'define %__python to /usr/bin/python2 or /usr/bin/python3 explicitly'
+    )
+    # when the macros are %global, the error is longer
+    # we deliberately allow this extra line to be optional
+    if len(lines) > 1:
+        # the failed macro is not unnecessarily our tested macro
+        pattern = r'error: Macro %\S+ failed to expand'
+        assert re.match(pattern, lines[1])
+    # but there should be no more lines
+    assert len(lines) < 3
 
 
 @unversioned_macros
