@@ -119,7 +119,7 @@
   PYTHONPATH="${PYTHONPATH:-%{buildroot}%{python3_sitearch}:%{buildroot}%{python3_sitelib}}"\\\
   PYTHONDONTWRITEBYTECODE=1\\\
   %{?__pytest_addopts:PYTEST_ADDOPTS="${PYTEST_ADDOPTS:-} %{__pytest_addopts}"}\\\
-  PYTEST_XDIST_AUTO_NUM_WORKERS=%{_smp_build_ncpus}}
+  PYTEST_XDIST_AUTO_NUM_WORKERS="${PYTEST_XDIST_AUTO_NUM_WORKERS:-%{_smp_build_ncpus}}"}
 
 # This is intended for Python 3 only, hence also no Python version in the name.
 %__pytest /usr/bin/pytest%(test %{python3_pkgversion} == 3 || echo -%{python3_version})

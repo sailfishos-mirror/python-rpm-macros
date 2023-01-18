@@ -324,7 +324,7 @@ def test_pytest_command_suffix_alternate_pkgversion(version):
 
 def test_pytest_sets_pytest_xdist_auto_num_workers():
     lines = rpm_eval('%pytest', _smp_build_ncpus=2)
-    assert 'PYTEST_XDIST_AUTO_NUM_WORKERS=2' in '\n'.join(lines)
+    assert 'PYTEST_XDIST_AUTO_NUM_WORKERS="${PYTEST_XDIST_AUTO_NUM_WORKERS:-2}"' in '\n'.join(lines)
 
 
 def test_pytest_undefined_addopts_are_not_set():
@@ -374,7 +374,7 @@ def test_py3_test_envvars(lib, __pytest_addopts):
     assert 'PATH="BUILDROOT/usr/bin:$PATH"' in stripped_lines
     assert 'CFLAGS="${CFLAGS:-${RPM_OPT_FLAGS}}" LDFLAGS="${LDFLAGS:-${RPM_LD_FLAGS}}"' in stripped_lines
     assert 'PYTHONDONTWRITEBYTECODE=1' in stripped_lines
-    assert 'PYTEST_XDIST_AUTO_NUM_WORKERS=3' in stripped_lines
+    assert 'PYTEST_XDIST_AUTO_NUM_WORKERS="${PYTEST_XDIST_AUTO_NUM_WORKERS:-3}"' in stripped_lines
     if __pytest_addopts:
         assert f'PYTEST_ADDOPTS="${{PYTEST_ADDOPTS:-}} {__pytest_addopts}"' in stripped_lines
     else:

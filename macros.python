@@ -169,7 +169,7 @@ print(_python_macro_cache[cache_key][name])
   PYTHONPATH="${PYTHONPATH:-%{buildroot}%{python_sitearch}:%{buildroot}%{python_sitelib}}"\\\
   PYTHONDONTWRITEBYTECODE=1\\\
   %{?__pytest_addopts:PYTEST_ADDOPTS="${PYTEST_ADDOPTS:-} %{__pytest_addopts}"}\\\
-  PYTEST_XDIST_AUTO_NUM_WORKERS=%{_smp_build_ncpus}}
+  PYTEST_XDIST_AUTO_NUM_WORKERS="${PYTEST_XDIST_AUTO_NUM_WORKERS:-%{_smp_build_ncpus}}"}
 
 %python_disable_dependency_generator() \
 %undefine __pythondist_requires \
