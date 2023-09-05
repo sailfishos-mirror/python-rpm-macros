@@ -31,11 +31,6 @@
   %{__python3} %{py_setup} %{?py_setup_args} build --executable="%{__python3} %{py3_shbang_opts}" %{?*}
 }
 
-%py3_build_egg() %{expand:\\\
-  CFLAGS="${CFLAGS:-${RPM_OPT_FLAGS}}" LDFLAGS="${LDFLAGS:-${RPM_LD_FLAGS}}"\\\
-  %{__python3} %{py_setup} %{?py_setup_args} bdist_egg %{?*}
-}
-
 %py3_build_wheel() %{expand:\\\
   CFLAGS="${CFLAGS:-${RPM_OPT_FLAGS}}" LDFLAGS="${LDFLAGS:-${RPM_LD_FLAGS}}"\\\
   %{__python3} %{py_setup} %{?py_setup_args} bdist_wheel %{?*}
@@ -44,12 +39,6 @@
 %py3_install() %{expand:\\\
   CFLAGS="${CFLAGS:-${RPM_OPT_FLAGS}}" LDFLAGS="${LDFLAGS:-${RPM_LD_FLAGS}}"\\\
   %{__python3} %{py_setup} %{?py_setup_args} install -O1 --skip-build --root %{buildroot} --prefix %{_prefix} %{?*}
-  rm -rfv %{buildroot}%{_bindir}/__pycache__
-}
-
-%py3_install_egg() %{expand:\\\
-  mkdir -p %{buildroot}%{python3_sitelib}
-  %{__python3} -m easy_install -m --prefix %{buildroot}%{_prefix} -Z dist/*-py%{python3_version}.egg %{?*}
   rm -rfv %{buildroot}%{_bindir}/__pycache__
 }
 
