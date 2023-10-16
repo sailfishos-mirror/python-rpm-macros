@@ -53,7 +53,7 @@ elseif posix.stat('macros.python-srpm') then
 end
 }
 Version:        %{__default_python3_version}
-Release:        9%{?dist}
+Release:        1%{?dist}
 
 BuildArch:      noarch
 
@@ -163,6 +163,9 @@ grep -E '^#[^%%]*%%[^%%]' %{buildroot}%{rpmmacrodir}/macros.* && exit 1 || true
 
 
 %changelog
+* Thu Jun 06 2024 Karolina Surma <ksurma@redhat.com> - 3.13-1
+- Update main Python to 3.13
+
 * Thu Mar 28 2024 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 3.12-9
 - Minor improvements to brp-fix-pyc-reproducibility
 
