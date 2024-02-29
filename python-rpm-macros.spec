@@ -53,7 +53,7 @@ elseif posix.stat('macros.python-srpm') then
 end
 }
 Version:        %{__default_python3_version}
-Release:        8%{?dist}
+Release:        9%{?dist}
 
 BuildArch:      noarch
 
@@ -163,6 +163,9 @@ grep -E '^#[^%%]*%%[^%%]' %{buildroot}%{rpmmacrodir}/macros.* && exit 1 || true
 
 
 %changelog
+* Thu Mar 28 2024 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 3.12-9
+- Minor improvements to brp-fix-pyc-reproducibility
+
 * Fri Mar 22 2024 Lumír Balhar <lbalhar@redhat.com> - 3.12-8
 - Update bundled compileall2 to version 0.8.0
 
