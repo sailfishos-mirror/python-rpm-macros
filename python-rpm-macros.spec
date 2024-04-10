@@ -53,7 +53,7 @@ elseif posix.stat('macros.python-srpm') then
 end
 }
 Version:        %{__default_python3_version}
-Release:        7%{?dist}
+Release:        8%{?dist}
 
 BuildArch:      noarch
 
@@ -163,6 +163,9 @@ grep -E '^#[^%%]*%%[^%%]' %{buildroot}%{rpmmacrodir}/macros.* && exit 1 || true
 
 
 %changelog
+* Tue Jun 25 2024 Cristian Le <fedora@lecris.me> - 3.12-8
+- %%python_extras_subpkg: Add option -a to include BuildArch: noarch
+
 * Thu Jan 25 2024 Miro Hrončok <mhroncok@redhat.com> - 3.12-7
 - %%py3_test_envvars: Only set $PYTEST_XDIST_AUTO_NUM_WORKERS if not already set
 
