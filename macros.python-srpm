@@ -225,15 +225,19 @@
     end
 }
 
-%python_extras_subpkg(n:i:f:F) %{expand:%{lua:
+%python_extras_subpkg(n:i:f:FaA) %{expand:%{lua:
     local option_n = '-n (name of the base package)'
     local option_i = '-i (buildroot path to metadata)'
     local option_f = '-f (builddir path to a filelist)'
     local option_F = '-F (skip %%files section)'
+    local option_a = '-a (insert BuildArch: noarch)'
+    local option_A = '-A (do not insert BuildArch: noarch (default))'
     local value_n = rpm.expand('%{-n*}')
     local value_i = rpm.expand('%{-i*}')
     local value_f = rpm.expand('%{-f*}')
     local value_F = rpm.expand('%{-F}')
+    local value_a = rpm.expand('%{-a}')
+    local value_A = rpm.expand('%{-A}')
     local args = rpm.expand('%{*}')
     if value_n == '' then
         rpm.expand('%{error:%%%0: missing option ' .. option_n .. '}')
@@ -249,6 +253,9 @@
     end
     if value_f ~= '' and value_F ~= '' then
         rpm.expand('%{error:%%%0: simultaneous ' .. option_f .. ' and ' .. option_F .. ' options are not possible}')
+    end
+    if value_a ~= '' and value_A ~= '' then
+        rpm.expand('%{error:%%%0: simultaneous ' .. option_a .. ' and ' .. option_A .. ' options are not possible}')
     end
     if args == '' then
         rpm.expand('%{error:%%%0 requires at least one argument with "extras" name}')
@@ -277,7 +284,11 @@
         elseif value_f ~= '' then
             files = '%files -n ' .. rpmname .. ' -f ' .. value_f
         end
-        for i, line in ipairs({pkgdef, summary, requires, description, files, ''}) do
+        local tags = summary .. '\\\n' .. requires
+        if value_a ~= '' then
+            tags = tags .. '\\\nBuildArch: noarch'
+        end
+        for i, line in ipairs({pkgdef, tags, description, files, ''}) do
             print(line .. '\\\n')
         end
     end

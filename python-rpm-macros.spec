@@ -53,7 +53,7 @@ elseif posix.stat('macros.python-srpm') then
 end
 }
 Version:        %{__default_python3_version}
-Release:        1%{?dist}
+Release:        2%{?dist}
 
 BuildArch:      noarch
 
@@ -163,6 +163,9 @@ grep -E '^#[^%%]*%%[^%%]' %{buildroot}%{rpmmacrodir}/macros.* && exit 1 || true
 
 
 %changelog
+* Tue Jun 25 2024 Cristian Le <fedora@lecris.me> - 3.13-2
+- %%python_extras_subpkg: Add option -a to include BuildArch: noarch
+
 * Thu Jun 06 2024 Karolina Surma <ksurma@redhat.com> - 3.13-1
 - Update main Python to 3.13
 
