@@ -160,15 +160,15 @@ def test_modules_from_files_are_found(tmp_path):
     test_file_3 = tmp_path / 'this_is_a_file_in_tmp_path_3.txt'
 
     test_file_1.write_text('math\nwave\n')
-    test_file_2.write_text('csv\npathlib\n')
+    test_file_2.write_text('csv\nnetrc\n')
     test_file_3.write_text('logging\ncsv\n')
 
     # Make sure the tested modules are not already in sys.modules
-    for m in ('math', 'wave', 'csv', 'pathlib', 'logging'):
+    for m in ('math', 'wave', 'csv', 'netrc', 'logging'):
         sys.modules.pop(m, None)
 
     modules_main(['-f', str(test_file_1), '-f', str(test_file_2), '-f', str(test_file_3), ])
-    for module in ('csv', 'math', 'wave', 'pathlib', 'logging'):
+    for module in ('csv', 'math', 'wave', 'netrc', 'logging'):
         assert module in sys.modules
 
 
