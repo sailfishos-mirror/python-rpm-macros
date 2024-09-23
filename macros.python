@@ -23,6 +23,23 @@ end
 print(_python_macro_cache[cache_key][name])
 }
 
+# Deprecation wrapper, warns only once per macro
+# Options:
+#   -n - The name of the macro that is deprecated
+%_python_deprecated(n:) %{lua:
+if not _python_deprecated_warned then
+    -- This is intentionally a global lua table
+    _python_deprecated_warned = {}
+end
+if not _python_deprecated_warned[opt.n] then
+    _python_deprecated_warned[opt.n] = true
+    local msg = "The %" .. opt.n .. " macro is deprecated and will likely stop working in Fedora 44. " ..
+                "See the current Python packaging guidelines: " ..
+                "https://docs.fedoraproject.org/en-US/packaging-guidelines/Python/"
+    macros.warn({msg})
+end
+}
+
 # unversioned macros: used with user defined __python, no longer part of rpm >= 4.15
 # __python is defined to error by default in the srpm macros
 # nb: $RPM_BUILD_ROOT is not set when the macros are expanded (at spec parse time)
@@ -69,17 +86,17 @@ print(_python_macro_cache[cache_key][name])
 
 # Use the slashes after expand so that the command starts on the same line as
 # the macro
-%py_build() %{expand:\\\
+%py_build() %{_python_deprecated -n py_build}%{expand:\\\
   CFLAGS="${CFLAGS:-${RPM_OPT_FLAGS}}" LDFLAGS="${LDFLAGS:-${RPM_LD_FLAGS}}"\\\
   %{__python} %{py_setup} %{?py_setup_args} build --executable="%{__python} %{py_shbang_opts}" %{?*}
 }
 
-%py_build_wheel() %{expand:\\\
+%py_build_wheel() %{_python_deprecated -n py_build_wheel}%{expand:\\\
   CFLAGS="${CFLAGS:-${RPM_OPT_FLAGS}}" LDFLAGS="${LDFLAGS:-${RPM_LD_FLAGS}}"\\\
   %{__python} %{py_setup} %{?py_setup_args} bdist_wheel %{?*}
 }
 
-%py_install() %{expand:\\\
+%py_install() %{_python_deprecated -n py_install}%{expand:\\\
   CFLAGS="${CFLAGS:-${RPM_OPT_FLAGS}}" LDFLAGS="${LDFLAGS:-${RPM_LD_FLAGS}}"\\\
   %{__python} %{py_setup} %{?py_setup_args} install -O1 --skip-build --root %{buildroot} --prefix %{_prefix} %{?*}
   rm -rfv %{buildroot}%{_bindir}/__pycache__
