@@ -1,9 +1,8 @@
 %global basedir /opt/test/byte_compilation
 
 # We have 3 different ways of bytecompiling: for 3.9+, 3.4-3.8, and 2.7
-# Test with a representative of each.
+# Test with a representative of each, except 2.7 which we no longer have
 %global python36_sitelib /usr/lib/python3.6/site-packages
-%global python27_sitelib /usr/lib/python2.7/site-packages
 
 Name:           pythontest
 Version:        0
@@ -12,7 +11,6 @@ Summary:        ...
 License:        MIT
 BuildRequires:  python3-devel
 BuildRequires:  python3.6
-BuildRequires:  python2.7
 
 %description
 ...
@@ -33,23 +31,19 @@ echo "print()" > %{buildroot}%{python3_sitelib}/directory/file.py
 mkdir -p %{buildroot}%{python36_sitelib}/directory/
 echo "print()" > %{buildroot}%{python36_sitelib}/directory/file.py
 
-mkdir -p %{buildroot}%{python27_sitelib}/directory/
-echo "print()" > %{buildroot}%{python27_sitelib}/directory/file.py
-
 %check
 LOCATIONS="
     %{buildroot}%{basedir}
     %{buildroot}%{python3_sitelib}/directory/
     %{buildroot}%{python36_sitelib}/directory/
-    %{buildroot}%{python27_sitelib}/directory/
 "
 
 # Count .py and .pyc files
 PY=$(find $LOCATIONS -name "*.py" | wc -l)
 PYC=$(find $LOCATIONS -name "*.py[co]" | wc -l)
 
-# We should have 5 .py files (3 for python3, one each for 3.6 & 2.7)
-test $PY -eq 5
+# We should have 4 .py files (3 for python3, one for 3.6)
+test $PY -eq 4
 
 # Every .py file should be byte-compiled to two .pyc files (optimization level 0 and 1)
 # so we should have two times more .pyc files than .py files
@@ -70,7 +64,6 @@ test $PY -ge $INODES
 %pycached %{basedir}/directory/to/test/recursion/file_in_dir.py
 %pycached %{python3_sitelib}/directory/file.py
 %pycached %{python36_sitelib}/directory/file.py
-%{python27_sitelib}/directory/file.py*
 
 
 %changelog
