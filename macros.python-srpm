@@ -66,6 +66,8 @@
 
 ### BRP scripts (and related macros)
 
+## Modifies installation method in .dist-info/INSTALLER file to rpm
+%python_rpm_in_distinfo 1
 ## Automatically compile python files
 %py_auto_byte_compile 1
 ## Should python bytecompilation errors terminate a build?
@@ -78,16 +80,19 @@
 %__env_unset_source_date_epoch_if_not_clamp_mtime %[0%{?clamp_mtime_to_source_date_epoch} == 0 ? "env -u SOURCE_DATE_EPOCH" : "env"]
 
 ## The individual BRP scripts
+%__brp_python_rpm_in_distinfo %{_rpmconfigdir}/redhat/brp-python-rpm-in-distinfo
 %__brp_python_bytecompile %{__env_unset_source_date_epoch_if_not_clamp_mtime} %{_rpmconfigdir}/redhat/brp-python-bytecompile "" "%{?_python_bytecompile_errors_terminate_build}" "%{?_python_bytecompile_extra}" "%{?_smp_build_ncpus:-j%{_smp_build_ncpus}}"
 %__brp_fix_pyc_reproducibility %{_rpmconfigdir}/redhat/brp-fix-pyc-reproducibility
 %__brp_python_hardlink %{_rpmconfigdir}/redhat/brp-python-hardlink
 
 ## This macro is included in redhat-rpm-config's %%__os_install_post
 # Note that the order matters:
-#  1. brp-python-bytecompile can create (or replace) pyc files
-#  2. brp-fix-pyc-reproducibility can modify the pyc files from above
-#  3. brp-python-hardlink de-duplicates identical pyc files
+#  1. brp-python-rpm-in-distinfo modifies .dist-info/INSTALLER file
+#  2. brp-python-bytecompile can create (or replace) pyc files
+#  3. brp-fix-pyc-reproducibility can modify the pyc files from above
+#  4. brp-python-hardlink de-duplicates identical pyc files
 %__os_install_post_python \
+    %{?python_rpm_in_distinfo:%{?__brp_python_rpm_in_distinfo}} \
     %{?py_auto_byte_compile:%{?__brp_python_bytecompile}} \
     %{?py_reproducible_pyc_path:%{?__brp_fix_pyc_reproducibility} "%{py_reproducible_pyc_path}"} \
     %{?__brp_python_hardlink} \
