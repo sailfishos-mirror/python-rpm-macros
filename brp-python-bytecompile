@@ -36,7 +36,7 @@ function python_bytecompile()
 {
     local options=$1
     local python_binary=$2
-    local exclude=$3
+    # local exclude=$3 # No longer used
     local python_libdir="$4"
     local compileall_flags="$5"
 
@@ -69,18 +69,14 @@ function python_bytecompile()
             invalidation_option=
         fi
 
-        [[ -n "$exclude" ]] && exclude="-x '$exclude'"
-
         # PYTHONPATH is needed for compileall2, but doesn't hurt for the stdlib
         # -o 0 -o 1 are the optimization levels
         # -q disables verbose output
         # -f forces the process to overwrite existing compiled files
-        # -x excludes paths defined by regex
         # -e excludes symbolic links pointing outside the build root
-        # -x and -e together implements the same functionality as the Filter class below
         # -s strips $RPM_BUILD_ROOT from the path
         # -p prepends the leading slash to the path to make it absolute
-        PYTHONPATH=/usr/lib/rpm/redhat/ $python_binary -B -m $compileall_module $compileall_flags -o 0 -o 1 -q -f $exclude -s "$RPM_BUILD_ROOT" -p / --hardlink-dupes $invalidation_option -e "$RPM_BUILD_ROOT" "$python_libdir"
+        PYTHONPATH=/usr/lib/rpm/redhat/ $python_binary -B -m $compileall_module $compileall_flags -o 0 -o 1 -q -f -s "$RPM_BUILD_ROOT" -p / --hardlink-dupes $invalidation_option -e "$RPM_BUILD_ROOT" "$python_libdir"
 
     else
 #
@@ -96,13 +92,10 @@ python_libdir = "$python_libdir"
 depth = sys.getrecursionlimit()
 real_libdir = "$real_libdir"
 build_root = "$RPM_BUILD_ROOT"
-exclude = r"$exclude"
 
 class Filter:
     def search(self, path):
         ret = not os.path.realpath(path).startswith(build_root)
-        if exclude:
-            ret = ret or re.search(exclude, path)
         return ret
 
 sys.exit(not compileall.compile_dir(python_libdir, depth, real_libdir, force=1, rx=Filter(), quiet=1))
