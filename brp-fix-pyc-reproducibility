@@ -1,7 +1,7 @@
 #!/bin/bash -eu
 
 # If using normal root, avoid changing anything.
-if [ -z "${RPM_BUILD_ROOT:-}" ] || [ "${RPM_BUILD_ROOT:-}" = "/" ]; then
+if [[ -z "${RPM_BUILD_ROOT:-}" ]] || [[ "${RPM_BUILD_ROOT:-}" = "/" ]]; then
   exit 0
 fi
 
@@ -10,7 +10,7 @@ fi
 path_to_fix=${1:?}
 
 # First, check that the parser is available:
-if [ ! -x /usr/bin/marshalparser ]; then
+if [[ ! -x /usr/bin/marshalparser ]]; then
   echo "ERROR: If %py_reproducible_pyc_path is defined, you have to also BuildRequire: /usr/bin/marshalparser !"
   exit 1
 fi
