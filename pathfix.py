@@ -56,7 +56,6 @@ def main():
             if recursedown(arg): bad = 1
         elif os.path.islink(arg):
             err(arg + ': will not process symbolic links\n')
-            bad = 1
         else:
             if fix(arg): bad = 1
     sys.exit(bad)

@@ -53,7 +53,7 @@ elseif posix.stat('macros.python-srpm') then
 end
 }
 Version:        %{__default_python3_version}
-Release:        4%{?dist}
+Release:        5%{?dist}
 
 BuildArch:      noarch
 
@@ -163,6 +163,9 @@ grep -E '^#[^%%]*%%[^%%]' %{buildroot}%{rpmmacrodir}/macros.* && exit 1 || true
 
 
 %changelog
+* Mon Jul 21 2025 Íñigo Huguet <ihuguet@riseup.net> - 3.13-5
+- pathfix.py: Don't fail on symbolic links
+
 * Sat Jan 18 2025 Fedora Release Engineering <releng@fedoraproject.org> - 3.13-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_42_Mass_Rebuild
 
