@@ -17,6 +17,9 @@ discover:
       test: rpmlint ~/rpmbuild/RPMS/x86_64/pythontest-0-0.clamp0.x86_64.rpm | grep python-bytecode-inconsistent-mtime || exit 0 && exit 1
     - name: rpmlint_clamp_mtime_on
       test: rpmlint ~/rpmbuild/RPMS/x86_64/pythontest-0-0.clamp1.x86_64.rpm | grep python-bytecode-inconsistent-mtime || exit 0 && exit 1
+    - name: python_wheel_inject_sbom
+      path: /tests
+      test: rpmbuild -ba testwheel.spec
 
 prepare:
   - name: Install dependencies
@@ -27,6 +30,8 @@ prepare:
     - python-rpm-macros
     - python3-rpm-macros
     - python3-devel
+    - python3-setuptools
+    - python3-pip
     - python3-pytest
     - python3.6
     - dnf
