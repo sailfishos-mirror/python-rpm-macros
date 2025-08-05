@@ -1,4 +1,4 @@
-from import_all_modules import argparser, exclude_unwanted_module_globs
+from import_all_modules import argparser, exclude_unwanted_module_globs, import_modules
 from import_all_modules import main as modules_main
 from import_all_modules import read_modules_from_cli, filter_top_level_modules_only
 
@@ -119,7 +119,7 @@ def test_import_all_modules_does_not_import():
     # We already imported it in this file once, make sure it's not imported
     # from the cache
     sys.modules.pop('import_all_modules')
-    with pytest.raises(ModuleNotFoundError):
+    with pytest.raises(SystemExit):
         modules_main(['import_all_modules'])
 
 
@@ -127,7 +127,7 @@ def test_modules_from_cwd_not_found(tmp_path, monkeypatch):
     test_module = tmp_path / 'this_is_a_module_in_cwd.py'
     test_module.write_text('')
     monkeypatch.chdir(tmp_path)
-    with pytest.raises(ModuleNotFoundError):
+    with pytest.raises(SystemExit):
         modules_main(['this_is_a_module_in_cwd'])
 
 
@@ -175,7 +175,7 @@ def test_modules_from_files_are_found(tmp_path):
 def test_nonexisting_modules_raise_exception_on_import(tmp_path):
     test_file = tmp_path / 'this_is_a_file_in_tmp_path.txt'
     test_file.write_text('nonexisting_module\nanother\n')
-    with pytest.raises(ModuleNotFoundError):
+    with pytest.raises(SystemExit):
         modules_main(['-f', str(test_file)])
 
 
@@ -203,7 +203,7 @@ def test_nested_modules_found_when_expected(tmp_path, monkeypatch, capsys):
     sys.path.append(str(tmp_path))
     monkeypatch.chdir(cwd_path)
 
-    with pytest.raises(ModuleNotFoundError):
+    with pytest.raises(SystemExit):
         modules_main([
             'this_is_a_module_in_level_0',
             'nested.this_is_a_module_in_level_1',
@@ -253,24 +253,70 @@ def test_non_existing_module_raises_exception(tmp_path):
     test_module_1.write_text('')
     sys.path.append(str(tmp_path))
 
-    with pytest.raises(ModuleNotFoundError):
+    with pytest.raises(SystemExit):
         modules_main([
             'this_is_a_module_in_tmp_path_1',
             'this_is_a_module_in_tmp_path_2',
         ])
 
 
-def test_module_with_error_propagates_exception(tmp_path):
+def test_import_module_returns_failed_modules(tmp_path):
+    test_module_1 = tmp_path / 'this_is_a_module_in_tmp_path_1.py'
+    test_module_1.write_text('')
+    sys.path.append(str(tmp_path))
+
+    failed_modules = import_modules([
+        'this_is_a_module_in_tmp_path_1',
+        'this_is_a_module_in_tmp_path_2',
+    ])
+
+    assert failed_modules == ['this_is_a_module_in_tmp_path_2']
+
+
+def test_module_with_error_propagates_exception(tmp_path, capsys):
 
     test_module_1 = tmp_path / 'this_is_a_module_in_tmp_path_1.py'
     test_module_1.write_text('0/0')
     sys.path.append(str(tmp_path))
 
-    # The correct exception must be raised
-    with pytest.raises(ZeroDivisionError):
+    with pytest.raises(SystemExit):
         modules_main([
             'this_is_a_module_in_tmp_path_1',
         ])
+    _, err = capsys.readouterr()
+    assert "ZeroDivisionError" in err
+
+
+def test_import_module_returns_empty_list_when_no_modules_failed(tmp_path):
+    test_module_1 = tmp_path / 'this_is_a_module_in_tmp_path_1.py'
+    test_module_1.write_text('')
+    sys.path.append(str(tmp_path))
+
+    failed_modules = import_modules(['this_is_a_module_in_tmp_path_1'])
+    assert failed_modules == []
+
+
+def test_all_modules_are_imported(tmp_path, capsys):
+    test_module_1 = tmp_path / 'this_is_a_module_in_tmp_path_1.py'
+    test_module_2 = tmp_path / 'this_is_a_module_in_tmp_path_2.py'
+    test_module_3 = tmp_path / 'this_is_a_module_in_tmp_path_3.py'
+
+    for module in (test_module_1, test_module_2, test_module_3):
+        module.write_text('')
+
+    sys.path.append(str(tmp_path))
+
+    with pytest.raises(SystemExit):
+        modules_main([
+            'this_is_a_module_in_tmp_path_1',
+            'missing_module',
+            'this_is_a_module_in_tmp_path_2',
+            'this_is_a_module_in_tmp_path_3',
+        ])
+    _, err = capsys.readouterr()
+    for i in range(1, 4):
+        assert f"Check import: this_is_a_module_in_tmp_path_{i}" in err
+    assert "Failed to import: missing_module" in err
 
 
 def test_correct_modules_are_excluded(tmp_path):

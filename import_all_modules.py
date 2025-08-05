@@ -7,6 +7,7 @@ import os
 import re
 import site
 import sys
+import traceback
 
 from contextlib import contextmanager
 from pathlib import Path
@@ -93,11 +94,24 @@ def read_modules_from_all_args(args):
 
 def import_modules(modules):
     '''Procedure to perform import check for each module name from the given list of modules.
+
+    Return a list of failed modules.
     '''
+
+    failed_modules = []
 
     for module in modules:
         print('Check import:', module, file=sys.stderr)
-        importlib.import_module(module)
+        try:
+            importlib.import_module(module)
+        except Exception:
+            traceback.print_exc(file=sys.stderr)
+            failed_modules.append(module)
+
+    if failed_modules:
+        print(f'Failed to import: {", ".join(failed_modules)}', file=sys.stderr)
+
+    return failed_modules
 
 
 def argparser():
@@ -164,7 +178,10 @@ def main(argv=None):
 
     with remove_unwanteds_from_sys_path():
         addsitedirs_from_environ()
-        import_modules(modules)
+        failed_modules = import_modules(modules)
+
+    if failed_modules:
+        raise SystemExit(1)
 
 
 if __name__ == '__main__':
