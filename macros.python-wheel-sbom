@@ -93,7 +93,7 @@
         whl="$pwd0/$whl"
     fi
 
-    record=$(zipinfo -1 "$whl" | grep '\.dist-info/RECORD$')
+    record=$(zipinfo -1 "$whl" | grep -E '^[^/]+-[^/]+\.dist-info/RECORD$')
     distinfo="${record%%/RECORD}"
     bom="$distinfo/sboms/%{__python_wheel_sbom_filename}"
 

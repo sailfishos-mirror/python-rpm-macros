@@ -23,7 +23,18 @@ version = "1"
 [build-system]
 requires = ["setuptools >= 61"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+include = ["testwheel*"]
 EOF
+# create a secondary dist-info folder in the project
+# we need to ensure this file is not altered
+mkdir -p testwheel/_vendor/dependency-2.2.2.dist-info
+touch testwheel/_vendor/dependency-2.2.2.dist-info/RECORD
+echo 'recursive-include testwheel/_vendor *' > MANIFEST.in
 
 
 %build
@@ -69,6 +80,9 @@ test -f %{venvsite}/testwheel-1.dist-info/sboms/bom.json
 grep '^testwheel-1.dist-info/sboms/bom.json,' %{venvsite}/testwheel-1.dist-info/RECORD
 # a more specific grep. we don't care about CRLF line ends (pip uses those? without the sed the $ doesn't match line end)
 sed 's/\r//g' %{venvsite}/testwheel-1.dist-info/RECORD | grep -E '^testwheel-1.dist-info/sboms/bom.json,sha256=[a-f0-9]{64},[0-9]+$'
+
+test -f %{venvsite}/testwheel/_vendor/dependency-2.2.2.dist-info/RECORD
+test -f %{venvsite}/testwheel/_vendor/dependency-2.2.2.dist-info/sboms/bom.json && exit 1 || true
 
 # this deliberately uses a different mechanism than the macro
 # if you are running this test on a different distro, adjust it
