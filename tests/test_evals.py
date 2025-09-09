@@ -658,6 +658,21 @@ def test_python_extras_subpkg_aA():
                         'BuildArch: noarch (default)) options are not possible')
 
 
+def test_python_extras_subpkg_v():
+    lines = rpm_eval('%python_extras_subpkg -n python3-setuptools_scm -A -v 1.2.3 -F toml',
+                     version='6', release='7')
+    expected = textwrap.dedent(f"""
+        %package -n python3-setuptools_scm+toml
+        Summary: Metapackage for python3-setuptools_scm: toml extras
+        Requires: python3-setuptools_scm = 1.2.3
+        %description -n python3-setuptools_scm+toml
+        This is a metapackage bringing in toml extras requires for
+        python3-setuptools_scm.
+        It makes sure the dependencies are installed.
+        """).lstrip().splitlines()
+    assert lines == expected
+
+
 def test_python_extras_subpkg_underscores():
     lines = rpm_eval('%python_extras_subpkg -n python3-webscrapbook -F adhoc_ssl',
                      version='0.33.3', release='1.fc33')
