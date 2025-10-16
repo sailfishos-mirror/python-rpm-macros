@@ -287,7 +287,7 @@
                       'It makes sure the dependencies are installed.\\\n'
         local files = ''
         if value_i ~= '' then
-            files = '%files -n ' .. rpmname .. '\\\n' .. '%ghost ' .. value_i
+            files = '%files -n ' .. rpmname .. '\\\n' .. '%ghost %dir ' .. value_i
         elseif value_f ~= '' then
             files = '%files -n ' .. rpmname .. ' -f ' .. value_f
         end

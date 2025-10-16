@@ -551,7 +551,7 @@ def test_python_extras_subpkg_i():
         It makes sure the dependencies are installed.
 
         %files -n python3-setuptools_scm+toml
-        %ghost /usr/lib/python{X_Y}/site-packages/*.egg-info
+        %ghost %dir /usr/lib/python{X_Y}/site-packages/*.egg-info
 
         %package -n python3-setuptools_scm+yaml
         Summary: Metapackage for python3-setuptools_scm: yaml extras
@@ -562,7 +562,7 @@ def test_python_extras_subpkg_i():
         It makes sure the dependencies are installed.
 
         %files -n python3-setuptools_scm+yaml
-        %ghost /usr/lib/python{X_Y}/site-packages/*.egg-info
+        %ghost %dir /usr/lib/python{X_Y}/site-packages/*.egg-info
         """).lstrip().splitlines()
     assert lines == expected
 
