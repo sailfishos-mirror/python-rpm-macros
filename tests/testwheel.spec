@@ -97,6 +97,11 @@ assert sbom['components'][0]['type'] == 'library'
 assert sbom['components'][0]['name'] == 'testwheel'
 assert sbom['components'][0]['version'] == '1-0%{?dist}'
 assert sbom['components'][0]['purl'] == 'pkg:rpm/%{ns}/testwheel@1-0%{?dist}?epoch=42&arch=src'
+
+assert sbom['metadata']['tools']['components'][0]['name'] == 'python-rpm-macros'
+assert sbom['metadata']['tools']['components'][0]['version'].startswith('%{__default_python3_version}-')
+assert sbom['metadata']['tools']['components'][0]['purl'].startswith('pkg:rpm/%{ns}/python-rpm-macros@%{__default_python3_version}-')
+assert sbom['metadata']['tools']['components'][0]['purl'].endswith('?arch=src')
 "
 
 # replace the installation with the original unaltered wheel
