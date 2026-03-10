@@ -14,9 +14,9 @@
 
 
 # Path of the SBOM file in the PEP 770 .dist-info/sboms directory
-# This filename is explicitly mentioned in https://cyclonedx.org/specification/overview/
+# This filename pattern is explicitly mentioned in https://cyclonedx.org/specification/overview/
 # section Recognized file patterns
-%__python_wheel_sbom_filename bom.json
+%__python_wheel_sbom_filename rpm.cdx.json
 
 
 # The SBOM content to put to the file
