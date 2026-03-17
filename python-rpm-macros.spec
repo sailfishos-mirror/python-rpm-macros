@@ -183,6 +183,7 @@ grep -iF PLACEHOLDER %{buildroot}%{rpmmacrodir}/macros.* && exit 1 || true
 %changelog
 * Tue Mar 17 2026 Miro Hrončok <mhroncok@redhat.com> - 3.14-12
 - %%python_wheel_inject_sbom: Hardcode the purl of this tool instead of constructing it at runtime
+- %%py3_build, %%py3_install, etc.: Bump the Fedora version in the deprecation message
 
 * Tue Mar 10 2026 Miro Hrončok <mhroncok@redhat.com> - 3.14-11
 - %%python_wheel_inject_sbom: Add more metadata to the SBOM
